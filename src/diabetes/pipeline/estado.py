@@ -183,6 +183,17 @@ ETAPAS: list[Etapa] = [
          "reports/produto/_casos_paridade.json"),
         nota="EBM exportado como tabela; paridade Python<->JS verificada",
     ),
+    Etapa(
+        "notebooks", "Notebooks da apresentacao",
+        ".\\tasks.ps1 notebooks",
+        ("data/processed/gold/_trilhaC_escore.json",
+         "reports/produto/modelo.json", "src/diabetes/produto/notebooks.py"),
+        tuple(f"notebooks/{n}.ipynb" for n in (
+            "01-ingestao-e-qualidade", "02-comparacao-com-a-fonte-original",
+            "03-analise-exploratoria-e-explicativa", "04-modelagem-preditiva",
+            "05-comparacao-entre-bases", "06-escore-decisao-e-produto")),
+        nota="gerados de src/, nunca escritos a mao (regra 7)",
+    ),
 ]
 
 

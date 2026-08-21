@@ -1,173 +1,210 @@
-# Data Science 2 — Projeto 1 · Diabetes (BRFSS 2015)
+# Diabetes — BRFSS 2015
 
-ESEG · Prof. Marino Catarino · Felipe Marins
+**Data Science 2 · Projeto 1 · ESEG · Prof. Marino Catarino**
 
-Análise de 253.680 respostas da pesquisa BRFSS 2015 (CDC) para **identificar fatores
-associados a diabetes** e **predizer ocorrências**, com validação contra fontes externas
-(BRFSS original, NHANES, Vigitel, PNS).
-
----
-
-## Estado atual
-
-| Camada | Status |
-|---|---|
-| Ingestão — PDF → CSV bronze | ✅ **pronta e validada** (253.680 linhas, 0 em quarentena) |
-| Limpeza — CSV → Parquet silver | ✅ **pronta** (31 colunas, 7 regras rastreadas) |
-| Diagnóstico dos dados | ✅ `docs/01-diagnostico-dos-dados.md` |
-| Proposta de análise | ✅ `docs/02-proposta-de-analise.md` |
-| Fontes externas | ✅ `docs/03-fontes-externas.md` |
-| Arquitetura | ✅ `docs/04-arquitetura.md` |
-| **Comparação com o BRFSS original** | ✅ **`docs/05-comparacao-brfss-original.md`** |
-| **EDA bivariada em base dupla** | ✅ **`docs/06-analise-exploratoria.md`** |
-| **Análise explicativa (OR ajustado)** | ✅ **`docs/07-analise-explicativa.md`** |
-| **Modelagem preditiva (escada de modelos)** | ✅ **`docs/08-modelagem-preditiva.md`** |
-| **Comparação binacional Brasil × EUA** | ✅ **`docs/09-comparacao-binacional.md`** |
-| **Expansão 1 — variáveis recuperadas** | ✅ **`docs/10`** · +6,6% PR-AUC, ganho é das minorias |
-| **Expansão 2 — Positive-Unlabeled** | ✅ **`docs/12`** · prevalência verdadeira 14,29% |
-| **Expansão 3 — EBM e conforme** | ✅ **`docs/13`** · 12 vars = 94,4% do boosting |
-| **Expansão 4 — Medicaid (DiD causal)** | ✅ **`docs/14`** · efeito sobre acesso medido |
-| **Expansão 5 — pesos publicáveis** | ✅ **`docs/11`** · remove 95,6% do viés do CSV |
-| **Síntese das expansões** | ✅ **`docs/15-sintese-das-expansoes.md`** |
-| **Figuras** | ✅ `reports/figures/index.html` + 6 SVG |
-| **Observabilidade do pipeline** | ✅ `.\tasks.ps1 status` · `.\tasks.ps1 log` |
-| Trilha C (decisão, escore, fairness) / causal | ⏳ próximos passos |
+Análise de 253.680 respostas da pesquisa BRFSS 2015 (CDC) para identificar
+fatores associados a diabetes e predizer ocorrências — com validação contra
+**cinco bases externas** e um **produto** aplicável.
 
 ---
 
-## Comece por aqui
+## 🎯 Comece por aqui
 
-1. **`docs/01-diagnostico-dos-dados.md`** — o que o dataset realmente é, e os quatro
-   problemas que definem o trabalho (vazamento por duplicata, teto de Bayes, viés de
-   verificação, truncamento MNAR).
-2. **`docs/02-proposta-de-analise.md`** — as três trilhas: explicar, predizer, decidir.
-3. **`docs/03-fontes-externas.md`** — as fontes públicas de comparação e o que cada uma resolve.
-4. **`docs/04-arquitetura.md`** — camadas de dado e código; por que local-first e não GCP.
-5. **`docs/05-comparacao-brfss-original.md`** — o que o pré-processamento fez com os dados,
-   etapa por etapa, com a fonte original do CDC ao lado.
-6. **`docs/06-analise-exploratoria.md`** — associações com tamanho de efeito, arquivo e
-   população lado a lado.
-7. **`docs/07-analise-explicativa.md`** — OR ajustado, M1/M2/M3, mediação, e por que o alvo
-   não é ordinal.
-8. **`docs/08-modelagem-preditiva.md`** — a escada de modelos, e três previsões minhas que
-   os dados não confirmaram.
-9. **`docs/09-comparacao-binacional.md`** — Vigitel 2015 × BRFSS 2015, mesmo modelo nos dois.
-10. **`docs/15-sintese-das-expansoes.md`** — as cinco expansões: por que cada uma, em que
-    ordem, e os sete insights que valem mais que os números. Detalhe em `docs/10`–`docs/14`.
-11. **`docs/adr/`** — decisões técnicas com justificativa.
+**Se você tem 2 minutos:** abra `reports/produto/index.html` (duplo clique,
+funciona offline). É a calculadora de risco — o produto do trabalho.
 
----
-
-## Setup
+**Se você vai mexer no código:**
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
+
+.\tasks.ps1 status      # o que já rodou, o que está desatualizado, o que falta
 ```
 
-## Ver o que já rodou
-
-```powershell
-.\tasks.ps1 status   # cada etapa: ok / OBSOLETO / ausente, com hash e idade do artefato
-.\tasks.ps1 log      # histórico de execuções, com duração
-```
-
-`status` marca **OBSOLETO** quando alguma entrada é mais nova que a saída — o artefato
-existe mas não reflete os dados atuais — e aponta a próxima etapa acionável.
-
-## Reproduzir do zero
-
-O PDF fonte (109 MB) não está no git. Coloque-o em `data/raw/Diabetes-2026.csv.pdf` e:
-
-```powershell
-.\tasks.ps1 all
-```
-
-Reconstrói bronze → silver → gold → relatório. O manifesto em
-`data/raw/_manifest_ingestao.json` traz o SHA-256 esperado do CSV reconstruído —
-se bater, a extração está correta.
-
-Comandos individuais em `docs/04-arquitetura.md` §3.
+`status` é o mapa vivo do projeto: mostra cada etapa como **ok / OBSOLETO /
+ausente**, com hash e idade de cada artefato, e aponta a próxima etapa acionável.
 
 ---
 
-## Achados de entrada (já apurados)
+## Os 8 achados que definem o trabalho
 
-| | |
+| # | Achado | Onde |
+|---|---|---|
+| 1 | **Os dados vieram como PDF de 4.374 páginas.** Reconstruímos por coordenada de bounding box: 253.680 linhas, 0 em quarentena | [`docs/01`](docs/01-diagnostico-dos-dados.md) |
+| 2 | **O arquivo entregue é um derivado enviesado.** Reconstruímos as 22 colunas do BRFSS original e batemos **100,000000%** célula a célula — e daí medimos: prevalência superestimada em **+3,26 p.p.** | [`docs/05`](docs/05-comparacao-brfss-original.md) |
+| 3 | **96,3% do arquivo fez exame de colesterol, contra 77,9% da população.** É uma amostra de quem tem acesso ao sistema de saúde | [`docs/05` §6.3](docs/05-comparacao-brfss-original.md) |
+| 4 | **Pré-diabetes não é o mesmo continuum.** Nove variáveis divergem, duas invertem de direção → modelo multinomial, não ordinal | [`docs/07` §3](docs/07-analise-explicativa.md) |
+| 5 | **Brasil × EUA: 6 de 8 fatores convergem.** Hipertensão 3,136 vs 3,146 — coincidem na 3ª decimal. Mas o **IMC pesa 16% menos no Brasil** | [`docs/09`](docs/09-comparacao-binacional.md) |
+| 6 | **O ganho de variáveis novas é inteiramente das minorias**: brancos −0,45 pp de recall, negros +10,6, hispânicos +10,8 | [`docs/10`](docs/10-frente1-variaveis-expandidas.md) |
+| 7 | **Duas fontes independentes concordam sobre o subdiagnóstico**: BBE dá c = 0,7283, NHANES dá 0,7240. Prevalência real: **14,29%** contra 10,67% diagnosticada | [`docs/12`](docs/12-frente2-positive-unlabeled.md) |
+| 8 | **Cinco perguntas batem o FINDRISC** (padrão internacional desde 2003) em +37,7 milésimos de ROC-AUC | [`docs/16`](docs/16-trilhaC-escore-decisao-equidade.md) |
+
+---
+
+## 🧮 O produto: calculadora de risco
+
+`reports/produto/index.html` — **59 KB, autocontido, offline.**
+
+12 perguntas → risco estimado, percentil populacional, comparação com 3 bases,
+explicação de cada resposta, contrafactuais e o escore de papel de 5 perguntas.
+
+**A garantia:** o EBM é aditivo, então exportamos as tabelas de consulta e a
+predição roda em JavaScript com o **mesmo número** do Python.
+
+```
+casos verificados      500
+erro máximo Py ↔ JS    1,110 × 10⁻¹⁶
+casos com ausente      290 (todos válidos)
+```
+
+Verificado no build e na suíte de testes. Detalhe em [`docs/17`](docs/17-produto-calculadora.md).
+
+---
+
+## 📚 Mapa dos documentos — por pergunta
+
+| Se a sua pergunta é… | Leia |
 |---|---|
-| Linhas × colunas | 253.680 × 22 (→ 31 após derivadas) |
-| Nulos / valores fora do domínio | **0** |
-| Distribuição do alvo | 84,24% sem · **1,83% pré** · 13,93% diabetes |
-| Duplicatas exatas | **23.899 (9,4%)** → 13,65% do teste contaminado, mas inflação medida de só 0,1–1,2% (`docs/08` §2.1) |
-| Grupos com rótulo contraditório | **1.834** → teto de Bayes de 99,3%: não é a restrição (`docs/08` §2.3) |
-| Códigos 77/99 de renda | **0** → amostra truncada, viés MNAR invisível |
-| Registros com IMC > 60 | 805 (marcados, não removidos) |
-| Base em memória após downcast | 44 MB → **8,6 MB** |
+| O que é este dataset, de verdade? | [`docs/01`](docs/01-diagnostico-dos-dados.md) diagnóstico |
+| Qual foi o plano de análise? | [`docs/02`](docs/02-proposta-de-analise.md) proposta |
+| Com o que comparamos? | [`docs/03`](docs/03-fontes-externas.md) fontes externas |
+| Como o projeto está organizado? | [`docs/04`](docs/04-arquitetura.md) arquitetura |
+| O que o pré-processamento fez com os dados? | [`docs/05`](docs/05-comparacao-brfss-original.md) BRFSS original |
+| Quais fatores se associam a diabetes? | [`docs/06`](docs/06-analise-exploratoria.md) EDA · [`docs/07`](docs/07-analise-explicativa.md) OR ajustado |
+| Quão bem dá para predizer? | [`docs/08`](docs/08-modelagem-preditiva.md) escada de modelos |
+| Vale para o Brasil? | [`docs/09`](docs/09-comparacao-binacional.md) Vigitel × BRFSS |
+| O que mais dava para extrair? | [`docs/15`](docs/15-sintese-das-expansoes.md) síntese · detalhe em [`10`](docs/10-frente1-variaveis-expandidas.md)–[`14`](docs/14-frente4-medicaid-experimento-natural.md) |
+| Como isso vira decisão e orçamento? | [`docs/16`](docs/16-trilhaC-escore-decisao-equidade.md) escore, custo e equidade |
+| Como o produto funciona? | [`docs/17`](docs/17-produto-calculadora.md) |
+| O que cada variável significa? | [`docs/dicionario-dados.md`](docs/dicionario-dados.md) |
+| Por que decidimos X? | [`docs/adr/`](docs/adr/) — 5 decisões registradas |
 
-Detalhamento e implicações em `docs/01-diagnostico-dos-dados.md`.
+---
 
-## Confronto com a fonte original do CDC
+## ⚙️ Reproduzir
 
-O arquivo entregue é um derivado de 253.680 linhas de uma pesquisa com **441.456**
-respondentes. Reconstruímos as 22 colunas a partir do BRFSS 2015 original e o resultado
-bate **100,000000% célula a célula** — o que prova a extração, a derivação e a integridade
-do download de uma vez só. A partir daí, o viés fica mensurável:
+O PDF fonte (109 MB) e o XPT do BRFSS (1,17 GB) **não estão no git** — URLs,
+hashes e prova de integridade em [`data/external/FONTES.md`](data/external/FONTES.md).
 
-| | arquivo entregue | população real (ponderada) | viés |
+```powershell
+.\tasks.ps1 all          # tudo: do PDF ao produto
+```
+
+Ou etapa por etapa:
+
+| comando | o que faz | precisa do XPT? |
+|---|---|---|
+| `.\tasks.ps1 ingest` | PDF → CSV (por coordenada) | não |
+| `.\tasks.ps1 clean` | CSV → Parquet validado | não |
+| `.\tasks.ps1 folds` | partição à prova de vazamento | não |
+| `.\tasks.ps1 modelos` | escada de modelos preditivos | não |
+| `.\tasks.ps1 external` | reconstrução do BRFSS + viés | **sim** |
+| `.\tasks.ps1 eda` | EDA em base dupla | **sim** |
+| `.\tasks.ps1 explicativo` | M1/M2/M3, odds ratio | **sim** |
+| `.\tasks.ps1 expandido` | 69 variáveis + auditoria racial | **sim** |
+| `.\tasks.ps1 pesos` | pesos publicáveis por raking | **sim** |
+| `.\tasks.ps1 pu` | Positive-Unlabeled | **sim** |
+| `.\tasks.ps1 glassbox` | EBM + predição conforme | **sim** |
+| `.\tasks.ps1 trilhac` | escore, decisão, equidade | **sim** |
+| `.\tasks.ps1 produto` | calculadora HTML | **sim** |
+| `.\tasks.ps1 vigitel` | comparação binacional | não (baixa sozinho) |
+| `.\tasks.ps1 medicaid` | DiD do Medicaid | não (usa API do CDC) |
+| `.\tasks.ps1 figuras` | 6 SVG + página | não |
+| `.\tasks.ps1 test` | ruff + pytest | não |
+| `.\tasks.ps1 status` | **o que rodou, o que está velho** | não |
+| `.\tasks.ps1 log` | histórico de execuções | não |
+
+---
+
+## 👥 Para o grupo — onde cada um pode pegar
+
+O projeto está modular. Estas frentes são **independentes** e podem ser tocadas
+em paralelo sem conflito:
+
+| frente | arquivos | pré-requisito | estado |
 |---|---|---|---|
-| Prevalência de diabetes | **13,933%** | **10,500%** | **+3,43 p.p. (+32,7%)** |
-| % fez exame de colesterol | **96,27%** | **77,93%** | **+18,34 p.p.** |
-| % com plano de saúde | 95,11% | 87,83% | +7,28 p.p. |
-| Efeito de desenho (DEFF) | assumido 1 | **4,04** | IC **2,01× mais largo** |
+| **Notebooks da apresentação** | `notebooks/` | nada — importa de `src/` | ⏳ aberto |
+| **Deck HTML/PDF** | `reports/deck/` | os docs prontos | ⏳ aberto |
+| **Análise causal (DAG, E-value)** | `src/diabetes/causal/` | `docs/07` §5 | ⏳ não iniciado |
+| **Não supervisionada (MCA, fenótipos)** | `src/diabetes/eda/` | base silver | ⏳ não iniciado |
+| **Pré-diabetes como problema próprio** | `src/diabetes/models/` | `docs/07` §3.3 | ⏳ não iniciado |
+| **Validação temporal 2015→2023** | `src/diabetes/external/` | baixar BRFSS 2023 | ⏳ não iniciado |
+| **Recalibração do escore para o Brasil** | `src/diabetes/eval/` | Vigitel já baixado | ⏳ não iniciado |
 
-**73% do viés de prevalência vem do peso amostral descartado**, não do descarte de 42,5%
-das linhas. E o arquivo é, na prática, uma amostra de pessoas **com** acesso ao sistema de
-saúde — o que compromete estruturalmente qualquer análise de desigualdade feita só nele.
+**Como não pisar no pé do outro:**
 
-Validação final: replicando a metodologia do CDC (mediana entre as 53 jurisdições),
-obtivemos **10,04%** contra os **10,0%** publicados. Passo a passo em
-`docs/05-comparacao-brfss-original.md`.
-
-## O que as expansões acrescentaram
-
-| | |
-|---|---|
-| Prevalência **verdadeira** (corrigido o subdiagnóstico) | **14,29%** contra 10,67% diagnosticada |
-| Frequência de rotulagem `c` — BBE vs NHANES | **0,7283** vs **0,7240**, duas fontes independentes |
-| Ganho com 60 variáveis curadas | **+6,62%** PR-AUC — e **inteiramente das minorias** |
-| Modelo auditável (EBM, 12 variáveis) | **94,4%** do boosting com 60 |
-| Testar 25% da população encontra | **70%** dos casos (NNS 2,7) |
-| Peso publicável para o CSV do Kaggle | remove **95,6%** do viés |
-| Efeito causal do Medicaid sobre cobertura | **+3,11 p.p.** (tendências paralelas verificadas) |
-
-Mapa completo em `docs/15-sintese-das-expansoes.md`.
+1. `git pull` antes de começar, sempre;
+2. crie um branch por frente: `git checkout -b frente/notebooks`;
+3. rode `.\tasks.ps1 status` — se algo estiver **OBSOLETO**, avise o grupo antes
+   de regerar (pode invalidar o trabalho de outro);
+4. `.\tasks.ps1 test` antes de commitar. O CI roda o mesmo.
 
 ---
 
-## Estrutura
+## 🧭 Convenções — as regras que sustentam o projeto
+
+Nenhuma é estética; cada uma evita um erro concreto que já apareceu.
+
+| # | Regra | Por quê |
+|---|---|---|
+| 1 | `src/diabetes/schema.py` é a **única fonte de verdade** de nome, tipo e domínio de coluna | notebook que escreve `df["IMC"]` na mão está errado por construção |
+| 2 | **Nenhuma linha some em silêncio** — toda remoção vai para quarentena com o motivo | foi assim que descobrimos os 187.776 excluídos |
+| 3 | **Nunca `train_test_split` aleatório** — use `features/split.py` | 23.899 duplicatas exatas contaminam 13,65% do teste |
+| 4 | **Acurácia não é reportada** | responder sempre "não" acerta 84,2% |
+| 5 | **Cost-sensitive, nunca SMOTE** | medido: reponderar piora o ECE em 67× |
+| 6 | **Dado não é versionado; manifesto com hash é** | reprodutibilidade sem repositório de 1 GB |
+| 7 | **Notebook mostra resultado, não contém lógica** | lógica em notebook não é testável nem reutilizável |
+| 8 | **Toda prevalência sai em par**: não ponderada e ponderada | sozinha, a não ponderada superestima em 32,7% |
+| 9 | **Comparação sempre na mesma amostra** | comparar escores em amostras diferentes já nos enganou uma vez |
+
+---
+
+## 📁 Estrutura
 
 ```
-data/       bronze / interim / silver+gold / external   (conteúdo fora do git; manifestos versionados)
-docs/       diagnóstico, proposta, fontes, arquitetura, ADRs, enunciado
-src/        schema.py (contrato único) + ingest, clean, features, eda, models, eval, causal, external, viz
-notebooks/  vitrine — importam de src/, não contêm lógica
-reports/    figuras, tabelas, deck
-tests/      pytest — inclui teste de vazamento por duplicata
+data/          bronze / interim / silver+gold / external   (conteúdo fora do git)
+docs/          17 documentos + ADRs + dicionário + enunciado
+src/diabetes/  6.500+ linhas em 33 módulos
+  schema.py      contrato único de dados
+  ingest/        PDF → CSV por coordenada
+  clean/         7 regras rastreadas
+  features/      partição sem vazamento, conjunto expandido
+  eda/           associação com tamanho de efeito
+  models/        escada, explicativo, PU, EBM, conforme
+  eval/          escore, curva de decisão, equidade
+  external/      BRFSS, Vigitel, Medicaid, pesos
+  produto/       exportação do modelo e página
+  viz/           figuras SVG
+  pipeline/      observabilidade (status, log)
+reports/
+  produto/       🧮 a calculadora
+  figures/       6 SVG + página com tabelas
+  deck/          (a fazer)
+notebooks/       (a fazer)
+tests/           97 testes, incl. paridade Python↔JavaScript
 ```
 
-## Convenções
+---
 
-- **`src/diabetes/schema.py` é a única fonte de verdade** para nome, tipo, domínio e
-  semântica de coluna. Nenhum nome de coluna literal fora dele.
-- Dado não é versionado; **manifesto com hash é**.
-- Notebook mostra resultado, não contém lógica.
-- Acurácia não é reportada (ADR 0005).
+## ✅ Estado
+
+| | |
+|---|---|
+| Pipeline | **16/16 etapas coerentes** (`.\tasks.ps1 status`) |
+| Testes | **97**, incluindo teste de vazamento e paridade Py↔JS |
+| Lint | `ruff` limpo |
+| CI | GitHub Actions verde a cada push |
+| Documentos | 17 + 5 ADRs |
+| Bases externas | BRFSS 2015 · Vigitel 2015/2023 · NHANES (prior) · CDC Open Data · painel Medicaid |
 
 ---
 
 ## Fonte dos dados
 
-Pesquisa **BRFSS 2015** do CDC, 253.680 respostas, 21 atributos + alvo `Diabetes`
-(0 sem diabetes · 1 pré-diabetes · 2 diabetes). Dicionário original em
-`docs/enunciado/Mapa-dos-dados.txt`; enunciado em `docs/enunciado/`.
+Pesquisa **BRFSS 2015** do CDC — 253.680 respostas no arquivo entregue,
+**441.456** no original. Alvo `Diabetes`: 0 sem diabetes · 1 pré-diabetes ·
+2 diabetes. Enunciado e dicionário original em [`docs/enunciado/`](docs/enunciado/).
+
+**Aviso:** este é um trabalho acadêmico. Nada aqui é orientação clínica.

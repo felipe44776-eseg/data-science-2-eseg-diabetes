@@ -122,3 +122,45 @@ def test_pagina_e_autocontida():
     assert "https://" not in html.split("<footer>")[0], "recurso remoto no corpo"
     assert "const MODELO=" in html, "modelo nao embutido"
     assert "não é um diagnóstico" in html, "aviso clinico ausente"
+
+
+# --- notebooks ------------------------------------------------------------
+
+NOTEBOOKS_DIR = Path("notebooks")
+
+
+def test_notebooks_sao_gerados_de_src():
+    """Regra 7: notebook mostra resultado, nao contem logica."""
+    from diabetes.produto.notebooks import NOTEBOOKS
+
+    assert len(NOTEBOOKS) >= 6
+    for nome, celulas in NOTEBOOKS.items():
+        codigo = "\n".join("".join(c["source"]) for c in celulas
+                           if c["cell_type"] == "code")
+        # o notebook nao pode reimplementar analise: nada de treinar modelo,
+        # particionar ou definir classe. Ler artefato e importar de src/, sim.
+        for proibido in (".fit(", "train_test_split", "sklearn", "\nclass "):
+            assert proibido not in codigo, f"{nome} contem logica: {proibido!r}"
+        assert celulas[0]["cell_type"] == "markdown", f"{nome} nao abre com contexto"
+
+
+def test_linhas_do_notebook_terminam_com_quebra():
+    """Sem o \n cada linha, o codigo vira uma linha so ao carregar."""
+    from diabetes.produto.notebooks import _linhas
+
+    ls = _linhas("import os\nimport sys")
+    assert ls[0].endswith("\n")
+    assert "".join(ls) == "import os\nimport sys\n"
+
+
+@pytest.mark.skipif(not NOTEBOOKS_DIR.exists() or
+                    not list(NOTEBOOKS_DIR.glob("*.ipynb")),
+                    reason="notebooks nao gerados")
+def test_notebooks_versionados_tem_saida():
+    """Notebook sem saida obriga cada pessoa a rodar tudo antes de ler."""
+    for nb in sorted(NOTEBOOKS_DIR.glob("*.ipynb")):
+        dados = json.loads(nb.read_text(encoding="utf-8"))
+        saidas = [o for c in dados["cells"] for o in c.get("outputs", [])]
+        assert saidas, f"{nb.name} versionado sem saida"
+        erros = [o for o in saidas if o.get("output_type") == "error"]
+        assert not erros, f"{nb.name} tem celula com erro: {erros[0].get('ename')}"
