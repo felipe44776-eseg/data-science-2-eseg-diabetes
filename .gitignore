@@ -11,6 +11,8 @@ data/external/**/*
 !data/**/_relatorio_*.json
 !data/**/_cascata_*.json
 !data/**/_analise_*.json
+!data/**/_eda_*.json
+!data/**/_modelo_*.json
 !data/**/*.md
 
 # excecao: o PDF fonte do professor e grande demais (109 MB) para o git

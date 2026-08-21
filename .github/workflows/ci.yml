@@ -18,7 +18,7 @@ jobs:
       - name: instalar
         run: |
           python -m pip install --upgrade pip
-          pip install pandas pyarrow numpy scikit-learn pymupdf pytest ruff
+          pip install pandas pyarrow numpy scipy scikit-learn statsmodels pymupdf pytest ruff
 
       - name: lint
         run: ruff check src tests

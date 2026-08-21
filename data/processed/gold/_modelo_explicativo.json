@@ -1,0 +1,1480 @@
+{
+  "base_A_sem_peso": {
+    "M1_risco_puro": {
+      "n": 253680,
+      "n_efetivo": 253680,
+      "escalas": {
+        "imc": {
+          "media": 28.382,
+          "dp": 6.609
+        },
+        "saude_mental_dias": {
+          "media": 3.185,
+          "dp": 7.413
+        },
+        "idade_faixa": {
+          "media": 8.032,
+          "dp": 3.054
+        },
+        "escolaridade": {
+          "media": 5.05,
+          "dp": 0.986
+        },
+        "renda_faixa": {
+          "media": 6.054,
+          "dp": 2.071
+        }
+      },
+      "coeficientes": {
+        "hipertensao": {
+          "coef": 0.8968,
+          "or": 2.4518,
+          "or_ic_baixo": 2.3829,
+          "or_ic_alto": 2.5227,
+          "z": 61.6508
+        },
+        "colesterol_alto": {
+          "coef": 0.6401,
+          "or": 1.8967,
+          "or_ic_baixo": 1.8475,
+          "or_ic_alto": 1.9471,
+          "z": 47.7799
+        },
+        "imc": {
+          "coef": 0.454,
+          "or": 1.5747,
+          "or_ic_baixo": 1.5567,
+          "or_ic_alto": 1.5929,
+          "z": 77.4033
+        },
+        "fumante": {
+          "coef": 0.0427,
+          "or": 1.0436,
+          "or_ic_baixo": 1.0175,
+          "or_ic_alto": 1.0704,
+          "z": 3.3017
+        },
+        "avc": {
+          "coef": 0.2984,
+          "or": 1.3478,
+          "or_ic_baixo": 1.2842,
+          "or_ic_alto": 1.4144,
+          "z": 12.119
+        },
+        "doenca_cardiaca": {
+          "coef": 0.4456,
+          "or": 1.5615,
+          "or_ic_baixo": 1.5095,
+          "or_ic_alto": 1.6152,
+          "z": 25.8022
+        },
+        "atividade_fisica": {
+          "coef": -0.2032,
+          "or": 0.8161,
+          "or_ic_baixo": 0.7942,
+          "or_ic_alto": 0.8387,
+          "z": -14.6061
+        },
+        "frutas": {
+          "coef": -0.0596,
+          "or": 0.9421,
+          "or_ic_baixo": 0.9176,
+          "or_ic_alto": 0.9673,
+          "z": -4.4255
+        },
+        "vegetais": {
+          "coef": -0.0482,
+          "or": 0.953,
+          "or_ic_baixo": 0.9241,
+          "or_ic_alto": 0.9827,
+          "z": -3.0741
+        },
+        "alcool_excessivo": {
+          "coef": -0.824,
+          "or": 0.4387,
+          "or_ic_baixo": 0.4071,
+          "or_ic_alto": 0.4727,
+          "z": -21.6262
+        },
+        "saude_mental_dias": {
+          "coef": 0.0735,
+          "or": 1.0762,
+          "or_ic_baixo": 1.0641,
+          "or_ic_alto": 1.0885,
+          "z": 12.6647
+        },
+        "sexo": {
+          "coef": 0.253,
+          "or": 1.2879,
+          "or_ic_baixo": 1.255,
+          "or_ic_alto": 1.3216,
+          "z": 19.1843
+        },
+        "idade_faixa": {
+          "coef": 0.3922,
+          "or": 1.4803,
+          "or_ic_baixo": 1.4568,
+          "or_ic_alto": 1.5041,
+          "z": 48.1259
+        },
+        "escolaridade": {
+          "coef": -0.0776,
+          "or": 0.9253,
+          "or_ic_baixo": 0.9132,
+          "or_ic_alto": 0.9376,
+          "z": -11.5375
+        },
+        "renda_faixa": {
+          "coef": -0.2075,
+          "or": 0.8126,
+          "or_ic_baixo": 0.8016,
+          "or_ic_alto": 0.8238,
+          "z": -29.7615
+        }
+      }
+    },
+    "M2_clinico": {
+      "n": 253680,
+      "n_efetivo": 253680,
+      "escalas": {
+        "imc": {
+          "media": 28.382,
+          "dp": 6.609
+        },
+        "saude_geral": {
+          "media": 2.511,
+          "dp": 1.068
+        },
+        "saude_mental_dias": {
+          "media": 3.185,
+          "dp": 7.413
+        },
+        "saude_fisica_dias": {
+          "media": 4.242,
+          "dp": 8.718
+        },
+        "idade_faixa": {
+          "media": 8.032,
+          "dp": 3.054
+        },
+        "escolaridade": {
+          "media": 5.05,
+          "dp": 0.986
+        },
+        "renda_faixa": {
+          "media": 6.054,
+          "dp": 2.071
+        }
+      },
+      "coeficientes": {
+        "hipertensao": {
+          "coef": 0.7732,
+          "or": 2.1667,
+          "or_ic_baixo": 2.105,
+          "or_ic_alto": 2.2302,
+          "z": 52.4473
+        },
+        "colesterol_alto": {
+          "coef": 0.5889,
+          "or": 1.8019,
+          "or_ic_baixo": 1.7546,
+          "or_ic_alto": 1.8505,
+          "z": 43.3616
+        },
+        "imc": {
+          "coef": 0.4037,
+          "or": 1.4973,
+          "or_ic_baixo": 1.48,
+          "or_ic_alto": 1.5149,
+          "z": 67.9458
+        },
+        "fumante": {
+          "coef": -0.0141,
+          "or": 0.986,
+          "or_ic_baixo": 0.9608,
+          "or_ic_alto": 1.0118,
+          "z": -1.0726
+        },
+        "avc": {
+          "coef": 0.1368,
+          "or": 1.1466,
+          "or_ic_baixo": 1.0916,
+          "or_ic_alto": 1.2044,
+          "z": 5.4521
+        },
+        "doenca_cardiaca": {
+          "coef": 0.2253,
+          "or": 1.2527,
+          "or_ic_baixo": 1.2098,
+          "or_ic_alto": 1.2971,
+          "z": 12.6633
+        },
+        "atividade_fisica": {
+          "coef": -0.0459,
+          "or": 0.9552,
+          "or_ic_baixo": 0.9286,
+          "or_ic_alto": 0.9826,
+          "z": -3.1799
+        },
+        "frutas": {
+          "coef": -0.0466,
+          "or": 0.9545,
+          "or_ic_baixo": 0.9293,
+          "or_ic_alto": 0.9805,
+          "z": -3.4031
+        },
+        "vegetais": {
+          "coef": -0.0334,
+          "or": 0.9672,
+          "or_ic_baixo": 0.9375,
+          "or_ic_alto": 0.9978,
+          "z": -2.1001
+        },
+        "alcool_excessivo": {
+          "coef": -0.7783,
+          "or": 0.4592,
+          "or_ic_baixo": 0.4258,
+          "or_ic_alto": 0.4952,
+          "z": -20.2262
+        },
+        "saude_geral": {
+          "coef": 0.5738,
+          "or": 1.775,
+          "or_ic_baixo": 1.745,
+          "or_ic_alto": 1.8054,
+          "z": 66.1362
+        },
+        "saude_mental_dias": {
+          "coef": -0.0277,
+          "or": 0.9727,
+          "or_ic_baixo": 0.9608,
+          "or_ic_alto": 0.9848,
+          "z": -4.4
+        },
+        "saude_fisica_dias": {
+          "coef": -0.063,
+          "or": 0.939,
+          "or_ic_baixo": 0.9265,
+          "or_ic_alto": 0.9516,
+          "z": -9.2319
+        },
+        "dificuldade_caminhar": {
+          "coef": 0.1271,
+          "or": 1.1355,
+          "or_ic_baixo": 1.0984,
+          "or_ic_alto": 1.1738,
+          "z": 7.4973
+        },
+        "sexo": {
+          "coef": 0.2513,
+          "or": 1.2857,
+          "or_ic_baixo": 1.2523,
+          "or_ic_alto": 1.32,
+          "z": 18.7065
+        },
+        "idade_faixa": {
+          "coef": 0.3886,
+          "or": 1.4749,
+          "or_ic_baixo": 1.451,
+          "or_ic_alto": 1.4993,
+          "z": 46.4934
+        },
+        "escolaridade": {
+          "coef": -0.0298,
+          "or": 0.9706,
+          "or_ic_baixo": 0.9577,
+          "or_ic_alto": 0.9837,
+          "z": -4.3572
+        },
+        "renda_faixa": {
+          "coef": -0.1,
+          "or": 0.9048,
+          "or_ic_baixo": 0.892,
+          "or_ic_alto": 0.9178,
+          "z": -13.7134
+        }
+      }
+    },
+    "M3_completo": {
+      "n": 253680,
+      "n_efetivo": 253680,
+      "escalas": {
+        "imc": {
+          "media": 28.382,
+          "dp": 6.609
+        },
+        "saude_geral": {
+          "media": 2.511,
+          "dp": 1.068
+        },
+        "saude_mental_dias": {
+          "media": 3.185,
+          "dp": 7.413
+        },
+        "saude_fisica_dias": {
+          "media": 4.242,
+          "dp": 8.718
+        },
+        "idade_faixa": {
+          "media": 8.032,
+          "dp": 3.054
+        },
+        "escolaridade": {
+          "media": 5.05,
+          "dp": 0.986
+        },
+        "renda_faixa": {
+          "media": 6.054,
+          "dp": 2.071
+        }
+      },
+      "coeficientes": {
+        "hipertensao": {
+          "coef": 0.7576,
+          "or": 2.1331,
+          "or_ic_baixo": 2.0723,
+          "or_ic_alto": 2.1957,
+          "z": 51.3323
+        },
+        "colesterol_alto": {
+          "coef": 0.5785,
+          "or": 1.7834,
+          "or_ic_baixo": 1.7365,
+          "or_ic_alto": 1.8315,
+          "z": 42.5569
+        },
+        "exame_colesterol": {
+          "coef": 1.244,
+          "or": 3.4695,
+          "or_ic_baixo": 3.0331,
+          "or_ic_alto": 3.9686,
+          "z": 18.1387
+        },
+        "imc": {
+          "coef": 0.4023,
+          "or": 1.4952,
+          "or_ic_baixo": 1.4779,
+          "or_ic_alto": 1.5127,
+          "z": 67.5988
+        },
+        "fumante": {
+          "coef": -0.0104,
+          "or": 0.9897,
+          "or_ic_baixo": 0.9644,
+          "or_ic_alto": 1.0156,
+          "z": -0.787
+        },
+        "avc": {
+          "coef": 0.1342,
+          "or": 1.1436,
+          "or_ic_baixo": 1.0887,
+          "or_ic_alto": 1.2013,
+          "z": 5.3456
+        },
+        "doenca_cardiaca": {
+          "coef": 0.2204,
+          "or": 1.2466,
+          "or_ic_baixo": 1.2039,
+          "or_ic_alto": 1.2909,
+          "z": 12.3825
+        },
+        "atividade_fisica": {
+          "coef": -0.0518,
+          "or": 0.9495,
+          "or_ic_baixo": 0.923,
+          "or_ic_alto": 0.9768,
+          "z": -3.5863
+        },
+        "frutas": {
+          "coef": -0.0499,
+          "or": 0.9513,
+          "or_ic_baixo": 0.9261,
+          "or_ic_alto": 0.9772,
+          "z": -3.647
+        },
+        "vegetais": {
+          "coef": -0.0332,
+          "or": 0.9674,
+          "or_ic_baixo": 0.9377,
+          "or_ic_alto": 0.998,
+          "z": -2.0831
+        },
+        "alcool_excessivo": {
+          "coef": -0.7692,
+          "or": 0.4634,
+          "or_ic_baixo": 0.4297,
+          "or_ic_alto": 0.4997,
+          "z": -19.9628
+        },
+        "acesso_saude": {
+          "coef": 0.0827,
+          "or": 1.0862,
+          "or_ic_baixo": 1.0172,
+          "or_ic_alto": 1.1598,
+          "z": 2.47
+        },
+        "sem_consulta_por_custo": {
+          "coef": 0.018,
+          "or": 1.0181,
+          "or_ic_baixo": 0.9732,
+          "or_ic_alto": 1.0651,
+          "z": 0.7798
+        },
+        "saude_geral": {
+          "coef": 0.5726,
+          "or": 1.773,
+          "or_ic_baixo": 1.743,
+          "or_ic_alto": 1.8034,
+          "z": 65.8624
+        },
+        "saude_mental_dias": {
+          "coef": -0.0269,
+          "or": 0.9734,
+          "or_ic_baixo": 0.9614,
+          "or_ic_alto": 0.9856,
+          "z": -4.2531
+        },
+        "saude_fisica_dias": {
+          "coef": -0.0646,
+          "or": 0.9375,
+          "or_ic_baixo": 0.925,
+          "or_ic_alto": 0.9501,
+          "z": -9.454
+        },
+        "dificuldade_caminhar": {
+          "coef": 0.1232,
+          "or": 1.1311,
+          "or_ic_baixo": 1.0941,
+          "or_ic_alto": 1.1694,
+          "z": 7.2554
+        },
+        "sexo": {
+          "coef": 0.2581,
+          "or": 1.2945,
+          "or_ic_baixo": 1.2608,
+          "or_ic_alto": 1.3291,
+          "z": 19.1816
+        },
+        "idade_faixa": {
+          "coef": 0.3776,
+          "or": 1.4588,
+          "or_ic_baixo": 1.4346,
+          "or_ic_alto": 1.4835,
+          "z": 44.1998
+        },
+        "escolaridade": {
+          "coef": -0.0304,
+          "or": 0.9701,
+          "or_ic_baixo": 0.9571,
+          "or_ic_alto": 0.9832,
+          "z": -4.4221
+        },
+        "renda_faixa": {
+          "coef": -0.1066,
+          "or": 0.8989,
+          "or_ic_baixo": 0.8859,
+          "or_ic_alto": 0.912,
+          "z": -14.4225
+        }
+      }
+    }
+  },
+  "base_B_ponderada": {
+    "M1_risco_puro": {
+      "n": 260089,
+      "n_efetivo": 65715,
+      "escalas": {
+        "imc": {
+          "media": 28.381,
+          "dp": 6.619
+        },
+        "saude_mental_dias": {
+          "media": 3.213,
+          "dp": 7.45
+        },
+        "idade_faixa": {
+          "media": 8.051,
+          "dp": 3.066
+        },
+        "escolaridade": {
+          "media": 5.042,
+          "dp": 0.99
+        },
+        "renda_faixa": {
+          "media": 6.028,
+          "dp": 2.082
+        }
+      },
+      "coeficientes": {
+        "hipertensao": {
+          "coef": 0.8729,
+          "or": 2.3939,
+          "or_ic_baixo": 2.2579,
+          "or_ic_alto": 2.5382,
+          "z": 29.2425
+        },
+        "colesterol_alto": {
+          "coef": 0.6933,
+          "or": 2.0004,
+          "or_ic_baixo": 1.894,
+          "or_ic_alto": 2.1127,
+          "z": 24.8738
+        },
+        "imc": {
+          "coef": 0.4633,
+          "or": 1.5893,
+          "or_ic_baixo": 1.5509,
+          "or_ic_alto": 1.6287,
+          "z": 37.091
+        },
+        "fumante": {
+          "coef": 0.0788,
+          "or": 1.082,
+          "or_ic_baixo": 1.0263,
+          "or_ic_alto": 1.1407,
+          "z": 2.9208
+        },
+        "avc": {
+          "coef": 0.1948,
+          "or": 1.2151,
+          "or_ic_baixo": 1.0921,
+          "or_ic_alto": 1.3519,
+          "z": 3.5788
+        },
+        "doenca_cardiaca": {
+          "coef": 0.4424,
+          "or": 1.5565,
+          "or_ic_baixo": 1.4459,
+          "or_ic_alto": 1.6756,
+          "z": 11.7622
+        },
+        "atividade_fisica": {
+          "coef": -0.16,
+          "or": 0.8521,
+          "or_ic_baixo": 0.8052,
+          "or_ic_alto": 0.9017,
+          "z": -5.5419
+        },
+        "frutas": {
+          "coef": -0.0583,
+          "or": 0.9434,
+          "or_ic_baixo": 0.8934,
+          "or_ic_alto": 0.9962,
+          "z": -2.0984
+        },
+        "vegetais": {
+          "coef": -0.0748,
+          "or": 0.928,
+          "or_ic_baixo": 0.8713,
+          "or_ic_alto": 0.9883,
+          "z": -2.3272
+        },
+        "alcool_excessivo": {
+          "coef": -0.7107,
+          "or": 0.4913,
+          "or_ic_baixo": 0.4247,
+          "or_ic_alto": 0.5683,
+          "z": -9.5617
+        },
+        "saude_mental_dias": {
+          "coef": 0.0562,
+          "or": 1.0578,
+          "or_ic_baixo": 1.0338,
+          "or_ic_alto": 1.0823,
+          "z": 4.8009
+        },
+        "sexo": {
+          "coef": 0.2154,
+          "or": 1.2403,
+          "or_ic_baixo": 1.1757,
+          "or_ic_alto": 1.3086,
+          "z": 7.8847
+        },
+        "idade_faixa": {
+          "coef": 0.4976,
+          "or": 1.6447,
+          "or_ic_baixo": 1.5955,
+          "or_ic_alto": 1.6954,
+          "z": 32.09
+        },
+        "escolaridade": {
+          "coef": -0.087,
+          "or": 0.9167,
+          "or_ic_baixo": 0.8932,
+          "or_ic_alto": 0.9407,
+          "z": -6.5879
+        },
+        "renda_faixa": {
+          "coef": -0.2014,
+          "or": 0.8176,
+          "or_ic_baixo": 0.795,
+          "or_ic_alto": 0.8408,
+          "z": -14.093
+        }
+      }
+    },
+    "M2_clinico": {
+      "n": 256322,
+      "n_efetivo": 64757,
+      "escalas": {
+        "imc": {
+          "media": 28.372,
+          "dp": 6.612
+        },
+        "saude_geral": {
+          "media": 2.514,
+          "dp": 1.07
+        },
+        "saude_mental_dias": {
+          "media": 3.197,
+          "dp": 7.43
+        },
+        "saude_fisica_dias": {
+          "media": 4.261,
+          "dp": 8.741
+        },
+        "idade_faixa": {
+          "media": 8.029,
+          "dp": 3.063
+        },
+        "escolaridade": {
+          "media": 5.048,
+          "dp": 0.987
+        },
+        "renda_faixa": {
+          "media": 6.045,
+          "dp": 2.075
+        }
+      },
+      "coeficientes": {
+        "hipertensao": {
+          "coef": 0.7468,
+          "or": 2.1103,
+          "or_ic_baixo": 1.9874,
+          "or_ic_alto": 2.2409,
+          "z": 24.3803
+        },
+        "colesterol_alto": {
+          "coef": 0.6298,
+          "or": 1.8773,
+          "or_ic_baixo": 1.775,
+          "or_ic_alto": 1.9856,
+          "z": 22.0184
+        },
+        "imc": {
+          "coef": 0.4153,
+          "or": 1.5148,
+          "or_ic_baixo": 1.4769,
+          "or_ic_alto": 1.5536,
+          "z": 32.1448
+        },
+        "fumante": {
+          "coef": 0.0319,
+          "or": 1.0324,
+          "or_ic_baixo": 0.9776,
+          "or_ic_alto": 1.0903,
+          "z": 1.1464
+        },
+        "avc": {
+          "coef": 0.0573,
+          "or": 1.059,
+          "or_ic_baixo": 0.9485,
+          "or_ic_alto": 1.1824,
+          "z": 1.0193
+        },
+        "doenca_cardiaca": {
+          "coef": 0.2319,
+          "or": 1.261,
+          "or_ic_baixo": 1.1677,
+          "or_ic_alto": 1.3618,
+          "z": 5.9103
+        },
+        "atividade_fisica": {
+          "coef": -0.0119,
+          "or": 0.9882,
+          "or_ic_baixo": 0.9313,
+          "or_ic_alto": 1.0485,
+          "z": -0.3934
+        },
+        "frutas": {
+          "coef": -0.0522,
+          "or": 0.9491,
+          "or_ic_baixo": 0.8974,
+          "or_ic_alto": 1.0038,
+          "z": -1.8273
+        },
+        "vegetais": {
+          "coef": -0.0678,
+          "or": 0.9344,
+          "or_ic_baixo": 0.8758,
+          "or_ic_alto": 0.9969,
+          "z": -2.0538
+        },
+        "alcool_excessivo": {
+          "coef": -0.6677,
+          "or": 0.5129,
+          "or_ic_baixo": 0.4421,
+          "or_ic_alto": 0.5951,
+          "z": -8.8065
+        },
+        "saude_geral": {
+          "coef": 0.5774,
+          "or": 1.7814,
+          "or_ic_baixo": 1.7194,
+          "or_ic_alto": 1.8455,
+          "z": 31.9766
+        },
+        "saude_mental_dias": {
+          "coef": -0.0503,
+          "or": 0.9509,
+          "or_ic_baixo": 0.9271,
+          "or_ic_alto": 0.9753,
+          "z": -3.8946
+        },
+        "saude_fisica_dias": {
+          "coef": -0.0421,
+          "or": 0.9588,
+          "or_ic_baixo": 0.932,
+          "or_ic_alto": 0.9863,
+          "z": -2.9113
+        },
+        "dificuldade_caminhar": {
+          "coef": 0.0912,
+          "or": 1.0955,
+          "or_ic_baixo": 1.0197,
+          "or_ic_alto": 1.1771,
+          "z": 2.4918
+        },
+        "sexo": {
+          "coef": 0.2224,
+          "or": 1.2491,
+          "or_ic_baixo": 1.1821,
+          "or_ic_alto": 1.3199,
+          "z": 7.9063
+        },
+        "idade_faixa": {
+          "coef": 0.4943,
+          "or": 1.6393,
+          "or_ic_baixo": 1.5881,
+          "or_ic_alto": 1.6921,
+          "z": 30.5456
+        },
+        "escolaridade": {
+          "coef": -0.0252,
+          "or": 0.9751,
+          "or_ic_baixo": 0.9495,
+          "or_ic_alto": 1.0015,
+          "z": -1.8506
+        },
+        "renda_faixa": {
+          "coef": -0.0979,
+          "or": 0.9068,
+          "or_ic_baixo": 0.8804,
+          "or_ic_alto": 0.934,
+          "z": -6.4896
+        }
+      }
+    },
+    "M3_completo": {
+      "n": 253680,
+      "n_efetivo": 64117,
+      "escalas": {
+        "imc": {
+          "media": 28.382,
+          "dp": 6.609
+        },
+        "saude_geral": {
+          "media": 2.511,
+          "dp": 1.068
+        },
+        "saude_mental_dias": {
+          "media": 3.185,
+          "dp": 7.413
+        },
+        "saude_fisica_dias": {
+          "media": 4.242,
+          "dp": 8.718
+        },
+        "idade_faixa": {
+          "media": 8.032,
+          "dp": 3.054
+        },
+        "escolaridade": {
+          "media": 5.05,
+          "dp": 0.986
+        },
+        "renda_faixa": {
+          "media": 6.054,
+          "dp": 2.071
+        }
+      },
+      "coeficientes": {
+        "hipertensao": {
+          "coef": 0.7324,
+          "or": 2.0801,
+          "or_ic_baixo": 1.9583,
+          "or_ic_alto": 2.2094,
+          "z": 23.7949
+        },
+        "colesterol_alto": {
+          "coef": 0.6164,
+          "or": 1.8523,
+          "or_ic_baixo": 1.7508,
+          "or_ic_alto": 1.9597,
+          "z": 21.4396
+        },
+        "exame_colesterol": {
+          "coef": 1.2379,
+          "or": 3.4485,
+          "or_ic_baixo": 2.6282,
+          "or_ic_alto": 4.5249,
+          "z": 8.9315
+        },
+        "imc": {
+          "coef": 0.4125,
+          "or": 1.5106,
+          "or_ic_baixo": 1.4726,
+          "or_ic_alto": 1.5496,
+          "z": 31.7485
+        },
+        "fumante": {
+          "coef": 0.0402,
+          "or": 1.041,
+          "or_ic_baixo": 0.9854,
+          "or_ic_alto": 1.0997,
+          "z": 1.4348
+        },
+        "avc": {
+          "coef": 0.0613,
+          "or": 1.0632,
+          "or_ic_baixo": 0.9517,
+          "or_ic_alto": 1.1878,
+          "z": 1.0847
+        },
+        "doenca_cardiaca": {
+          "coef": 0.2246,
+          "or": 1.2519,
+          "or_ic_baixo": 1.1587,
+          "or_ic_alto": 1.3525,
+          "z": 5.6952
+        },
+        "atividade_fisica": {
+          "coef": -0.0223,
+          "or": 0.978,
+          "or_ic_baixo": 0.9214,
+          "or_ic_alto": 1.0381,
+          "z": -0.7316
+        },
+        "frutas": {
+          "coef": -0.057,
+          "or": 0.9446,
+          "or_ic_baixo": 0.8929,
+          "or_ic_alto": 0.9993,
+          "z": -1.9826
+        },
+        "vegetais": {
+          "coef": -0.0694,
+          "or": 0.933,
+          "or_ic_baixo": 0.8742,
+          "or_ic_alto": 0.9958,
+          "z": -2.0879
+        },
+        "alcool_excessivo": {
+          "coef": -0.6616,
+          "or": 0.516,
+          "or_ic_baixo": 0.4444,
+          "or_ic_alto": 0.5992,
+          "z": -8.6759
+        },
+        "acesso_saude": {
+          "coef": 0.1566,
+          "or": 1.1695,
+          "or_ic_baixo": 1.04,
+          "or_ic_alto": 1.3152,
+          "z": 2.6158
+        },
+        "sem_consulta_por_custo": {
+          "coef": 0.0974,
+          "or": 1.1023,
+          "or_ic_baixo": 1.0116,
+          "or_ic_alto": 1.201,
+          "z": 2.2234
+        },
+        "saude_geral": {
+          "coef": 0.5806,
+          "or": 1.7871,
+          "or_ic_baixo": 1.7245,
+          "or_ic_alto": 1.8519,
+          "z": 31.9435
+        },
+        "saude_mental_dias": {
+          "coef": -0.0505,
+          "or": 0.9507,
+          "or_ic_baixo": 0.9267,
+          "or_ic_alto": 0.9754,
+          "z": -3.8665
+        },
+        "saude_fisica_dias": {
+          "coef": -0.0465,
+          "or": 0.9545,
+          "or_ic_baixo": 0.9277,
+          "or_ic_alto": 0.9821,
+          "z": -3.2008
+        },
+        "dificuldade_caminhar": {
+          "coef": 0.073,
+          "or": 1.0757,
+          "or_ic_baixo": 1.0007,
+          "or_ic_alto": 1.1563,
+          "z": 1.9788
+        },
+        "sexo": {
+          "coef": 0.2293,
+          "or": 1.2577,
+          "or_ic_baixo": 1.1898,
+          "or_ic_alto": 1.3294,
+          "z": 8.1008
+        },
+        "idade_faixa": {
+          "coef": 0.486,
+          "or": 1.6258,
+          "or_ic_baixo": 1.5738,
+          "or_ic_alto": 1.6796,
+          "z": 29.2796
+        },
+        "escolaridade": {
+          "coef": -0.027,
+          "or": 0.9733,
+          "or_ic_baixo": 0.9474,
+          "or_ic_alto": 0.9999,
+          "z": -1.9666
+        },
+        "renda_faixa": {
+          "coef": -0.101,
+          "or": 0.9039,
+          "or_ic_baixo": 0.8772,
+          "or_ic_alto": 0.9315,
+          "z": -6.5929
+        }
+      }
+    }
+  },
+  "odds_proporcionais": {
+    "alcool_excessivo": {
+      "or_corte1_alteracao": 0.561,
+      "or_corte2_diabetes": 0.513,
+      "razao": 0.914,
+      "divergencia_%": -8.6,
+      "ic_sobrepoe": true
+    },
+    "hipertensao": {
+      "or_corte1_alteracao": 2.011,
+      "or_corte2_diabetes": 2.11,
+      "razao": 1.049,
+      "divergencia_%": 4.9,
+      "ic_sobrepoe": true
+    },
+    "sexo": {
+      "or_corte1_alteracao": 1.205,
+      "or_corte2_diabetes": 1.249,
+      "razao": 1.036,
+      "divergencia_%": 3.6,
+      "ic_sobrepoe": true
+    },
+    "escolaridade": {
+      "or_corte1_alteracao": 0.948,
+      "or_corte2_diabetes": 0.975,
+      "razao": 1.029,
+      "divergencia_%": 2.9,
+      "ic_sobrepoe": true
+    },
+    "saude_geral": {
+      "or_corte1_alteracao": 1.732,
+      "or_corte2_diabetes": 1.781,
+      "razao": 1.029,
+      "divergencia_%": 2.9,
+      "ic_sobrepoe": true
+    },
+    "fumante": {
+      "or_corte1_alteracao": 1.004,
+      "or_corte2_diabetes": 1.032,
+      "razao": 1.029,
+      "divergencia_%": 2.9,
+      "ic_sobrepoe": true
+    },
+    "doenca_cardiaca": {
+      "or_corte1_alteracao": 1.231,
+      "or_corte2_diabetes": 1.261,
+      "razao": 1.024,
+      "divergencia_%": 2.4,
+      "ic_sobrepoe": true
+    },
+    "saude_mental_dias": {
+      "or_corte1_alteracao": 0.972,
+      "or_corte2_diabetes": 0.951,
+      "razao": 0.979,
+      "divergencia_%": -2.1,
+      "ic_sobrepoe": true
+    },
+    "vegetais": {
+      "or_corte1_alteracao": 0.954,
+      "or_corte2_diabetes": 0.934,
+      "razao": 0.98,
+      "divergencia_%": -2.0,
+      "ic_sobrepoe": true
+    },
+    "frutas": {
+      "or_corte1_alteracao": 0.968,
+      "or_corte2_diabetes": 0.949,
+      "razao": 0.98,
+      "divergencia_%": -2.0,
+      "ic_sobrepoe": true
+    },
+    "colesterol_alto": {
+      "or_corte1_alteracao": 1.906,
+      "or_corte2_diabetes": 1.877,
+      "razao": 0.985,
+      "divergencia_%": -1.5,
+      "ic_sobrepoe": true
+    },
+    "idade_faixa": {
+      "or_corte1_alteracao": 1.624,
+      "or_corte2_diabetes": 1.639,
+      "razao": 1.01,
+      "divergencia_%": 1.0,
+      "ic_sobrepoe": true
+    },
+    "avc": {
+      "or_corte1_alteracao": 1.048,
+      "or_corte2_diabetes": 1.059,
+      "razao": 1.01,
+      "divergencia_%": 1.0,
+      "ic_sobrepoe": true
+    },
+    "renda_faixa": {
+      "or_corte1_alteracao": 0.909,
+      "or_corte2_diabetes": 0.907,
+      "razao": 0.997,
+      "divergencia_%": -0.3,
+      "ic_sobrepoe": true
+    },
+    "saude_fisica_dias": {
+      "or_corte1_alteracao": 0.96,
+      "or_corte2_diabetes": 0.959,
+      "razao": 0.998,
+      "divergencia_%": -0.2,
+      "ic_sobrepoe": true
+    },
+    "atividade_fisica": {
+      "or_corte1_alteracao": 0.99,
+      "or_corte2_diabetes": 0.988,
+      "razao": 0.998,
+      "divergencia_%": -0.2,
+      "ic_sobrepoe": true
+    },
+    "dificuldade_caminhar": {
+      "or_corte1_alteracao": 1.096,
+      "or_corte2_diabetes": 1.096,
+      "razao": 0.999,
+      "divergencia_%": -0.1,
+      "ic_sobrepoe": true
+    },
+    "imc": {
+      "or_corte1_alteracao": 1.514,
+      "or_corte2_diabetes": 1.515,
+      "razao": 1.0,
+      "divergencia_%": 0.0,
+      "ic_sobrepoe": true
+    }
+  },
+  "pre_vs_diabetes": {
+    "exame_colesterol": {
+      "or_pre_vs_sem": 2.094,
+      "ic_pre": "[1.31; 3.34]",
+      "or_diab_vs_sem": 3.525,
+      "ic_diab": "[2.68; 4.63]",
+      "razao_diab_pre": 1.68,
+      "ic_sobrepoe": true
+    },
+    "hipertensao": {
+      "or_pre_vs_sem": 1.47,
+      "ic_pre": "[1.29; 1.68]",
+      "or_diab_vs_sem": 2.106,
+      "ic_diab": "[1.98; 2.24]",
+      "razao_diab_pre": 1.43,
+      "ic_sobrepoe": false
+    },
+    "doenca_cardiaca": {
+      "or_pre_vs_sem": 0.923,
+      "ic_pre": "[0.76; 1.12]",
+      "or_diab_vs_sem": 1.248,
+      "ic_diab": "[1.15; 1.35]",
+      "razao_diab_pre": 1.35,
+      "ic_sobrepoe": false
+    },
+    "saude_geral": {
+      "or_pre_vs_sem": 1.339,
+      "ic_pre": "[1.24; 1.44]",
+      "or_diab_vs_sem": 1.802,
+      "ic_diab": "[1.74; 1.87]",
+      "razao_diab_pre": 1.35,
+      "ic_sobrepoe": false
+    },
+    "sexo": {
+      "or_pre_vs_sem": 1.003,
+      "ic_pre": "[0.89; 1.14]",
+      "or_diab_vs_sem": 1.256,
+      "ic_diab": "[1.19; 1.33]",
+      "razao_diab_pre": 1.25,
+      "ic_sobrepoe": false
+    },
+    "imc": {
+      "or_pre_vs_sem": 1.304,
+      "ic_pre": "[1.24; 1.37]",
+      "or_diab_vs_sem": 1.526,
+      "ic_diab": "[1.49; 1.57]",
+      "razao_diab_pre": 1.17,
+      "ic_sobrepoe": false
+    },
+    "fumante": {
+      "or_pre_vs_sem": 0.893,
+      "ic_pre": "[0.79; 1.01]",
+      "or_diab_vs_sem": 1.034,
+      "ic_diab": "[0.98; 1.09]",
+      "razao_diab_pre": 1.16,
+      "ic_sobrepoe": true
+    },
+    "avc": {
+      "or_pre_vs_sem": 0.913,
+      "ic_pre": "[0.69; 1.21]",
+      "or_diab_vs_sem": 1.058,
+      "ic_diab": "[0.95; 1.18]",
+      "razao_diab_pre": 1.16,
+      "ic_sobrepoe": true
+    },
+    "escolaridade": {
+      "or_pre_vs_sem": 0.845,
+      "ic_pre": "[0.80; 0.90]",
+      "or_diab_vs_sem": 0.965,
+      "ic_diab": "[0.94; 0.99]",
+      "razao_diab_pre": 1.14,
+      "ic_sobrepoe": false
+    },
+    "idade_faixa": {
+      "or_pre_vs_sem": 1.439,
+      "ic_pre": "[1.34; 1.54]",
+      "or_diab_vs_sem": 1.642,
+      "ic_diab": "[1.59; 1.70]",
+      "razao_diab_pre": 1.14,
+      "ic_sobrepoe": false
+    },
+    "acesso_saude": {
+      "or_pre_vs_sem": 1.065,
+      "ic_pre": "[0.84; 1.35]",
+      "or_diab_vs_sem": 1.183,
+      "ic_diab": "[1.05; 1.33]",
+      "razao_diab_pre": 1.11,
+      "ic_sobrepoe": true
+    },
+    "dificuldade_caminhar": {
+      "or_pre_vs_sem": 1.006,
+      "ic_pre": "[0.85; 1.19]",
+      "or_diab_vs_sem": 1.082,
+      "ic_diab": "[1.01; 1.16]",
+      "razao_diab_pre": 1.08,
+      "ic_sobrepoe": true
+    },
+    "colesterol_alto": {
+      "or_pre_vs_sem": 1.84,
+      "ic_pre": "[1.62; 2.09]",
+      "or_diab_vs_sem": 1.889,
+      "ic_diab": "[1.79; 2.00]",
+      "razao_diab_pre": 1.03,
+      "ic_sobrepoe": true
+    },
+    "atividade_fisica": {
+      "or_pre_vs_sem": 0.977,
+      "ic_pre": "[0.85; 1.12]",
+      "or_diab_vs_sem": 0.98,
+      "ic_diab": "[0.92; 1.04]",
+      "razao_diab_pre": 1.0,
+      "ic_sobrepoe": true
+    },
+    "saude_fisica_dias": {
+      "or_pre_vs_sem": 0.96,
+      "ic_pre": "[0.90; 1.02]",
+      "or_diab_vs_sem": 0.954,
+      "ic_diab": "[0.93; 0.98]",
+      "razao_diab_pre": 0.99,
+      "ic_sobrepoe": true
+    },
+    "renda_faixa": {
+      "or_pre_vs_sem": 0.952,
+      "ic_pre": "[0.89; 1.02]",
+      "or_diab_vs_sem": 0.904,
+      "ic_diab": "[0.88; 0.93]",
+      "razao_diab_pre": 0.95,
+      "ic_sobrepoe": true
+    },
+    "saude_mental_dias": {
+      "or_pre_vs_sem": 1.072,
+      "ic_pre": "[1.02; 1.13]",
+      "or_diab_vs_sem": 0.954,
+      "ic_diab": "[0.93; 0.98]",
+      "razao_diab_pre": 0.89,
+      "ic_sobrepoe": false
+    },
+    "frutas": {
+      "or_pre_vs_sem": 1.079,
+      "ic_pre": "[0.95; 1.23]",
+      "or_diab_vs_sem": 0.945,
+      "ic_diab": "[0.89; 1.00]",
+      "razao_diab_pre": 0.88,
+      "ic_sobrepoe": true
+    },
+    "vegetais": {
+      "or_pre_vs_sem": 1.078,
+      "ic_pre": "[0.92; 1.26]",
+      "or_diab_vs_sem": 0.933,
+      "ic_diab": "[0.87; 1.00]",
+      "razao_diab_pre": 0.87,
+      "ic_sobrepoe": true
+    },
+    "sem_consulta_por_custo": {
+      "or_pre_vs_sem": 1.458,
+      "ic_pre": "[1.22; 1.74]",
+      "or_diab_vs_sem": 1.122,
+      "ic_diab": "[1.03; 1.22]",
+      "razao_diab_pre": 0.77,
+      "ic_sobrepoe": true
+    },
+    "alcool_excessivo": {
+      "or_pre_vs_sem": 0.872,
+      "ic_pre": "[0.66; 1.15]",
+      "or_diab_vs_sem": 0.519,
+      "ic_diab": "[0.45; 0.60]",
+      "razao_diab_pre": 0.6,
+      "ic_sobrepoe": false
+    }
+  },
+  "comparacao_M1_entre_bases": {
+    "hipertensao": {
+      "A_OR": 2.452,
+      "B_OR": 2.394,
+      "B_ic": "[2.26; 2.54]",
+      "atenuacao_%": 2.4
+    },
+    "colesterol_alto": {
+      "A_OR": 1.897,
+      "B_OR": 2.0,
+      "B_ic": "[1.89; 2.11]",
+      "atenuacao_%": -5.2
+    },
+    "idade_faixa": {
+      "A_OR": 1.48,
+      "B_OR": 1.645,
+      "B_ic": "[1.60; 1.70]",
+      "atenuacao_%": -10.0
+    },
+    "imc": {
+      "A_OR": 1.575,
+      "B_OR": 1.589,
+      "B_ic": "[1.55; 1.63]",
+      "atenuacao_%": -0.9
+    },
+    "doenca_cardiaca": {
+      "A_OR": 1.562,
+      "B_OR": 1.556,
+      "B_ic": "[1.45; 1.68]",
+      "atenuacao_%": 0.3
+    },
+    "sexo": {
+      "A_OR": 1.288,
+      "B_OR": 1.24,
+      "B_ic": "[1.18; 1.31]",
+      "atenuacao_%": 3.8
+    },
+    "avc": {
+      "A_OR": 1.348,
+      "B_OR": 1.215,
+      "B_ic": "[1.09; 1.35]",
+      "atenuacao_%": 10.9
+    },
+    "fumante": {
+      "A_OR": 1.044,
+      "B_OR": 1.082,
+      "B_ic": "[1.03; 1.14]",
+      "atenuacao_%": -3.5
+    },
+    "saude_mental_dias": {
+      "A_OR": 1.076,
+      "B_OR": 1.058,
+      "B_ic": "[1.03; 1.08]",
+      "atenuacao_%": 1.7
+    },
+    "frutas": {
+      "A_OR": 0.942,
+      "B_OR": 0.943,
+      "B_ic": "[0.89; 1.00]",
+      "atenuacao_%": -0.1
+    },
+    "vegetais": {
+      "A_OR": 0.953,
+      "B_OR": 0.928,
+      "B_ic": "[0.87; 0.99]",
+      "atenuacao_%": 2.7
+    },
+    "escolaridade": {
+      "A_OR": 0.925,
+      "B_OR": 0.917,
+      "B_ic": "[0.89; 0.94]",
+      "atenuacao_%": 0.9
+    },
+    "atividade_fisica": {
+      "A_OR": 0.816,
+      "B_OR": 0.852,
+      "B_ic": "[0.81; 0.90]",
+      "atenuacao_%": -4.2
+    },
+    "renda_faixa": {
+      "A_OR": 0.813,
+      "B_OR": 0.818,
+      "B_ic": "[0.80; 0.84]",
+      "atenuacao_%": -0.6
+    },
+    "alcool_excessivo": {
+      "A_OR": 0.439,
+      "B_OR": 0.491,
+      "B_ic": "[0.42; 0.57]",
+      "atenuacao_%": -10.7
+    }
+  },
+  "estabilidade_M1_M2_M3": {
+    "acesso_saude": {
+      "M1_risco_puro": NaN,
+      "M2_clinico": NaN,
+      "M3_completo": 1.17,
+      "desloc_M1_M3_%": NaN
+    },
+    "alcool_excessivo": {
+      "M1_risco_puro": 0.491,
+      "M2_clinico": 0.513,
+      "M3_completo": 0.516,
+      "desloc_M1_M3_%": 5.1
+    },
+    "atividade_fisica": {
+      "M1_risco_puro": 0.852,
+      "M2_clinico": 0.988,
+      "M3_completo": 0.978,
+      "desloc_M1_M3_%": 14.8
+    },
+    "avc": {
+      "M1_risco_puro": 1.215,
+      "M2_clinico": 1.059,
+      "M3_completo": 1.063,
+      "desloc_M1_M3_%": -12.5
+    },
+    "colesterol_alto": {
+      "M1_risco_puro": 2.0,
+      "M2_clinico": 1.877,
+      "M3_completo": 1.852,
+      "desloc_M1_M3_%": -7.4
+    },
+    "dificuldade_caminhar": {
+      "M1_risco_puro": NaN,
+      "M2_clinico": 1.096,
+      "M3_completo": 1.076,
+      "desloc_M1_M3_%": NaN
+    },
+    "doenca_cardiaca": {
+      "M1_risco_puro": 1.556,
+      "M2_clinico": 1.261,
+      "M3_completo": 1.252,
+      "desloc_M1_M3_%": -19.5
+    },
+    "escolaridade": {
+      "M1_risco_puro": 0.917,
+      "M2_clinico": 0.975,
+      "M3_completo": 0.973,
+      "desloc_M1_M3_%": 6.1
+    },
+    "exame_colesterol": {
+      "M1_risco_puro": NaN,
+      "M2_clinico": NaN,
+      "M3_completo": 3.448,
+      "desloc_M1_M3_%": NaN
+    },
+    "frutas": {
+      "M1_risco_puro": 0.943,
+      "M2_clinico": 0.949,
+      "M3_completo": 0.945,
+      "desloc_M1_M3_%": 0.2
+    },
+    "fumante": {
+      "M1_risco_puro": 1.082,
+      "M2_clinico": 1.032,
+      "M3_completo": 1.041,
+      "desloc_M1_M3_%": -3.8
+    },
+    "hipertensao": {
+      "M1_risco_puro": 2.394,
+      "M2_clinico": 2.11,
+      "M3_completo": 2.08,
+      "desloc_M1_M3_%": -13.1
+    },
+    "idade_faixa": {
+      "M1_risco_puro": 1.645,
+      "M2_clinico": 1.639,
+      "M3_completo": 1.626,
+      "desloc_M1_M3_%": -1.2
+    },
+    "imc": {
+      "M1_risco_puro": 1.589,
+      "M2_clinico": 1.515,
+      "M3_completo": 1.511,
+      "desloc_M1_M3_%": -4.9
+    },
+    "renda_faixa": {
+      "M1_risco_puro": 0.818,
+      "M2_clinico": 0.907,
+      "M3_completo": 0.904,
+      "desloc_M1_M3_%": 10.5
+    },
+    "saude_fisica_dias": {
+      "M1_risco_puro": NaN,
+      "M2_clinico": 0.959,
+      "M3_completo": 0.954,
+      "desloc_M1_M3_%": NaN
+    },
+    "saude_geral": {
+      "M1_risco_puro": NaN,
+      "M2_clinico": 1.781,
+      "M3_completo": 1.787,
+      "desloc_M1_M3_%": NaN
+    },
+    "saude_mental_dias": {
+      "M1_risco_puro": 1.058,
+      "M2_clinico": 0.951,
+      "M3_completo": 0.951,
+      "desloc_M1_M3_%": -10.1
+    },
+    "sem_consulta_por_custo": {
+      "M1_risco_puro": NaN,
+      "M2_clinico": NaN,
+      "M3_completo": 1.102,
+      "desloc_M1_M3_%": NaN
+    },
+    "sexo": {
+      "M1_risco_puro": 1.24,
+      "M2_clinico": 1.249,
+      "M3_completo": 1.258,
+      "desloc_M1_M3_%": 1.5
+    },
+    "vegetais": {
+      "M1_risco_puro": 0.928,
+      "M2_clinico": 0.934,
+      "M3_completo": 0.933,
+      "desloc_M1_M3_%": 0.5
+    }
+  }
+}

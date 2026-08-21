@@ -20,6 +20,8 @@ existem para sustentá-la.
 
 ### A1. Análise exploratória com rigor estatístico
 
+> ✅ **EXECUTADA em base dupla — `docs/06-analise-exploratoria.md`.**
+
 Não "gráfico bonito". Cada afirmação com teste e tamanho de efeito.
 
 | Cruzamento | Técnica | Tamanho de efeito |
@@ -40,13 +42,28 @@ deste dataset ou (a) binariza juntando 1 e 2, ou (b) trata como multiclasse nomi
 Ambas jogam fora informação.
 
 - Modelo de **odds proporcionais** (`statsmodels` / `mord`).
-- **Teste de Brant** da hipótese de odds proporcionais. Se falhar — e provavelmente falha,
-  porque pré-diabetes tem mecanismo de detecção próprio — usamos **logística multinomial**
-  e documentamos *por que*. A rejeição da hipótese é um achado, não um problema.
+- **Teste da hipótese de odds proporcionais.** Se falhar, usamos **logística multinomial**
+  e documentamos *por quê*. A rejeição é um achado, não um problema.
+
 - Saída: **odds ratio ajustado com IC 95%** para as 21 variáveis. É isto que responde
   "quais informações são relevantes" de forma defensável.
 
+> ⚠️ **EXECUTADO — hipótese REJEITADA. Ver `docs/07-analise-explicativa.md` §3.**
+> Oito variáveis têm efeito materialmente diferente em pré-diabetes e em diabetes, e duas
+> **invertem de direção**. **A especificação adotada é a multinomial.**
+>
+> Lição metodológica que vale registrar: o teste por *logits cumulativos* (`{0}` vs `{1,2}`
+> contra `{0,1}` vs `{2}`) **não rejeitou** — divergência máxima de 8,6%. É falso negativo:
+> com a classe 1 valendo 1,6% da amostra, os dois contrastes são quase idênticos por
+> construção e o teste não tem poder. Só o contraste direto (cada classe contra a
+> referência) resolve. **Teste de Brant por cortes cumulativos é inadequado quando uma
+> classe é rara.**
+
 ### A3. Três especificações, reportadas lado a lado
+
+> ✅ **EXECUTADA — `docs/07-analise-explicativa.md` §2.** O deslocamento revelou mediação:
+> o efeito protetor da atividade física (OR 0,85) **desaparece** (OR 0,99) ao entrar
+> `saude_geral`. M2/M3 não podem ser lidos como "atividade física não importa".
 
 | Modelo | Variáveis | Lê-se como |
 |---|---|---|

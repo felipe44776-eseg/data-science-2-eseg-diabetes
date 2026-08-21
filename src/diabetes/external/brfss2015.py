@@ -155,6 +155,36 @@ def reconstruir(bruto: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, list[d
     return out, excluidos, cascata
 
 
+def reconstruir_sem_descarte(bruto: pd.DataFrame) -> pd.DataFrame:
+    """Mesma derivacao, mas **sem eliminar respondente**: codigo de nao-resposta vira NaN.
+
+    Preserva os 441.456 respondentes e o peso `_LLCPWT`. E a base correta para
+    estimativa populacional: cada analise usa o maximo de dados disponivel para
+    aquelas variaveis (exclusao par a par), em vez de herdar o `dropna()` global
+    que gerou o arquivo entregue.
+
+    Contrapartida honesta: com exclusao par a par o n varia entre analises e a
+    nao-resposta continua nao sendo aleatoria (MNAR). Isto nao "conserta" o vies —
+    apenas deixa de amplifica-lo, e torna o n de cada estimativa explicito.
+    """
+    out = pd.DataFrame(index=bruto.index)
+    for r in REGRAS:
+        s = bruto[r.origem].copy()
+        if r.descartar:
+            s = s.mask(s.isin(r.descartar))
+        if r.dividir_por:
+            s = s / r.dividir_por
+        if r.arredondar:
+            s = s.round()
+        if r.recodificar:
+            s = s.replace(r.recodificar)
+        out[r.destino] = s.astype("Float32")  # nullable: NaN e informacao, nao erro
+    for c in DESENHO:
+        if c in bruto.columns:
+            out[c] = bruto[c].values
+    return out
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--xpt", type=Path, required=True)

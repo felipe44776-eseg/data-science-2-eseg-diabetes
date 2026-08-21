@@ -8,7 +8,7 @@
 #>
 param(
     [Parameter(Position = 0)]
-    [ValidateSet('ingest', 'clean', 'external', 'features', 'train', 'report', 'test', 'all', 'help')]
+    [ValidateSet('ingest', 'clean', 'external', 'eda', 'explicativo', 'features', 'train', 'report', 'test', 'all', 'help')]
     [string]$Task = 'help'
 )
 
@@ -42,6 +42,20 @@ function Invoke-External {
     python -m diabetes.external.vies_amostral --xpt $xpt
 }
 
+$XPT = 'data/external/brfss2015/LLCP2015.XPT'
+
+function Invoke-Eda {
+    if (-not (Test-Path $XPT)) { throw "XPT do BRFSS ausente. URL e hash em data/external/FONTES.md" }
+    Step 'EDA comparativa: arquivo entregue vs BRFSS ponderado'
+    python -m diabetes.eda.comparativo --xpt $XPT
+}
+
+function Invoke-Explicativo {
+    if (-not (Test-Path $XPT)) { throw "XPT do BRFSS ausente. URL e hash em data/external/FONTES.md" }
+    Step 'modelo explicativo: M1/M2/M3 + odds proporcionais'
+    python -m diabetes.models.explicativo --xpt $XPT
+}
+
 function Invoke-Features { Step 'features: silver -> gold'; python -m diabetes.features.build }
 function Invoke-Train    { Step 'treino: escada de modelos -> MLflow'; python -m diabetes.models.train }
 function Invoke-Report   { Step 'relatorio: figuras e tabelas'; python -m diabetes.viz.report }
@@ -57,6 +71,8 @@ switch ($Task) {
     'ingest'   { Invoke-Ingest }
     'clean'    { Invoke-Clean }
     'external' { Invoke-External }
+    'eda'      { Invoke-Eda }
+    'explicativo' { Invoke-Explicativo }
     'features' { Invoke-Features }
     'train'    { Invoke-Train }
     'report'   { Invoke-Report }

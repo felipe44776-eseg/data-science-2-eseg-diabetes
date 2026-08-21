@@ -19,7 +19,9 @@ associados a diabetes** e **predizer ocorrências**, com validação contra font
 | Fontes externas | ✅ `docs/03-fontes-externas.md` |
 | Arquitetura | ✅ `docs/04-arquitetura.md` |
 | **Comparação com o BRFSS original** | ✅ **`docs/05-comparacao-brfss-original.md`** |
-| Features / EDA / modelos / causal | ⏳ próximos passos |
+| **EDA bivariada em base dupla** | ✅ **`docs/06-analise-exploratoria.md`** |
+| **Análise explicativa (OR ajustado)** | ✅ **`docs/07-analise-explicativa.md`** |
+| Modelagem preditiva / causal / escore | ⏳ próximos passos |
 
 ---
 
@@ -33,7 +35,11 @@ associados a diabetes** e **predizer ocorrências**, com validação contra font
 4. **`docs/04-arquitetura.md`** — camadas de dado e código; por que local-first e não GCP.
 5. **`docs/05-comparacao-brfss-original.md`** — o que o pré-processamento fez com os dados,
    etapa por etapa, com a fonte original do CDC ao lado.
-6. **`docs/adr/`** — decisões técnicas com justificativa.
+6. **`docs/06-analise-exploratoria.md`** — associações com tamanho de efeito, arquivo e
+   população lado a lado.
+7. **`docs/07-analise-explicativa.md`** — OR ajustado, M1/M2/M3, mediação, e por que o alvo
+   não é ordinal.
+8. **`docs/adr/`** — decisões técnicas com justificativa.
 
 ---
 
