@@ -16,7 +16,7 @@ param(
     [Parameter(Position = 0)]
     [ValidateSet('status', 'log', 'ingest', 'clean', 'folds', 'external', 'eda',
                  'explicativo', 'figuras', 'modelos', 'vigitel',
-                 'expandido', 'pesos', 'pu', 'glassbox', 'medicaid', 'trilhac', 'produto', 'notebooks',
+                 'expandido', 'pesos', 'pu', 'glassbox', 'medicaid', 'trilhac', 'produto', 'notebooks', 'deck',
                  'test', 'all', 'help')]
     [string]$Task = 'help'
 )
@@ -190,6 +190,10 @@ function Invoke-Notebooks {
     }
 }
 
+function Invoke-Deck {
+    Invoke-Etapa 'deck' 'Deck da apresentacao' { python -m diabetes.produto.deck }
+}
+
 function Invoke-Test {
     Invoke-Etapa 'test' 'Lint e testes' {
         python -m ruff check src tests
@@ -219,6 +223,7 @@ switch ($Task) {
     'trilhac'     { Invoke-TrilhaC }
     'produto'     { Invoke-Produto }
     'notebooks'   { Invoke-Notebooks }
+    'deck'        { Invoke-Deck }
     'test'        { Invoke-Test }
     'all' {
         Invoke-Ingest; Invoke-Clean; Invoke-Folds
@@ -231,7 +236,7 @@ switch ($Task) {
         }
         Invoke-Modelos; Invoke-Figuras
         if (Test-Path (Join-Path $PSScriptRoot $XPT)) {
-            Invoke-Expandido; Invoke-Pesos; Invoke-Pu; Invoke-Glassbox; Invoke-TrilhaC; Invoke-Produto; Invoke-Notebooks
+            Invoke-Expandido; Invoke-Pesos; Invoke-Pu; Invoke-Glassbox; Invoke-TrilhaC; Invoke-Produto; Invoke-Notebooks; Invoke-Deck
         }
         Invoke-Medicaid
         python -m diabetes.pipeline.estado

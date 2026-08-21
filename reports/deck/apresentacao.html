@@ -1,0 +1,355 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=1280">
+<title>Diabetes — o que os dados escondem · Data Science 2 · ESEG</title>
+<style>
+:root{
+  --bg:#fcfcfb; --tinta:#0b0b0b; --tinta2:#52514e; --tinta3:#898781;
+  --linha:#e1e0d9; --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --alerta:#d03b3b;
+  --realce:#f0efec;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#3a3a38;font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;
+  color:var(--tinta)}
+.slide{position:relative;width:1280px;height:720px;background:var(--bg);
+  margin:22px auto;padding:56px 72px;overflow:hidden;
+  box-shadow:0 3px 18px rgba(0,0,0,.35);display:flex;flex-direction:column}
+.slide::after{content:attr(data-n);position:absolute;right:30px;bottom:20px;
+  font-size:12px;color:var(--tinta3);font-variant-numeric:tabular-nums}
+.olho{font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--s1);font-weight:650;margin-bottom:12px}
+h1{font-size:52px;line-height:1.08;letter-spacing:-.025em;font-weight:680}
+h2{font-size:34px;line-height:1.15;letter-spacing:-.02em;font-weight:660;
+  margin-bottom:18px}
+h3{font-size:19px;font-weight:640;margin-bottom:8px}
+p{font-size:19px;color:var(--tinta2);max-width:62ch}
+p+p{margin-top:12px}
+b,strong{color:var(--tinta);font-weight:650}
+.sub{font-size:22px;color:var(--tinta2);margin-top:16px;max-width:64ch}
+.corpo{flex:1;display:flex;flex-direction:column;justify-content:center}
+.capa{justify-content:center}
+.capa h1{font-size:64px;max-width:22ch}
+.rodape-capa{position:absolute;left:72px;bottom:56px;font-size:15px;
+  color:var(--tinta3);line-height:1.7}
+.duas{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:start}
+.tres{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.cartao{background:var(--realce);border-radius:12px;padding:22px 24px}
+.cartao h3{color:var(--tinta);font-size:17px}
+.cartao p{font-size:16px}
+.numerao{font-size:76px;font-weight:690;line-height:1;letter-spacing:-.035em;
+  font-variant-numeric:tabular-nums}
+.numerao small{font-size:30px;font-weight:550;color:var(--tinta2)}
+.legenda{font-size:16px;color:var(--tinta2);margin-top:8px;max-width:34ch}
+table{border-collapse:collapse;width:100%;font-size:17px}
+th,td{text-align:left;padding:9px 14px 9px 0;border-bottom:1px solid var(--linha);
+  font-variant-numeric:tabular-nums}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--tinta3);
+  font-weight:650}
+td.n,th.n{text-align:right}
+tr.destaque td{background:color-mix(in srgb,var(--s1) 10%,transparent);font-weight:640}
+.tag{display:inline-block;font-size:13px;padding:3px 10px;border-radius:99px;
+  background:var(--realce);color:var(--tinta2);margin-right:6px}
+.tag.ok{background:color-mix(in srgb,var(--s3) 18%,transparent);color:#0d6b4a}
+.tag.al{background:color-mix(in srgb,var(--alerta) 15%,transparent);color:#8f2020}
+.citacao{border-left:4px solid var(--s1);padding:6px 0 6px 22px;font-size:23px;
+  line-height:1.4;color:var(--tinta);max-width:58ch}
+.barra-lista{display:flex;flex-direction:column;gap:11px;margin-top:6px}
+.bl{display:grid;grid-template-columns:220px 1fr 74px;gap:14px;align-items:center;
+  font-size:16px}
+.bl .rot{color:var(--tinta2);text-align:right}
+.bl .tr{height:15px;background:var(--linha);border-radius:8px;overflow:hidden}
+.bl .tr i{display:block;height:100%;border-radius:8px}
+.bl .v{text-align:right;font-variant-numeric:tabular-nums;font-weight:620}
+.passos{display:flex;align-items:center;gap:14px;margin-top:20px;flex-wrap:wrap}
+.passo{background:var(--realce);border-radius:10px;padding:14px 18px;font-size:17px;
+  font-variant-numeric:tabular-nums}
+.passo b{display:block;font-size:26px;font-weight:670}
+.seta{color:var(--tinta3);font-size:22px}
+.queda{color:var(--alerta);font-weight:650}
+.prog{position:fixed;left:0;top:0;height:3px;background:var(--s1);z-index:9;
+  transition:width .15s}
+.ajuda{position:fixed;right:14px;bottom:12px;font-size:12px;color:#c9c8c2;z-index:9}
+@page{size:1280px 720px;margin:0}
+@media print{
+  body{background:#fff}
+  .slide{margin:0;box-shadow:none;break-after:page;page-break-after:always}
+  .prog,.ajuda{display:none}
+}
+</style></head><body>
+<div class="prog"></div><section data-n="1/19" class="slide capa"><div class="corpo">
+      <h1>Diabetes:<br>o que os dados escondem</h1>
+      <p class="sub">253.680 respostas do BRFSS 2015 — e o que aparece quando
+      comparamos com <b>cinco bases externas</b>.</p>
+      <div class="rodape-capa">Data Science 2 · Projeto 1 · ESEG<br>
+      Prof. Marino Catarino</div></div></section><section data-n="2/19" class="slide "><div class="olho">o começo</div><div class="corpo">
+      <h2>Os dados não vieram como dados</h2>
+      <div class="duas">
+        <div>
+          <p>O arquivo entregue foi <b>um PDF de 4.374 páginas</b> — uma
+          tabela renderizada, não um CSV.</p>
+          <p>Extrair por ordem de leitura é frágil: a especificação PDF <b>não
+          garante</b> que a ordem dos tokens corresponda à ordem visual.</p>
+          <p>Reconstruímos linha a linha <b>por coordenada de bounding box</b>.</p>
+        </div>
+        <div class="cartao">
+          <div class="numerao">253.680<small> linhas</small></div>
+          <p class="legenda">bate exatamente com o enunciado</p>
+          <div style="margin-top:20px">
+            <span class="tag ok">0 em quarentena</span>
+            <span class="tag ok">0 fora do domínio</span>
+            <span class="tag">48,6s</span>
+          </div>
+        </div>
+      </div></div></section><section data-n="3/19" class="slide "><div class="olho">diagnóstico</div><div class="corpo">
+      <h2>Quatro problemas definiram o trabalho</h2>
+      <div class="tres">
+        <div class="cartao"><h3>Duplicatas</h3>
+          <div class="numerao" style="font-size:44px">23.899</div>
+          <p>linhas idênticas — 9,4% da base</p></div>
+        <div class="cartao"><h3>Rótulo contraditório</h3>
+          <div class="numerao" style="font-size:44px">1.834</div>
+          <p>perfis iguais, alvo diferente</p></div>
+        <div class="cartao"><h3>Desbalanceamento</h3>
+          <div class="numerao" style="font-size:44px">1,83<small>%</small></div>
+          <p>é o tamanho da classe pré-diabetes</p></div>
+      </div>
+      <div style="margin-top:30px" class="citacao">
+        Responder sempre “não tem diabetes” acerta <b>84,2%</b>.<br>
+        Por isso <b>acurácia não é reportada</b> neste trabalho.
+      </div>
+      <p style="margin-top:22px">E o quarto: <b>zero códigos 77/99 de renda</b> —
+      a amostra foi <b>truncada</b> antes de chegar. Foi o fio que abriu o resto.</p>
+      </div></section><section data-n="4/19" class="slide "><div class="olho">a virada</div><div class="corpo">
+      <h2>Se a amostra foi truncada,<br>quanto isso distorce?</h2>
+      <p class="sub">O arquivo entregue tem 253.680 respondentes.<br>
+      O <b>BRFSS 2015 original do CDC tem 441.456</b>.</p>
+      <p style="margin-top:26px">Baixamos a fonte, reconstruímos as 22 colunas e
+      comparamos célula a célula.</p></div></section><section data-n="5/19" class="slide "><div class="olho">validação</div><div class="corpo">
+      <h2>A reconstrução bate exatamente</h2>
+      <div class="duas">
+        <div>
+          <div class="numerao">100,000000<small>%</small></div>
+          <p class="legenda">das células idênticas · 253.680 de 253.680 linhas,
+          na mesma ordem</p>
+          <p style="margin-top:26px">Prova quatro coisas de uma vez: a extração do
+          PDF, as regras de derivação, a integridade do download e a preservação
+          da ordem original.</p>
+        </div>
+        <div>
+          <h3>Depois disso, o viés fica mensurável</h3>
+          <table><thead><tr><th></th><th class="n">arquivo</th><th class="n">população</th></tr></thead><tbody><tr><td>prevalência de diabetes</td><td class="n">13,93%</td><td class="n">10,50%</td></tr><tr><td>fez exame de colesterol</td><td class="n">96,27%</td><td class="n">77,93%</td></tr><tr><td>tem plano de saúde</td><td class="n">95,11%</td><td class="n">87,83%</td></tr></tbody></table>
+        </div>
+      </div></div></section><section data-n="6/19" class="slide "><div class="olho">o viés</div><div class="corpo">
+      <h2>De onde vem o viés de prevalência</h2>
+      <div class="passos">
+        <div class="passo"><b>13,93%</b>arquivo entregue</div>
+        <div class="seta">→</div>
+        <div class="passo"><b class="queda">−0,94</b>descarte de 42,5%</div>
+        <div class="seta">→</div>
+        <div class="passo"><b>12,99%</b>BRFSS sem peso</div>
+        <div class="seta">→</div>
+        <div class="passo"><b class="queda">−2,49</b>peso descartado</div>
+        <div class="seta">→</div>
+        <div class="passo"><b>10,50%</b>população</div>
+      </div>
+      <div class="citacao" style="margin-top:34px">
+        A maior parte do viés <b>não</b> vem de terem jogado fora 187.776 pessoas.<br>
+        Vem de terem jogado fora <b>três colunas</b>: os pesos amostrais.
+      </div></div></section><section data-n="7/19" class="slide "><div class="olho">o achado central</div><div class="corpo">
+      <h2>O arquivo é uma amostra de quem<br>tem acesso ao sistema de saúde</h2>
+      <div class="barra-lista"><div class="bl"><div class="rot">fez exame de colesterol — arquivo</div><div class="tr"><i style="width:96.3%;background:var(--s2)"></i></div><div class="v">96,27%</div></div><div class="bl"><div class="rot">fez exame de colesterol — população</div><div class="tr"><i style="width:77.9%;background:var(--s1)"></i></div><div class="v">77,93%</div></div><div class="bl"><div class="rot">sem consulta por custo — arquivo</div><div class="tr"><i style="width:8.4%;background:var(--s2)"></i></div><div class="v">8,42%</div></div><div class="bl"><div class="rot">sem consulta por custo — população</div><div class="tr"><i style="width:13.3%;background:var(--s1)"></i></div><div class="v">13,27%</div></div></div>
+      <p style="margin-top:26px">O mecanismo: <b>59.154 nulos</b> em “tem colesterol
+      alto?” são <b>salto de questionário</b> — 84% deles <b>nunca fizeram o exame</b>,
+      então nunca foram perguntados. O <code>dropna()</code> removeu exatamente a
+      população de menor acesso.</p></div></section><section data-n="8/19" class="slide "><div class="olho">exploratória</div><div class="corpo">
+      <h2>Nenhum fator isolado explica diabetes</h2>
+      <div class="duas">
+        <div>
+          <p>O maior V de Cramér é <b>0,293</b> (hipertensão) — ainda “pequeno” pela
+          convenção de Cohen. Onze das quatorze variáveis são desprezíveis.</p>
+          <p>Isso não é resultado fraco. É <b>o</b> resultado: diabetes é
+          multifatorial, e nenhuma conclusão monocausal se sustenta.</p>
+          <p style="margin-top:22px">O gradiente etário é o mais forte —
+          <b>30,02×</b> entre a menor e a maior faixa — e o arquivo
+          entregue o <b>comprime pela metade</b> (15,96×).</p>
+        </div>
+        <div>
+          <h3>E não é monotônico</h3>
+          <table><thead><tr><th>faixa etária</th><th class="n">prevalência</th></tr></thead><tbody><tr><td>70–74 anos</td><td class="n">24,60%</td></tr><tr><td>75–79 anos</td><td class="n">24,66%</td></tr><tr class="destaque"><td>80 anos ou mais</td><td class="n">19,67%</td></tr></tbody></table>
+          <p style="margin-top:14px">A queda em 80+ é <b>mortalidade seletiva</b>:
+          diabéticos têm menor chance de chegar lá.</p>
+        </div>
+      </div></div></section><section data-n="9/19" class="slide "><div class="olho">explicativa</div><div class="corpo">
+      <h2>O efeito protetor da atividade física desaparece</h2>
+      <div class="duas">
+        <div>
+          <table><thead><tr><th>especificação</th><th class="n">OR</th></tr></thead><tbody><tr><td>M1 · risco puro</td><td class="n">0,852</td></tr><tr class="destaque"><td>M2 · + saúde autoavaliada</td><td class="n">0,988</td></tr></tbody></table>
+          <p style="margin-top:18px">Ao entrar <code>saude_geral</code>, o efeito
+          evapora. Isso é <b>mediação</b> — condicionar em mediador bloqueia o
+          caminho causal.</p>
+          <p><b>M2 e M3 não podem ser lidos como “atividade física não importa”.</b></p>
+        </div>
+        <div>
+          <h3>O que sobrevive a tudo</h3>
+          <table><thead><tr><th>fator</th><th class="n">OR ajustado</th></tr></thead><tbody><tr><td>hipertensão</td><td class="n">2,39</td></tr><tr><td>colesterol alto</td><td class="n">2,00</td></tr><tr><td>idade (por DP)</td><td class="n">1,65</td></tr><tr><td>IMC (por DP)</td><td class="n">1,59</td></tr><tr><td>renda (por DP)</td><td class="n">0,82</td></tr></tbody></table>
+          <p style="margin-top:12px">Renda mantém efeito <b>mesmo controlando</b>
+          IMC, dieta, atividade física e escolaridade.</p>
+        </div>
+      </div></div></section><section data-n="10/19" class="slide "><div class="olho">descoberta</div><div class="corpo">
+      <h2>Pré-diabetes não é o mesmo continuum</h2>
+      <table><thead><tr><th>fator</th><th class="n">OR pré-diabetes</th><th class="n">OR diabetes</th></tr></thead><tbody><tr><td>sexo (masculino)</td><td class="n">1,00</td><td class="n">1,26</td></tr><tr><td>doença cardíaca</td><td class="n">0,92</td><td class="n">1,25</td></tr><tr><td>dias de saúde mental</td><td class="n">1,07</td><td class="n">0,95</td></tr><tr><td>hipertensão</td><td class="n">1,47</td><td class="n">2,11</td></tr></tbody></table>
+      <p style="margin-top:22px"><b>9 variáveis</b> têm efeito materialmente
+      diferente nas duas classes, e <b>duas invertem de direção</b>.
+      A especificação correta é <b>multinomial</b>, não ordinal.</p>
+      <p><b>Lição:</b> o teste por logits cumulativos <b>não rejeitou</b> — falso
+      negativo, porque a classe pré-diabetes tem 1,6% e os dois contrastes ficam
+      quase idênticos por construção.</p></div></section><section data-n="11/19" class="slide "><div class="olho">Brasil × EUA</div><div class="corpo">
+      <h2>Seis de oito fatores convergem</h2>
+      <table><thead><tr><th>fator</th><th class="n">OR Brasil</th><th class="n">OR EUA</th><th class="n">razão</th></tr></thead><tbody><tr><td>hipertensão</td><td class="n">3,136</td><td class="n">3,146</td><td class="n">1,00</td></tr><tr><td>idade</td><td class="n">1,234</td><td class="n">1,240</td><td class="n">1,00</td></tr><tr><td>escolaridade</td><td class="n">0,732</td><td class="n">0,768</td><td class="n">0,95</td></tr><tr class="destaque"><td>IMC (por 5 kg/m²)</td><td class="n">1,228</td><td class="n">1,454</td><td class="n">0,84</td></tr><tr><td>frutas</td><td class="n">1,299</td><td class="n">0,898</td><td class="n">1,45</td></tr></tbody></table>
+      <p style="margin-top:20px">Vigitel 2015 × BRFSS 2015 — <b>mesmo ano, mesmo
+      desenho de inquérito, mesmo modelo</b>. Hipertensão e idade coincidem na
+      <b>terceira casa decimal</b>, em dois países e dois sistemas de saúde.</p>
+      <p><b>Mas o IMC pesa 16% menos no Brasil</b> — um escore calibrado nos EUA
+      superestima o IMC aqui. E <b>frutas inverte de direção</b>.</p></div></section><section data-n="12/19" class="slide "><div class="olho">o rótulo mente</div><div class="corpo">
+      <h2>O alvo não é diabetes.<br>É <i>diagnóstico</i> de diabetes.</h2>
+      <div class="duas">
+        <div>
+          <p>Segundo o NHANES, <b>27,6% dos diabéticos nos EUA não sabem</b>.
+          Formalmente isto é <b>Positive-Unlabeled learning</b>, não classificação
+          supervisionada.</p>
+          <p style="margin-top:20px">Estimamos a frequência de rotulagem <b>só com
+          os dados</b> e comparamos com a fonte externa:</p>
+          <table><thead><tr><th>estimativa de c</th><th class="n">valor</th></tr></thead><tbody><tr><td>só com o BRFSS (BBE)</td><td class="n">0,7283</td></tr><tr><td>NHANES (exame de sangue)</td><td class="n">0,7240</td></tr></tbody></table>
+        </div>
+        <div class="cartao">
+          <h3>Prevalência verdadeira</h3>
+          <div class="numerao">14,29<small>%</small></div>
+          <p class="legenda">contra 10,67% diagnosticada</p>
+          <p style="margin-top:18px"><b>Os prováveis não diagnosticados são
+          clinicamente idênticos</b> aos diagnosticados — hipertensão 74,7% contra
+          74,9% — mas têm <b>um terço do check-up</b> e o dobro de renúncia a
+          consulta por custo.</p>
+        </div>
+      </div></div></section><section data-n="13/19" class="slide "><div class="olho">predição</div><div class="corpo">
+      <h2>O teto não é o algoritmo. É a informação.</h2>
+      <table><thead><tr><th>modelo</th><th class="n">variáveis</th><th class="n">PR-AUC</th></tr></thead><tbody><tr><td>prevalência constante</td><td class="n">—</td><td class="n">0,1428</td></tr><tr><td>regra clínica</td><td class="n">3</td><td class="n">0,3350</td></tr><tr><td>logística</td><td class="n">18</td><td class="n">0,4139</td></tr><tr><td>gradient boosting calibrado</td><td class="n">18</td><td class="n">0,4504</td></tr><tr class="destaque"><td>boosting + 39 variáveis recuperadas</td><td class="n">60</td><td class="n">0,4733</td></tr></tbody></table>
+      <p style="margin-top:22px">A escada inteira de modelos rendeu <b>+0,036</b> de
+      PR-AUC. <b>Recuperar variáveis descartadas rendeu +0,029</b> — quase o mesmo,
+      sem tocar no algoritmo.</p>
+      <p>E o ruído de rótulo limita a acurácia a <b>99,3%</b>: o teto de Bayes
+      <b>não</b> é a restrição.</p></div></section><section data-n="14/19" class="slide "><div class="olho">equidade</div><div class="corpo">
+      <h2>O ganho médio escondia uma redistribuição</h2>
+      <div class="barra-lista"><div class="bl"><div class="rot">branco não-hispânico</div><div class="tr"><i style="width:3.4%;background:var(--alerta)"></i></div><div class="v">-0,45 pp</div></div><div class="bl"><div class="rot">negro não-hispânico</div><div class="tr"><i style="width:79.0%;background:var(--s3)"></i></div><div class="v">10,59 pp</div></div><div class="bl"><div class="rot">hispânico</div><div class="tr"><i style="width:80.7%;background:var(--s3)"></i></div><div class="v">10,81 pp</div></div><div class="bl"><div class="rot">multirracial</div><div class="tr"><i style="width:100.0%;background:var(--s3)"></i></div><div class="v">13,40 pp</div></div></div>
+      <p style="margin-top:24px">Ganho de <i>recall</i> ao recuperar as variáveis.
+      O ganho médio de 6,6% é <b>inteiramente das minorias</b>.</p>
+      <div class="citacao" style="margin-top:18px">
+        O modelo de 21 variáveis era sistematicamente pior para minorias — e
+        <b>ninguém podia saber</b>, porque a variável que revela isso tinha sido
+        removida da base.
+      </div></div></section><section data-n="15/19" class="slide "><div class="olho">o entregável</div><div class="corpo">
+      <h2>Cinco perguntas que cabem numa folha de papel</h2>
+      <div class="duas">
+        <div>
+          <table><thead><tr><th>pergunta</th><th class="n">pontos</th></tr></thead><tbody><tr><td>Idade (&lt; 35 … 65+)</td><td class="n">0 a +17</td></tr><tr><td>IMC (&lt; 25 … 35+)</td><td class="n">0 a +9</td></tr><tr><td>Saúde autoavaliada</td><td class="n">0 a +11</td></tr><tr><td>Pressão alta?</td><td class="n">0 ou +7</td></tr><tr><td>Sexo</td><td class="n">0 ou +1</td></tr></tbody></table>
+          <p style="margin-top:16px"><b>Nenhuma exige exame prévio.</b> Podem ser
+          respondidas por alguém que nunca viu um médico.</p>
+        </div>
+        <div>
+          <table><thead><tr><th>pontos</th><th class="n">risco</th></tr></thead><tbody><tr><td>0–9</td><td class="n">0,54%</td></tr><tr><td>10–15</td><td class="n">1,76%</td></tr><tr><td>16–18</td><td class="n">3,42%</td></tr><tr><td>19–23</td><td class="n">6,54%</td></tr><tr><td>24–27</td><td class="n">12,94%</td></tr><tr><td>28–30</td><td class="n">18,51%</td></tr><tr><td>31–35</td><td class="n">28,56%</td></tr><tr class="destaque"><td>36–45</td><td class="n">45,49%</td></tr></tbody></table>
+        </div>
+      </div>
+      <p style="margin-top:20px">ROC-AUC <b>0,804</b> contra <b>0,766</b> do
+      <b>FINDRISC</b> — o padrão internacional desde 2003, na mesma amostra.</p></div></section><section data-n="16/19" class="slide "><div class="olho">decisão</div><div class="corpo">
+      <h2>Do modelo ao orçamento</h2>
+      <table><thead><tr><th>testar</th><th class="n">casos encontrados</th><th class="n">NNS</th><th class="n">custo por caso</th></tr></thead><tbody><tr><td>5%</td><td class="n">21,0%</td><td class="n">2,23</td><td class="n">R$ 71</td></tr><tr class="destaque"><td>10%</td><td class="n">40,2%</td><td class="n">2,33</td><td class="n">R$ 75</td></tr><tr><td>15%</td><td class="n">54,4%</td><td class="n">2,59</td><td class="n">R$ 83</td></tr><tr><td>20%</td><td class="n">65,4%</td><td class="n">2,87</td><td class="n">R$ 92</td></tr><tr><td>25%</td><td class="n">73,6%</td><td class="n">3,19</td><td class="n">R$ 102</td></tr><tr><td>30%</td><td class="n">79,2%</td><td class="n">3,55</td><td class="n">R$ 114</td></tr></tbody></table>
+      <p style="margin-top:22px">Testando <b>10% da população</b> encontramos
+      <b>40% dos casos</b> a <b>R$ 75</b> por caso (HbA1c na faixa da tabela SUS).</p>
+      <p>As duas faixas superiores do escore concentram <b>60,5% dos casos</b> a
+      R$ 69–109. A faixa mais baixa custa <b>R$ 3.593</b> — <b>52× mais</b>.</p>
+      <p><b>Rastrear por ordem de escore é a diferença entre um programa viável e
+      um inviável.</b></p></div></section><section data-n="17/19" class="slide "><div class="olho">o produto</div><div class="corpo">
+      <h2>Uma calculadora que roda no navegador</h2>
+      <div class="duas">
+        <div>
+          <p>O modelo interpretável é <b>aditivo</b>: cada termo é uma tabela de
+          consulta. Exportamos as tabelas e a predição roda em JavaScript com o
+          <b>mesmo número</b> do Python.</p>
+          <table><thead><tr><th>verificação</th><th class="n">valor</th></tr></thead><tbody><tr><td>casos conferidos</td><td class="n">500</td></tr><tr><td>erro máximo Python ↔ JS</td><td class="n">1.1e-16</td></tr><tr><td>casos com resposta ausente</td><td class="n">290</td></tr><tr><td>tamanho da página</td><td class="n">59 KB</td></tr></tbody></table>
+          <p style="margin-top:14px">Funciona <b>offline</b>, sem servidor.
+          Nenhuma resposta sai do computador.</p>
+        </div>
+        <div class="cartao">
+          <h3>Na apresentação</h3>
+          <p style="font-size:17px">1. preencher um perfil<br>
+          2. ver <b>o que pesa</b> em cada resposta<br>
+          3. mudar o IMC e ver o número reagir<br>
+          4. escolher <b>“nunca fiz o exame”</b> no colesterol</p>
+          <p style="margin-top:16px;font-size:17px"><b>O passo 4 é o momento:</b>
+          demonstra em um clique que um instrumento que exige exame prévio
+          <b>exclui quem mais precisa dele</b>.</p>
+        </div>
+      </div></div></section><section data-n="18/19" class="slide "><div class="olho">honestidade</div><div class="corpo">
+      <h2>O que este trabalho <i>não</i> mostra</h2>
+      <div class="tres">
+        <div class="cartao"><h3>Não é causal</h3>
+          <p>Dados transversais. Testamos com o experimento natural do Medicaid —
+          e o desenho <b>não tem poder</b> para o efeito esperado (0,16 contra
+          0,90 p.p. detectável).</p></div>
+        <div class="cartao"><h3>Não é a doença</h3>
+          <p>O alvo é <b>diagnóstico autorrelatado</b>. O modelo prediz quem
+          <i>consta</i> como diabético.</p></div>
+        <div class="cartao"><h3>Não é o Brasil</h3>
+          <p>Treinado nos EUA de 2015. O IMC pesa <b>16% menos</b> aqui —
+          recalibração local é requisito.</p></div>
+      </div>
+      <p style="margin-top:30px">Três previsões nossas <b>não se confirmaram</b> e
+      foram corrigidas na fonte: o vazamento por duplicata quase não infla a
+      métrica, os proxies de acesso quase não melhoram a predição, e o teto de
+      Bayes não é a restrição.</p></div></section><section data-n="19/19" class="slide "><div class="olho">conclusão</div><div class="corpo">
+      <h2>O que fica</h2>
+      <div class="duas">
+        <div>
+          <h3>Sobre os dados</h3>
+          <p>O arquivo entregue é um <b>derivado enviesado</b>: superestima a
+          prevalência em um terço e é uma amostra de quem tem acesso ao sistema
+          de saúde.</p>
+          <p style="margin-top:16px"><b>Publicamos os pesos</b> que corrigem
+          95,6% desse viés — utilizáveis por qualquer pessoa que use o mesmo CSV.</p>
+        </div>
+        <div>
+          <h3>Sobre o valor</h3>
+          <p>Um escore de <b>cinco perguntas</b> que bate o padrão internacional,
+          custa R$ 75 por caso encontrado e <b>alcança quem nunca viu um médico</b>.</p>
+          <p style="margin-top:16px">E uma calculadora que <b>roda offline</b>, com
+          predição verificada contra o Python.</p>
+        </div>
+      </div>
+      <div class="citacao" style="margin-top:34px">
+        O achado mais útil não foi sobre diabetes.<br>
+        Foi sobre <b>quem os dados de saúde deixam de fora</b>.
+      </div></div></section>
+<div class="ajuda">← → navega · Ctrl+P exporta em PDF (paisagem, sem margens)</div>
+<script>
+const slides = [...document.querySelectorAll(".slide")];
+const prog = document.querySelector(".prog");
+function atual(){
+  const y = window.scrollY + window.innerHeight/2;
+  let i = 0;
+  slides.forEach((s,k) => { if (s.offsetTop <= y) i = k; });
+  return i;
+}
+function ir(i){
+  i = Math.max(0, Math.min(slides.length-1, i));
+  slides[i].scrollIntoView({behavior:"smooth", block:"start"});
+}
+addEventListener("keydown", e => {
+  const k = e.key;
+  if (["ArrowRight","PageDown"," ","n"].includes(k)){ e.preventDefault(); ir(atual()+1); }
+  if (["ArrowLeft","PageUp","p"].includes(k)){ e.preventDefault(); ir(atual()-1); }
+  if (k === "Home"){ e.preventDefault(); ir(0); }
+  if (k === "End"){ e.preventDefault(); ir(slides.length-1); }
+});
+addEventListener("scroll", () => {
+  prog.style.width = ((atual()+1)/slides.length*100) + "%";
+}, {passive:true});
+prog.style.width = (1/slides.length*100) + "%";
+</script></body></html>

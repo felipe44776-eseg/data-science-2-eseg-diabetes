@@ -10,8 +10,14 @@ fatores associados a diabetes e predizer ocorrências — com validação contra
 
 ## 🎯 Comece por aqui
 
+**Se você vai apresentar:** abra `reports/deck/apresentacao.html` — 19 slides,
+navegação por `←` `→`, e `Ctrl+P` exporta em PDF (paisagem, sem margens).
+
 **Se você tem 2 minutos:** abra `reports/produto/index.html` (duplo clique,
 funciona offline). É a calculadora de risco — o produto do trabalho.
+
+**Se você quer ver a análise em Python:** `notebooks/` — seis notebooks
+executados, com as saídas gravadas.
 
 **Se você vai mexer no código:**
 
@@ -125,8 +131,8 @@ em paralelo sem conflito:
 
 | frente | arquivos | pré-requisito | estado |
 |---|---|---|---|
-| **Notebooks da apresentação** | `notebooks/` | nada — importa de `src/` | ⏳ aberto |
-| **Deck HTML/PDF** | `reports/deck/` | os docs prontos | ⏳ aberto |
+| **Revisar o roteiro do deck** | `src/diabetes/produto/deck.py` | — | ✅ 19 slides prontos |
+| **Revisar os notebooks** | `src/diabetes/produto/notebooks.py` | — | ✅ 6 executados |
 | **Análise causal (DAG, E-value)** | `src/diabetes/causal/` | `docs/07` §5 | ⏳ não iniciado |
 | **Não supervisionada (MCA, fenótipos)** | `src/diabetes/eda/` | base silver | ⏳ não iniciado |
 | **Pré-diabetes como problema próprio** | `src/diabetes/models/` | `docs/07` §3.3 | ⏳ não iniciado |
@@ -181,8 +187,8 @@ src/diabetes/  6.500+ linhas em 33 módulos
 reports/
   produto/       🧮 a calculadora
   figures/       6 SVG + página com tabelas
-  deck/          (a fazer)
-notebooks/       (a fazer)
+  deck/          🎤 apresentacao.html — 19 slides, exporta em PDF
+notebooks/       6 notebooks executados, com saídas
 tests/           97 testes, incl. paridade Python↔JavaScript
 ```
 
@@ -192,11 +198,11 @@ tests/           97 testes, incl. paridade Python↔JavaScript
 
 | | |
 |---|---|
-| Pipeline | **16/16 etapas coerentes** (`.\tasks.ps1 status`) |
-| Testes | **97**, incluindo teste de vazamento e paridade Py↔JS |
+| Pipeline | **18/18 etapas coerentes** (`.\tasks.ps1 status`) |
+| Testes | **100**, incluindo teste de vazamento e paridade Py↔JS |
 | Lint | `ruff` limpo |
 | CI | GitHub Actions verde a cada push |
-| Documentos | 17 + 5 ADRs |
+| Documentos | 17 + 5 ADRs · 6 notebooks · 19 slides |
 | Bases externas | BRFSS 2015 · Vigitel 2015/2023 · NHANES (prior) · CDC Open Data · painel Medicaid |
 
 ---

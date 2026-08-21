@@ -194,6 +194,14 @@ ETAPAS: list[Etapa] = [
             "05-comparacao-entre-bases", "06-escore-decisao-e-produto")),
         nota="gerados de src/, nunca escritos a mao (regra 7)",
     ),
+    Etapa(
+        "deck", "Deck da apresentacao",
+        ".\\tasks.ps1 deck",
+        ("data/processed/gold/_trilhaC_decisao.json",
+         "reports/produto/modelo.json", "src/diabetes/produto/deck.py"),
+        ("reports/deck/apresentacao.html",),
+        nota="1280x720, autocontido, Ctrl+P exporta em PDF",
+    ),
 ]
 
 
