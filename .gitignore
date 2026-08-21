@@ -1,12 +1,17 @@
-# dados — versionados por manifesto/hash, nunca por conteudo
-data/raw/*
-data/interim/*
-data/processed/*
-data/external/*
+# dados — versionados por manifesto/hash, nunca por conteudo.
+# Nota: git nao reinclui arquivo dentro de diretorio excluido, entao o padrao
+# ignora os ARQUIVOS (**/*) e mantem os DIRETORIOS navegaveis (!**/).
+data/raw/**/*
+data/interim/**/*
+data/processed/**/*
+data/external/**/*
+!data/**/
 !data/**/.gitkeep
 !data/**/_manifest_*.json
 !data/**/_relatorio_*.json
-!data/external/**/*.md
+!data/**/_cascata_*.json
+!data/**/_analise_*.json
+!data/**/*.md
 
 # excecao: o PDF fonte do professor e grande demais (109 MB) para o git
 *.pdf

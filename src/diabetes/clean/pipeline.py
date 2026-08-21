@@ -80,8 +80,8 @@ def limpar(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, dict]:
     df = df[~mask_invalida].copy()
     rel["linhas_quarentena"] = int(len(quarentena))
 
-    # R2 — tipos
-    for col, meta in ESQUEMA.items():
+    # R2 — tipos: todos os valores sao inteiros pequenos, uint8 basta
+    for col in ESQUEMA:
         df[col] = df[col].astype("uint8")
 
     # R4 — duplicatas exatas (marcadas, nao removidas)

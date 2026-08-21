@@ -18,6 +18,7 @@ associados a diabetes** e **predizer ocorrências**, com validação contra font
 | Proposta de análise | ✅ `docs/02-proposta-de-analise.md` |
 | Fontes externas | ✅ `docs/03-fontes-externas.md` |
 | Arquitetura | ✅ `docs/04-arquitetura.md` |
+| **Comparação com o BRFSS original** | ✅ **`docs/05-comparacao-brfss-original.md`** |
 | Features / EDA / modelos / causal | ⏳ próximos passos |
 
 ---
@@ -30,7 +31,9 @@ associados a diabetes** e **predizer ocorrências**, com validação contra font
 2. **`docs/02-proposta-de-analise.md`** — as três trilhas: explicar, predizer, decidir.
 3. **`docs/03-fontes-externas.md`** — as fontes públicas de comparação e o que cada uma resolve.
 4. **`docs/04-arquitetura.md`** — camadas de dado e código; por que local-first e não GCP.
-5. **`docs/adr/`** — decisões técnicas com justificativa.
+5. **`docs/05-comparacao-brfss-original.md`** — o que o pré-processamento fez com os dados,
+   etapa por etapa, com a fonte original do CDC ao lado.
+6. **`docs/adr/`** — decisões técnicas com justificativa.
 
 ---
 
@@ -72,6 +75,28 @@ Comandos individuais em `docs/04-arquitetura.md` §3.
 | Base em memória após downcast | 44 MB → **8,6 MB** |
 
 Detalhamento e implicações em `docs/01-diagnostico-dos-dados.md`.
+
+## Confronto com a fonte original do CDC
+
+O arquivo entregue é um derivado de 253.680 linhas de uma pesquisa com **441.456**
+respondentes. Reconstruímos as 22 colunas a partir do BRFSS 2015 original e o resultado
+bate **100,000000% célula a célula** — o que prova a extração, a derivação e a integridade
+do download de uma vez só. A partir daí, o viés fica mensurável:
+
+| | arquivo entregue | população real (ponderada) | viés |
+|---|---|---|---|
+| Prevalência de diabetes | **13,933%** | **10,500%** | **+3,43 p.p. (+32,7%)** |
+| % fez exame de colesterol | **96,27%** | **77,93%** | **+18,34 p.p.** |
+| % com plano de saúde | 95,11% | 87,83% | +7,28 p.p. |
+| Efeito de desenho (DEFF) | assumido 1 | **4,04** | IC **2,01× mais largo** |
+
+**73% do viés de prevalência vem do peso amostral descartado**, não do descarte de 42,5%
+das linhas. E o arquivo é, na prática, uma amostra de pessoas **com** acesso ao sistema de
+saúde — o que compromete estruturalmente qualquer análise de desigualdade feita só nele.
+
+Validação final: replicando a metodologia do CDC (mediana entre as 53 jurisdições),
+obtivemos **10,04%** contra os **10,0%** publicados. Passo a passo em
+`docs/05-comparacao-brfss-original.md`.
 
 ---
 

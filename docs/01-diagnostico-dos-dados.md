@@ -87,7 +87,12 @@ excluído antes de o arquivo chegar. Não é dado limpo — é dado **truncado**
 
 Quem se recusa a informar renda não é aleatório (concentra extremos e desconfiança
 institucional). O viés é *Missing Not At Random* e é **invisível** no arquivo entregue.
-Só é mensurável comparando com o BRFSS 2015 original do CDC — o que faremos (§ fontes externas).
+Só é mensurável comparando com o BRFSS original — **o que foi feito**.
+
+> ✅ **MEDIDO** (`docs/05-comparacao-brfss-original.md`): **34.251 respondentes foram
+> excluídos exatamente por isso**, e **40,58% de todos os 187.776 excluídos** não declararam
+> renda. Eles são mais pobres (renda média 5,26 vs 6,05) e o dobro deles não completou o
+> ensino médio (10,95% vs 5,40%). A hipótese está confirmada com número.
 
 ### 1.5 — Outros achados
 

@@ -47,8 +47,19 @@ que reabriria a decisão.
    — são marcadores de detecção. Bloco separado, modelo reportado com e sem eles.
 9. O alvo mede **diagnóstico autorrelatado**, não a doença. ~27,6% dos diabéticos não sabem
    (NHANES). Qualquer conclusão redigida como "tem diabetes" está errada.
+10. **Toda prevalência é reportada em par:** não ponderada (arquivo) e ponderada (`_LLCPWT`
+    do BRFSS). Sozinha, a não ponderada superestima diabetes em 32,7%. Ver `docs/05`.
+11. **Todo IC calculado no arquivo entregue é metade do correto** — DEFF = 4,04. Reportar
+    sempre com a ressalva, ou usar `samplics` com o desenho amostral.
+12. **Análise de desigualdade de acesso não pode ser feita só no arquivo entregue.**
+    96,3% fizeram exame de colesterol contra 77,9% na população: a variação de acesso foi
+    removida da amostra. Usar `data/external/brfss2015/brfss2015_reconstruido.parquet`.
 
 ## Estado
 
-Ingestão e limpeza prontas e testadas. Próximo: features → EDA → modelos.
-Roteiro completo em `docs/02-proposta-de-analise.md`.
+Ingestão, limpeza e comparação com o BRFSS original prontas e testadas (18 testes).
+Próximo: features → EDA → modelos. Roteiro em `docs/02-proposta-de-analise.md`.
+
+O XPT do BRFSS (1,17 GB) fica fora do git — URL, hash e prova de integridade em
+`data/external/FONTES.md`. `www.cdc.gov` bloqueia acesso automatizado (403);
+`data.cdc.gov` não.

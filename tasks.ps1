@@ -8,7 +8,7 @@
 #>
 param(
     [Parameter(Position = 0)]
-    [ValidateSet('ingest', 'clean', 'features', 'train', 'report', 'test', 'all', 'help')]
+    [ValidateSet('ingest', 'clean', 'external', 'features', 'train', 'report', 'test', 'all', 'help')]
     [string]$Task = 'help'
 )
 
@@ -33,6 +33,15 @@ function Invoke-Clean {
     python -m diabetes.clean.pipeline --entrada $CSV --saida $SILVER
 }
 
+function Invoke-External {
+    $xpt = 'data/external/brfss2015/LLCP2015.XPT'
+    if (-not (Test-Path $xpt)) { throw "XPT do BRFSS ausente. URL e hash em data/external/FONTES.md" }
+    Step 'externo: reconstrucao do BRFSS 2015 + cascata de exclusoes'
+    python -m diabetes.external.brfss2015 --xpt $xpt
+    Step 'externo: analise de vies amostral'
+    python -m diabetes.external.vies_amostral --xpt $xpt
+}
+
 function Invoke-Features { Step 'features: silver -> gold'; python -m diabetes.features.build }
 function Invoke-Train    { Step 'treino: escada de modelos -> MLflow'; python -m diabetes.models.train }
 function Invoke-Report   { Step 'relatorio: figuras e tabelas'; python -m diabetes.viz.report }
@@ -47,6 +56,7 @@ function Invoke-Test {
 switch ($Task) {
     'ingest'   { Invoke-Ingest }
     'clean'    { Invoke-Clean }
+    'external' { Invoke-External }
     'features' { Invoke-Features }
     'train'    { Invoke-Train }
     'report'   { Invoke-Report }

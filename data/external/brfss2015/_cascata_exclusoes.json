@@ -1,0 +1,197 @@
+{
+  "n_original": 441456,
+  "cascata": [
+    {
+      "etapa": 0,
+      "regra": "—",
+      "variavel": "(qualquer)",
+      "criterio": "valor ausente",
+      "excluidos": 97850,
+      "restantes": 343606
+    },
+    {
+      "etapa": 1,
+      "regra": "diabetes",
+      "variavel": "DIABETE3",
+      "criterio": "descarta [7, 9]",
+      "excluidos": 374,
+      "restantes": 343232
+    },
+    {
+      "etapa": 2,
+      "regra": "hipertensao",
+      "variavel": "_RFHYPE5",
+      "criterio": "descarta [9]",
+      "excluidos": 693,
+      "restantes": 342539
+    },
+    {
+      "etapa": 3,
+      "regra": "colesterol_alto",
+      "variavel": "TOLDHI2",
+      "criterio": "descarta [7, 9]",
+      "excluidos": 2707,
+      "restantes": 339832
+    },
+    {
+      "etapa": 4,
+      "regra": "exame_colesterol",
+      "variavel": "_CHOLCHK",
+      "criterio": "descarta [9]",
+      "excluidos": 4342,
+      "restantes": 335490
+    },
+    {
+      "etapa": 5,
+      "regra": "imc",
+      "variavel": "_BMI5",
+      "criterio": "—",
+      "excluidos": 0,
+      "restantes": 335490
+    },
+    {
+      "etapa": 6,
+      "regra": "fumante",
+      "variavel": "SMOKE100",
+      "criterio": "descarta [7, 9]",
+      "excluidos": 1961,
+      "restantes": 333529
+    },
+    {
+      "etapa": 7,
+      "regra": "avc",
+      "variavel": "CVDSTRK3",
+      "criterio": "descarta [7, 9]",
+      "excluidos": 728,
+      "restantes": 332801
+    },
+    {
+      "etapa": 8,
+      "regra": "doenca_cardiaca",
+      "variavel": "_MICHD",
+      "criterio": "—",
+      "excluidos": 0,
+      "restantes": 332801
+    },
+    {
+      "etapa": 9,
+      "regra": "atividade_fisica",
+      "variavel": "_TOTINDA",
+      "criterio": "descarta [9]",
+      "excluidos": 15397,
+      "restantes": 317404
+    },
+    {
+      "etapa": 10,
+      "regra": "frutas",
+      "variavel": "_FRTLT1",
+      "criterio": "descarta [9]",
+      "excluidos": 7636,
+      "restantes": 309768
+    },
+    {
+      "etapa": 11,
+      "regra": "vegetais",
+      "variavel": "_VEGLT1",
+      "criterio": "descarta [9]",
+      "excluidos": 7608,
+      "restantes": 302160
+    },
+    {
+      "etapa": 12,
+      "regra": "alcool_excessivo",
+      "variavel": "_RFDRHV5",
+      "criterio": "descarta [9]",
+      "excluidos": 3523,
+      "restantes": 298637
+    },
+    {
+      "etapa": 13,
+      "regra": "acesso_saude",
+      "variavel": "HLTHPLN1",
+      "criterio": "descarta [7, 9]",
+      "excluidos": 492,
+      "restantes": 298145
+    },
+    {
+      "etapa": 14,
+      "regra": "sem_consulta_por_custo",
+      "variavel": "MEDCOST",
+      "criterio": "descarta [7, 9]",
+      "excluidos": 436,
+      "restantes": 297709
+    },
+    {
+      "etapa": 15,
+      "regra": "saude_geral",
+      "variavel": "GENHLTH",
+      "criterio": "descarta [7, 9]",
+      "excluidos": 515,
+      "restantes": 297194
+    },
+    {
+      "etapa": 16,
+      "regra": "saude_mental_dias",
+      "variavel": "MENTHLTH",
+      "criterio": "descarta [77, 99]",
+      "excluidos": 3092,
+      "restantes": 294102
+    },
+    {
+      "etapa": 17,
+      "regra": "saude_fisica_dias",
+      "variavel": "PHYSHLTH",
+      "criterio": "descarta [77, 99]",
+      "excluidos": 3629,
+      "restantes": 290473
+    },
+    {
+      "etapa": 18,
+      "regra": "dificuldade_caminhar",
+      "variavel": "DIFFWALK",
+      "criterio": "descarta [7, 9]",
+      "excluidos": 775,
+      "restantes": 289698
+    },
+    {
+      "etapa": 19,
+      "regra": "sexo",
+      "variavel": "SEX",
+      "criterio": "—",
+      "excluidos": 0,
+      "restantes": 289698
+    },
+    {
+      "etapa": 20,
+      "regra": "idade_faixa",
+      "variavel": "_AGEG5YR",
+      "criterio": "descarta [14]",
+      "excluidos": 1439,
+      "restantes": 288259
+    },
+    {
+      "etapa": 21,
+      "regra": "escolaridade",
+      "variavel": "EDUCA",
+      "criterio": "descarta [9]",
+      "excluidos": 328,
+      "restantes": 287931
+    },
+    {
+      "etapa": 22,
+      "regra": "renda_faixa",
+      "variavel": "INCOME2",
+      "criterio": "descarta [77, 99]",
+      "excluidos": 34251,
+      "restantes": 253680
+    },
+    {
+      "etapa": "final",
+      "regra": "—",
+      "variavel": "—",
+      "criterio": "—",
+      "excluidos": 187776,
+      "restantes": 253680
+    }
+  ]
+}

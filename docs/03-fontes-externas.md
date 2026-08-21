@@ -46,13 +46,19 @@ de confiança é otimista (ignora o *design effect*, tipicamente 1,5–2,5).
 
    | # | Estimativa | Valor |
    |---|---|---|
-   | a | Nosso arquivo, sem peso | **13,93%** (apurado) |
-   | b | BRFSS completo, sem peso | a apurar |
-   | c | BRFSS completo, **com `_LLCPWT`** | a apurar |
-   | d | CDC oficial publicado | referência |
+   | a | Nosso arquivo, sem peso | **13,933%** |
+   | b | BRFSS completo, sem peso | **12,993%** |
+   | c | BRFSS completo, **com `_LLCPWT`** | **10,500%** |
+   | d | CDC oficial publicado (mediana entre 53 jurisdições) | **10,0%** — reproduzido em **10,04%** |
 
 4. O gap (a) → (c) é o **viés que 42,5% de descarte + ausência de peso introduz**.
-   Nenhum trabalho de sala mede isso. Este mede.
+
+> ✅ **EXECUTADO.** Resultado completo em **`docs/05-comparacao-brfss-original.md`**.
+> Viés total **+3,43 p.p. (superestimação de 32,7%)**, dos quais **73% vêm do peso
+> descartado**, não do descarte de linhas. Efeito de desenho **DEFF = 4,04** → todo IC
+> calculado no arquivo entregue é **metade** do correto. E o achado mais grave: o arquivo
+> tem **96,3%** de pessoas que fizeram exame de colesterol contra **77,9%** na população —
+> é uma amostra de quem tem acesso ao sistema de saúde.
 
 Ferramenta: `samplics` ou `statsmodels` com `freq_weights`; para variância correta,
 `survey`-style via `samplics` (Taylor linearization).
@@ -173,7 +179,7 @@ Ordem por relação valor/esforço. As três primeiras já sustentam o trabalho.
 
 | # | Fonte | Esforço | Por que primeiro |
 |---|---|---|---|
-| 1 | **BRFSS 2015 original** | médio | quantifica o viés do próprio arquivo entregue — nenhum concorrente faz |
+| 1 | **BRFSS 2015 original** | ✅ **feito** | quantificou o viés do arquivo entregue — ver `docs/05` |
 | 2 | **Vigitel 2023** | médio | dá relevância brasileira; comparação binacional de OR |
 | 3 | **NHANES / NCHS 516** | baixo | um número (27,6%) destrava toda a formulação PU |
 | 4 | IDF Atlas / NCD-RisC | baixo | sanidade e contexto para os gráficos |

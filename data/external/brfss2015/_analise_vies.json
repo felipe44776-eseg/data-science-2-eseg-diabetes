@@ -1,0 +1,124 @@
+{
+  "prevalencia": [
+    {
+      "estimativa": "a · arquivo entregue, SEM peso",
+      "n": 253680,
+      "n_efetivo": 253680,
+      "sem_diabetes_%": 84.241,
+      "pre_diabetes_%": 1.826,
+      "diabetes_%": 13.933,
+      "ic95_diabetes": "[13.80; 14.07]",
+      "nota": "o que o trabalho usaria se ignorasse tudo isto"
+    },
+    {
+      "estimativa": "b · BRFSS completo, SEM peso",
+      "n": 440658,
+      "n_efetivo": 440658,
+      "sem_diabetes_%": 85.262,
+      "pre_diabetes_%": 1.745,
+      "diabetes_%": 12.993,
+      "ic95_diabetes": "[12.89; 13.09]",
+      "nota": "isola o efeito do descarte de 42,5% da amostra"
+    },
+    {
+      "estimativa": "c · BRFSS completo, COM _LLCPWT",
+      "n": 440658,
+      "n_efetivo": 109019,
+      "sem_diabetes_%": 87.901,
+      "pre_diabetes_%": 1.599,
+      "diabetes_%": 10.5,
+      "ic95_diabetes": "[10.32; 10.68]",
+      "nota": "estimativa populacional correta — a referencia"
+    },
+    {
+      "estimativa": "d · subamostra analitica, COM _LLCPWT",
+      "n": 253680,
+      "n_efetivo": 64117,
+      "sem_diabetes_%": 85.933,
+      "pre_diabetes_%": 1.786,
+      "diabetes_%": 12.28,
+      "ic95_diabetes": "[12.03; 12.53]",
+      "nota": "peso aplicado a subamostra: valido? ver ressalva metodologica"
+    }
+  ],
+  "perfil": [
+    {
+      "indicador": "idade_faixa_media (1-13)",
+      "mantidos (253.680)": 8.03,
+      "excluidos (187.776)": 7.3,
+      "diferenca": -0.73
+    },
+    {
+      "indicador": "% 65 anos ou mais",
+      "mantidos (253.680)": 35.11,
+      "excluidos (187.776)": 33.84,
+      "diferenca": -1.27
+    },
+    {
+      "indicador": "% masculino",
+      "mantidos (253.680)": 44.03,
+      "excluidos (187.776)": 40.06,
+      "diferenca": -3.97
+    },
+    {
+      "indicador": "escolaridade media (1-6)",
+      "mantidos (253.680)": 5.05,
+      "excluidos (187.776)": 4.7,
+      "diferenca": -0.35
+    },
+    {
+      "indicador": "% sem ensino medio completo",
+      "mantidos (253.680)": 5.4,
+      "excluidos (187.776)": 10.95,
+      "diferenca": 5.55
+    },
+    {
+      "indicador": "renda media (1-8)",
+      "mantidos (253.680)": 6.05,
+      "excluidos (187.776)": 5.26,
+      "diferenca": -0.79
+    },
+    {
+      "indicador": "% renda nao declarada (77/99)",
+      "mantidos (253.680)": 0.0,
+      "excluidos (187.776)": 40.58,
+      "diferenca": 40.58
+    },
+    {
+      "indicador": "saude geral media (1-5)",
+      "mantidos (253.680)": 2.51,
+      "excluidos (187.776)": 2.64,
+      "diferenca": 0.12
+    },
+    {
+      "indicador": "% saude regular ou ruim",
+      "mantidos (253.680)": 17.21,
+      "excluidos (187.776)": 20.5,
+      "diferenca": 3.29
+    },
+    {
+      "indicador": "IMC medio",
+      "mantidos (253.680)": 28.4,
+      "excluidos (187.776)": 27.45,
+      "diferenca": -0.95
+    },
+    {
+      "indicador": "% hipertensao",
+      "mantidos (253.680)": 42.9,
+      "excluidos (187.776)": 36.94,
+      "diferenca": -5.96
+    },
+    {
+      "indicador": "% diabetes (DIABETE3=1)",
+      "mantidos (253.680)": 13.93,
+      "excluidos (187.776)": 11.67,
+      "diferenca": -2.27
+    },
+    {
+      "indicador": "% pre-diabetes (DIABETE3=4)",
+      "mantidos (253.680)": 1.83,
+      "excluidos (187.776)": 1.63,
+      "diferenca": -0.2
+    }
+  ]
+}
