@@ -192,6 +192,14 @@ def perfil_dos_ocultos(df: pd.DataFrame, p_y: np.ndarray, p_s: np.ndarray,
     idx = np.argsort(-risco_oculto)[:n_top]
 
     def resumo(m: np.ndarray) -> dict:
+        """Perfil medio de um subgrupo, com risco fisiologico e acesso lado a lado.
+
+        As mesmas colunas nos tres grupos, sem excecao — a leitura de `docs/12` depende
+        disso: os provaveis ocultos batem com os diagnosticados nas variaveis de risco
+        (idade, IMC, hipertensao) e divergem nas de acesso (plano, exame de colesterol,
+        consulta adiada por custo, check-up). Duas listas com colunas diferentes nao
+        sustentariam essa comparacao.
+        """
         return {
             "n": int(m.sum()),
             "idade_media": round(float(df.loc[m, "_AGE80"].mean()), 1),
@@ -215,6 +223,7 @@ def perfil_dos_ocultos(df: pd.DataFrame, p_y: np.ndarray, p_s: np.ndarray,
 
 
 def main() -> None:
+    """Roda SCAR, SCAR ponderado e SAR com sensibilidade em c; grava `gold/_frente2_pu.json`."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--entrada", type=Path, default=ENTRADA)
     ap.add_argument("--saida", type=Path,

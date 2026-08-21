@@ -70,6 +70,15 @@ def _faixa_idade(v: pd.Series) -> pd.Series:
 
 def metricas_por_grupo(y: np.ndarray, p: np.ndarray, grupo: pd.Series,
                        limiar: float, w: np.ndarray) -> list[dict]:
+    """Prevalencia, taxa de selecao, TPR, FPR, PPV e desvio de calibracao por grupo.
+
+    O limiar e **global**, nao por grupo: e assim que um rastreamento opera na
+    pratica, e e exatamente isso que faz TPR e PPV divergirem entre grupos quando
+    a prevalencia difere — o resultado de impossibilidade de Chouldechova (2017).
+    Grupo com menos de 400 linhas e omitido: abaixo disso o TPR oscila mais que a
+    disparidade que se quer medir. Tudo ponderado por `_LLCPWT`, menos `n`, que e
+    contagem de amostra e serve para julgar a precisao de cada linha.
+    """
     saida = []
     for g in sorted(pd.Series(grupo).dropna().unique(), key=str):
         m = (grupo == g).to_numpy()
@@ -96,10 +105,25 @@ def metricas_por_grupo(y: np.ndarray, p: np.ndarray, grupo: pd.Series,
 
 
 def resumo_disparidade(linhas: list[dict]) -> dict:
+    """Reduz a tabela por grupo a amplitudes e razoes — o resumo da auditoria.
+
+    Espalhamento, nao teste: sem IC e sem hipotese nula, entao "amplitude 0,05" nao
+    autoriza dizer que ha disparidade significativa. As quatro familias reportadas
+    (paridade demografica, igualdade de oportunidade, odds equalizados, calibracao)
+    nao podem zerar ao mesmo tempo com prevalencias diferentes entre grupos
+    (Kleinberg, Mullainathan & Raghavan, 2016); qual priorizar esta declarado em
+    `docs/16`.
+    """
     def amp(k: str) -> float:
+        """Amplitude do indicador entre grupos: max - min, ignorando ausente."""
         v = [x[k] for x in linhas if not pd.isna(x[k])]
         return round(max(v) - min(v), 4) if v else float("nan")
     def raz(k: str) -> float:
+        """Razao do indicador entre grupos: min/max, com 1,0 significando paridade.
+
+        Zero fica de fora junto com o ausente — um unico grupo com recall 0 colapsaria
+        a razao em 0 e esconderia a distribuicao dos demais.
+        """
         v = [x[k] for x in linhas if not pd.isna(x[k]) and x[k] > 0]
         return round(min(v) / max(v), 4) if v else float("nan")
     return {
@@ -112,6 +136,7 @@ def resumo_disparidade(linhas: list[dict]) -> dict:
 
 
 def main() -> None:
+    """Audita equidade no rotulo observado e no corrigido pelo PU; grava `gold/_trilhaC_equidade.json`."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--entrada", type=Path, default=ENTRADA)
     ap.add_argument("--saida", type=Path,

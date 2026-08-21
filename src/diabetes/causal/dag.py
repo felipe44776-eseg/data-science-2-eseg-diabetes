@@ -159,6 +159,14 @@ def refutar(df: pd.DataFrame, ajustes: list[str], or_obs: float) -> list[dict]:
     testes = []
 
     def ajusta(tt, yy, XX, ww) -> float:
+        """Reajusta o mesmo GLM logistico e devolve so o OR do tratamento.
+
+        Fechada sobre nada: recebe tudo por parametro justamente para que os tres
+        testes de refutacao troquem uma peca de cada vez (tratamento embaralhado,
+        covariavel de ruido, subamostra) sem tocar no resto da especificacao. O peso
+        entra reescalado para media 1 — `freq_weights` cru leria `_LLCPWT` como
+        contagem e produziria erro-padrao de uma amostra de 250 milhoes.
+        """
         M = sm.add_constant(pd.concat(
             [pd.Series(tt, index=XX.index, name="atividade"), XX], axis=1))
         with warnings.catch_warnings():
@@ -200,6 +208,7 @@ def refutar(df: pd.DataFrame, ajustes: list[str], or_obs: float) -> list[dict]:
 
 
 def main() -> None:
+    """Roda a camada causal (backdoor, refutacao, E-value) e grava `gold/_causal.json`."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--entrada", type=Path, default=ENTRADA)
     ap.add_argument("--saida", type=Path,

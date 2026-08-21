@@ -267,6 +267,7 @@ def construir(xpt: Path) -> tuple[pd.DataFrame, dict]:
 
 
 def main() -> None:
+    """Constroi o conjunto expandido a partir do XPT e grava `gold/brfss_expandido.parquet`."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--xpt", type=Path,
                     default=Path("data/external/brfss2015/LLCP2015.XPT"))

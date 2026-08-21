@@ -113,6 +113,19 @@ NOMES_PT = {
 # --------------------------------------------------------------------------
 
 def exportar_ebm(m, variaveis: list[str]) -> dict:
+    """Serializa o EBM como tabelas de consulta: intercepto, cortes e scores.
+
+    Nao e um resumo do modelo — e o modelo. Como o EBM e aditivo, a predicao vira
+    soma de valores tabelados, e reimplementa-la em JavaScript da o mesmo numero.
+
+    Para cada termo, a resolucao de bins e `r = min(ordem - 1, len(bins) - 1)`, que
+    e a convencao do `interpret` 0.7: termo de interacao usa a grade mais grossa.
+    `scores` sai achatado com `forma` ao lado, para o JavaScript reindexar sem
+    biblioteca de array — e as posicoes extras por dimensao (ausente, faixas,
+    desconhecido) vao junto, porque a pagina precisa delas para tratar campo em
+    branco. Quem confirma que a indexacao ficou certa e `verificar_paridade`, nao
+    esta funcao.
+    """
     termos = []
     for t, feats in enumerate(m.term_features_):
         ordem = len(feats)
@@ -237,6 +250,7 @@ def verificar_paridade(m, modelo: dict, df: pd.DataFrame, variaveis: list[str],
 # --------------------------------------------------------------------------
 
 def main() -> None:
+    """Ajusta o EBM, verifica paridade com o JS e grava `reports/produto/modelo.json`."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--entrada", type=Path, default=ENTRADA)
     ap.add_argument("--saida", type=Path, default=SAIDA / "modelo.json")

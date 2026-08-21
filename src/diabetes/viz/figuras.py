@@ -58,6 +58,7 @@ NOMES = {
 
 
 def nome(k: str) -> str:
+    """Nome legivel em pt-BR da variavel; fora de `NOMES`, troca `_` por espaco."""
     return NOMES.get(k, k.replace("_", " "))
 
 
@@ -71,6 +72,15 @@ def _dados(**kw) -> str:
 # ==========================================================================
 
 def fig_cascata(cascata: dict) -> tuple[str, list[list]]:
+    """Barras da cascata de exclusoes do BRFSS, ordenadas pelo volume descartado.
+
+    Devolve `(svg, tabela)` — a tabela e a *table view* que acompanha toda figura da
+    pagina, exigencia de acessibilidade do projeto, e nao um extra.
+
+    Fora ficam a linha `final` e as etapas que nao derrubaram ninguem. A ordenacao e
+    por volume, nao pela ordem em que as regras rodaram: a pergunta que a figura
+    responde e "o que mais pesou", nao "o que veio antes".
+    """
     etapas = [e for e in cascata["cascata"]
               if e["etapa"] != "final" and e["excluidos"] > 0]
     etapas.sort(key=lambda e: -e["excluidos"])
@@ -86,6 +96,7 @@ def fig_cascata(cascata: dict) -> tuple[str, list[list]]:
              "187.776 exclusões (42,5%)", "sub")]
 
     def rotular(e: dict) -> str:
+        """Rotulo da etapa de exclusao. A etapa 0 e o bloco de ausentes, sem regra unica."""
         if e["etapa"] == 0:
             return "valores ausentes"
         return nome(e["regra"])  # nome do projeto, nao o codigo BRFSS
@@ -119,28 +130,45 @@ def fig_cascata(cascata: dict) -> tuple[str, list[list]]:
 # 2 — decomposicao do vies
 # ==========================================================================
 
-def fig_vies() -> tuple[str, list[list]]:
+def fig_vies(vies: dict) -> tuple[str, list[list]]:
+    """Waterfall da decomposicao do vies de prevalencia, do arquivo a populacao.
+
+    Os tres patamares (a, b, c de `_analise_vies.json`) vem do artefato; as duas
+    quedas sao a diferenca entre eles. Antes estavam fixos no codigo — o que fazia
+    desta a unica figura do modulo que nao acompanharia uma mudanca de base, e sem
+    nada avisar.
+
+    A leitura e a proporcao entre as duas quedas: ~73% do vies vem do peso amostral
+    descartado, nao do descarte de linhas.
+    """
+    def _prev(prefixo: str) -> float:
+        return next(e["diabetes_%"] for e in vies["prevalencia"]
+                    if e["estimativa"].startswith(prefixo))
+
+    arquivo, completo, populacao = _prev("a "), _prev("b "), _prev("c ")
     passos = [
-        ("arquivo entregue\nsem peso", 13.933, None),
-        ("descarte de\n42,5% da amostra", -0.940, "queda"),
-        ("BRFSS completo\nsem peso", 12.993, None),
-        ("peso _LLCPWT\ndescartado", -2.493, "queda"),
-        ("estimativa\npopulacional", 10.500, None),
+        ("arquivo entregue\nsem peso", arquivo, None),
+        ("descarte de\n42,5% da amostra", completo - arquivo, "queda"),
+        ("BRFSS completo\nsem peso", completo, None),
+        ("peso _LLCPWT\ndescartado", populacao - completo, "queda"),
+        ("estimativa\npopulacional", populacao, None),
     ]
     W, H = 860, 400
     mt, mb, ml, mr = 78, 96, 60, 30
     y = Escala(0, 15, H - mb, mt)
     larg = (W - ml - mr) / len(passos) - 26
 
+    # a manchete da figura e uma razao entre as duas quedas: calcular, nao digitar
+    peso_pct = abs(populacao - completo) / abs(populacao - arquivo) * 100
     p = [txt(20, 30, "De onde vem o viés de prevalência", "titulo"),
-         txt(20, 50, "Prevalência de diabetes (%) — 73% do viés vem do peso amostral "
-             "descartado, não do descarte de linhas", "sub")]
+         txt(20, 50, f"Prevalência de diabetes (%) — {peso_pct:.0f}% do viés vem do peso "
+             "amostral descartado, não do descarte de linhas", "sub")]
 
     for v in (0, 5, 10, 15):
         p.append(f'<line x1="{ml}" y1="{y(v):.1f}" x2="{W - mr}" y2="{y(v):.1f}" class="grade"/>')
         p.append(txt(ml - 8, y(v) + 4, f"{v}", "eixo", "end"))
 
-    base = 13.933
+    base = arquivo
     for i, (rot, val, tipo) in enumerate(passos):
         rot1 = rot.replace("\n", " ")
         cx = ml + i * ((W - ml - mr) / len(passos)) + 13
@@ -175,6 +203,16 @@ def fig_vies() -> tuple[str, list[list]]:
 # ==========================================================================
 
 def fig_forest(modelo: dict) -> tuple[str, list[list]]:
+    """Forest plot dos OR de M1: IC 95% da base ponderada e o ponto do arquivo.
+
+    Eixo em escala logaritmica porque OR e razao — so no log um afastamento de 0,5 e
+    um de 2,0 aparecem simetricos em torno de 1.
+
+    A barra e o IC da estimativa populacional. O arquivo entregue entra apenas como
+    ponto, sem IC: calculado como amostra aleatoria simples ele sairia estreito
+    demais (`docs/11` §A, DEFF real 2,94) e desenha-lo ao lado sugeriria uma
+    precisao que a estimativa nao tem.
+    """
     b = modelo["base_B_ponderada"]["M1_risco_puro"]["coeficientes"]
     a = modelo["base_A_sem_peso"]["M1_risco_puro"]["coeficientes"]
     itens = sorted(b.items(), key=lambda kv: -kv[1]["or"])
@@ -245,6 +283,20 @@ EIXOS = {
 
 
 def fig_gradientes(eda: dict) -> tuple[str, list[list]]:
+    """Small multiples: prevalencia por nivel das quatro variaveis ordinais.
+
+    Quatro paineis com o mesmo par de series e uma legenda unica, mas **escala y
+    propria por painel** (`passo_t` escolhido para caber em ate 3 marcas): as faixas
+    de prevalencia de idade e de escolaridade estao em ordens de grandeza
+    diferentes, e um eixo comum achataria as duas.
+
+    Duas armadilhas do artefato: `A_prev_por_nivel` pode chegar como dict ou como
+    string de dict (por isso o `eval` de resgate), e as chaves podem ser str ou int
+    — dai o acesso duplo. Corrigir isso e na origem, no JSON, nao aqui.
+
+    O achado que a figura carrega: nenhum gradiente e monotonico — idade cai em 80+
+    e renda inverte na faixa mais baixa.
+    """
     ordem = ["idade_faixa", "saude_geral", "renda_faixa", "escolaridade"]
     dados = {o["variavel"]: o for o in eda["ordinais"]}
 
@@ -308,6 +360,15 @@ def fig_gradientes(eda: dict) -> tuple[str, list[list]]:
 # ==========================================================================
 
 def fig_imc(eda: dict) -> tuple[str, list[list]]:
+    """Barras pareadas de prevalencia de diabetes por faixa de IMC da OMS.
+
+    Duas series lado a lado com 2px de folga entre elas (o `-1` em `bw` desconta de
+    cada lado) e rotulo direto sobre a barra populacional, que e o que autoriza o
+    uso da serie sem depender so da cor.
+
+    A curva em J no baixo peso nao e ruido de amostra: a faixa concentra diabetes
+    tipo 1 e perda de peso causada por doenca.
+    """
     A = eda["imc"]["A_prev_por_faixa_oms"]
     B = eda["imc"]["B_prev_por_faixa_oms"]
     rot = {"baixo_peso": "baixo peso\n<18,5", "eutrofico": "eutrófico\n18,5–25",
@@ -357,6 +418,16 @@ def fig_imc(eda: dict) -> tuple[str, list[list]]:
 # ==========================================================================
 
 def fig_pre_vs_diabetes(modelo: dict) -> tuple[str, list[list]]:
+    """Dumbbell dos OR de pre-diabetes e de diabetes contra "sem diabetes".
+
+    Mostra somente as variaveis cujos IC 95% **nao** se sobrepoem — criterio
+    conservador, e o que sobra e o argumento de `docs/07` §3: as duas classes nao
+    sao pontos do mesmo continuum. O simbolo ⟳ marca fator que inverte de direcao
+    entre elas.
+
+    Eixo em log, com dominio recortado no que e efetivamente desenhado para nao
+    sobrar eixo vazio nas pontas.
+    """
     d = modelo["pre_vs_diabetes"]
     itens = [(k, v) for k, v in d.items() if not v["ic_sobrepoe"]]
     itens.sort(key=lambda kv: -abs(math.log(kv[1]["razao_diab_pre"])))
@@ -477,6 +548,7 @@ def _tabela_html(t: list[list]) -> str:
 
 
 def main() -> None:
+    """Gera os seis SVG e a pagina `reports/figures/index.html` com as tabelas de dados."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--saida", type=Path, default=SAIDA)
     args = ap.parse_args()
@@ -484,10 +556,11 @@ def main() -> None:
     eda = json.loads((GOLD / "_eda_comparativa.json").read_text(encoding="utf-8"))
     modelo = json.loads((GOLD / "_modelo_explicativo.json").read_text(encoding="utf-8"))
     cascata = json.loads((EXT / "_cascata_exclusoes.json").read_text(encoding="utf-8"))
+    vies = json.loads((EXT / "_analise_vies.json").read_text(encoding="utf-8"))
 
     figuras = [
         ("01-cascata-exclusoes", *fig_cascata(cascata)),
-        ("02-decomposicao-vies", *fig_vies()),
+        ("02-decomposicao-vies", *fig_vies(vies)),
         ("03-forest-m1", *fig_forest(modelo)),
         ("04-gradientes", *fig_gradientes(eda)),
         ("05-imc", *fig_imc(eda)),

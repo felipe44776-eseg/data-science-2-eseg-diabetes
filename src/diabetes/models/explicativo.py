@@ -168,6 +168,12 @@ def comparar_pre_vs_diabetes(df: pd.DataFrame, variaveis: list[str],
     w = None if peso is None else peso.loc[d.index]
 
     def ajustar(classe: int) -> pd.DataFrame:
+        """Logit de uma classe contra a classe 0, sobre a amostra ja filtrada.
+
+        O `dropna` fica **fora**, feito uma unica vez: os dois contrastes precisam rodar
+        na MESMA amostra, senao `razao_diab_pre` estaria misturando diferenca de efeito
+        com diferenca de quem entrou em cada modelo.
+        """
         sel = d[TARGET].isin([0, classe])
         X, y, _, _ = _preparar(d.loc[sel], variaveis, None)
         ww = None if w is None else w.loc[d.index[sel]]
@@ -190,6 +196,7 @@ def comparar_pre_vs_diabetes(df: pd.DataFrame, variaveis: list[str],
 
 
 def main() -> None:
+    """Ajusta M1/M2/M3 nas duas bases, testa odds proporcionais e grava `gold/_modelo_explicativo.json`."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--xpt", type=Path, required=True)
     ap.add_argument("--silver", type=Path, default=Path("data/processed/diabetes_silver.parquet"))

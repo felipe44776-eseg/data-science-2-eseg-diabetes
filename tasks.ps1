@@ -16,7 +16,7 @@ param(
     [Parameter(Position = 0)]
     [ValidateSet('status', 'log', 'ingest', 'clean', 'folds', 'external', 'eda',
                  'explicativo', 'figuras', 'modelos', 'vigitel',
-                 'expandido', 'pesos', 'pu', 'glassbox', 'medicaid', 'trilhac', 'produto', 'notebooks', 'deck', 'escorebr', 'prediabetes', 'naosup', 'causal', 'temporal',
+                 'expandido', 'pesos', 'pu', 'glassbox', 'medicaid', 'trilhac', 'produto', 'notebooks', 'deck', 'escorebr', 'prediabetes', 'naosup', 'causal', 'temporal', 'site',
                  'test', 'all', 'help')]
     [string]$Task = 'help'
 )
@@ -194,6 +194,12 @@ function Invoke-Deck {
     Invoke-Etapa 'deck' 'Deck da apresentacao' { python -m diabetes.produto.deck }
 }
 
+function Invoke-Site {
+    Invoke-Etapa 'site' 'Pagina de entrada do site publico' {
+        python -m diabetes.produto.site
+    }
+}
+
 function Invoke-EscoreBr {
     Invoke-Etapa 'escorebr' 'Escore recalibrado para o Brasil' {
         python -m diabetes.eval.escore_brasil
@@ -259,6 +265,7 @@ switch ($Task) {
     'naosup'      { Invoke-NaoSup }
     'causal'      { Invoke-Causal }
     'temporal'    { Invoke-Temporal }
+    'site'        { Invoke-Site }
     'test'        { Invoke-Test }
     'all' {
         Invoke-Ingest; Invoke-Clean; Invoke-Folds
@@ -269,9 +276,11 @@ switch ($Task) {
             Write-Host 'XPT do BRFSS ausente - etapas externas puladas. Ver data/external/FONTES.md' -ForegroundColor Yellow
             Write-Log 'all' 'pulado' @{ detalhe = 'XPT ausente' }
         }
-        Invoke-Modelos; Invoke-Figuras
+        Invoke-Modelos; Invoke-Figuras; Invoke-Vigitel
         if (Test-Path (Join-Path $PSScriptRoot $XPT)) {
-            Invoke-Expandido; Invoke-Pesos; Invoke-Pu; Invoke-Glassbox; Invoke-TrilhaC; Invoke-Produto; Invoke-Notebooks; Invoke-Deck
+            Invoke-Expandido; Invoke-Pesos; Invoke-Pu; Invoke-Glassbox; Invoke-TrilhaC
+            Invoke-EscoreBr; Invoke-Prediabetes; Invoke-NaoSup; Invoke-Causal; Invoke-Temporal
+            Invoke-Produto; Invoke-Notebooks; Invoke-Deck; Invoke-Site
         }
         Invoke-Medicaid
         python -m diabetes.pipeline.estado

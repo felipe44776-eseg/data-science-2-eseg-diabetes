@@ -71,6 +71,13 @@ def particionar(df: pd.DataFrame, frac: float = 0.2) -> np.ndarray:
 
 def treinar_avaliar(df: pd.DataFrame, cols: list[str], te: np.ndarray,
                     rotulo: str, calibrado: bool = True) -> dict:
+    """Ajusta no treino e avalia no holdout; devolve metricas e as predicoes.
+
+    A calibracao isotonica acontece dentro do `CalibratedClassifierCV` (cv=3 sobre o
+    proprio treino), entao o holdout nao participa dela em momento nenhum. As
+    predicoes voltam junto com o resumo porque a ablacao e a auditoria por raca
+    precisam do vetor bruto, nao so das metricas agregadas.
+    """
     y = df["diabetes"].to_numpy()
     X = df[cols].astype("float32").to_numpy()
     t0 = time.time()
@@ -134,6 +141,7 @@ def auditar_raca(df: pd.DataFrame, te: np.ndarray, p_orig: np.ndarray,
 
 
 def main() -> None:
+    """Compara 21 originais com 60/69 curadas, faz ablacao e auditoria racial; grava `gold/_frente1_expandido.json`."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--entrada", type=Path, default=ENTRADA)
     ap.add_argument("--saida", type=Path,

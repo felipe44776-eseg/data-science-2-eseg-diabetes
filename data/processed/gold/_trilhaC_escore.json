@@ -10,7 +10,7 @@
         "sexo"
       ],
       "tabela": {
-        "unidade_logit": 0.13951410683074392,
+        "unidade_logit": 0.13951410683074417,
         "pontos": {
           "idade": {
             "<35": 0,
@@ -133,7 +133,7 @@
         "sexo"
       ],
       "tabela": {
-        "unidade_logit": 0.13970210194330687,
+        "unidade_logit": 0.13970210194330768,
         "pontos": {
           "idade": {
             "<35": 0,

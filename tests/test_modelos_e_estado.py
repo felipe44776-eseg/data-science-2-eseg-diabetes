@@ -222,3 +222,36 @@ def test_hipertensao_e_idade_replicam_entre_paises():
     for v in ("hipertensao", "idade_faixa"):
         assert o[v]["mesma_direcao"] and o[v]["ic_sobrepoe"], v
         assert 0.9 <= o[v]["razao_BR_EUA"] <= 1.1, v
+
+
+def test_nenhuma_saida_declarada_e_cache_de_download():
+    """Cache declarado como saida deixa a etapa OBSOLETA para sempre.
+
+    Ja aconteceu duas vezes: com o parquet do vigitel (era artefato de verdade —
+    o cache saiu) e com o painel do medicaid (era cache — a declaracao saiu). O
+    sintoma e sempre o mesmo: `status` acusa obsoleto logo apos a etapa rodar.
+    """
+    caches = {"data/external/medicaid/painel_brfss_estados.parquet"}
+    declaradas = {s for e in ETAPAS for s in e.saidas}
+    assert not (declaradas & caches), sorted(declaradas & caches)
+
+
+def test_status_fica_ok_logo_apos_a_etapa_rodar(tmp_path: Path):
+    """Toda etapa tem de convergir: entradas velhas, saidas novas -> ok.
+
+    Simula o que o pipeline faz de verdade — escreve as entradas, depois as
+    saidas — e exige que nenhuma etapa continue OBSOLETA.
+    """
+    for e in ETAPAS:
+        for c in e.entradas:
+            p = tmp_path / c
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_text("x")
+    time.sleep(0.02)
+    for e in ETAPAS:
+        for c in e.saidas:
+            p = tmp_path / c
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_text("y")
+    obsoletas = [ln["chave"] for ln in status(raiz=tmp_path) if ln["estado"] == "obsoleto"]
+    assert not obsoletas, obsoletas

@@ -280,6 +280,7 @@ def poder_do_desenho(r_did: list[dict], c_subdiag: float = 0.276) -> dict:
 
 
 def main() -> None:
+    """Roda o DiD/DDD da expansao do Medicaid e grava `_frente4_medicaid.json` (painel do CDC em cache)."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--painel", type=Path, default=SAIDA / "painel_brfss_estados.parquet")
     ap.add_argument("--saida", type=Path, default=SAIDA / "_frente4_medicaid.json")

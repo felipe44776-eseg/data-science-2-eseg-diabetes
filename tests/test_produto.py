@@ -164,3 +164,64 @@ def test_notebooks_versionados_tem_saida():
         assert saidas, f"{nb.name} versionado sem saida"
         erros = [o for o in saidas if o.get("output_type") == "error"]
         assert not erros, f"{nb.name} tem celula com erro: {erros[0].get('ename')}"
+
+
+# --- publicacao (site + GitHub Pages) ---------------------------------------
+
+SITE = Path("reports/site/index.html")
+WORKFLOW_PAGES = Path(".github/workflows/pages.yml")
+
+
+def test_toda_funcao_publica_tem_docstring():
+    """Regressao: 52% das funcoes publicas estavam sem docstring.
+
+    Nao e estetica. Modulo sem docstring obriga quem for continuar o trabalho a
+    reconstruir a intencao a partir do codigo — e foi assim que a formulacao SAR
+    passou a medir 'nao foi testado' em vez de 'alto risco e nao testado'.
+    """
+    import ast
+
+    sem = [f"{p}:{n.name}"
+           for p in Path("src").rglob("*.py")
+           for n in ast.walk(ast.parse(p.read_text(encoding="utf-8")))
+           if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))
+           and not n.name.startswith("_")
+           and not ast.get_docstring(n)]
+    assert not sem, f"sem docstring: {sem}"
+
+
+def test_workflow_de_pages_publica_o_que_o_pipeline_produz():
+    """O que o workflow copia tem de ser saida declarada de alguma etapa.
+
+    Se o caminho no YAML e o caminho em `ETAPAS` divergirem, o deploy publica
+    silenciosamente a versao antiga — ou quebra so no CI.
+    """
+    from diabetes.pipeline.estado import ETAPAS
+
+    yml = WORKFLOW_PAGES.read_text(encoding="utf-8")
+    produzidas = {s for e in ETAPAS for s in e.saidas}
+    for caminho in ("reports/site/index.html", "reports/produto/index.html",
+                    "reports/deck/apresentacao.html"):
+        assert caminho in yml, f"{caminho} nao e publicado pelo workflow"
+        assert caminho in produzidas, f"{caminho} nao e saida de nenhuma etapa"
+
+
+def test_etapa_site_existe_e_depende_do_produto():
+    """A pagina de entrada cita metricas do escore e do produto — se nao
+    depender deles, `status` nao a marca OBSOLETA quando eles mudarem."""
+    from diabetes.pipeline.estado import ETAPAS
+
+    site = next(e for e in ETAPAS if e.chave == "site")
+    assert "reports/produto/modelo.json" in site.entradas
+    assert "data/processed/gold/_trilhaC_escore.json" in site.entradas
+    assert site.saidas == ("reports/site/index.html",)
+
+
+@pytest.mark.skipif(not SITE.exists(), reason="site nao gerado")
+def test_site_liga_para_os_tres_entregaveis():
+    html = SITE.read_text(encoding="utf-8")
+    for destino in ('href="calculadora/"', 'href="deck/"', 'href="figuras/"'):
+        assert destino in html, destino
+    assert "não é orientação clínica" in html, "falta o aviso de escopo"
+    # numero digitado a mao envelhece sem aviso; tudo vem de artefato
+    assert "0,804" in html and "0,7663" in html

@@ -47,6 +47,14 @@ def _desfecho_binario(s: pd.Series) -> pd.Series:
 
 
 def carregar_bases(xpt: Path, silver: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Carrega o par: A (silver, sem peso) e B (BRFSS reconstruido, com `_LLCPWT`).
+
+    A sai como `Float32` — o silver e `uint8` e nao admite ausente, mas as duas
+    bases precisam do mesmo tratamento par a par para que a comparacao seja de
+    metodo e nao de tipo. B vem de `reconstruir_sem_descarte`: nenhum respondente
+    e eliminado por ausencia em outra variavel, ao contrario do arquivo entregue
+    (`docs/05`).
+    """
     a = pd.read_parquet(silver)[list(ESQUEMA)].astype("Float32")
     bruto = carregar_xpt(xpt, colunas=COLUNAS_BRFSS + DESENHO)
     b = reconstruir_sem_descarte(bruto)
@@ -54,6 +62,18 @@ def carregar_bases(xpt: Path, silver: Path) -> tuple[pd.DataFrame, pd.DataFrame]
 
 
 def comparar(a: pd.DataFrame, b: pd.DataFrame) -> dict:
+    """Roda a EDA inteira nas duas bases e devolve o dicionario A-vs-B.
+
+    O resultado nao e "a estimativa"; e o par. `delta_exposicao` e `delta_OR_%`
+    medem o efeito conjunto do pre-processamento do Kaggle e da ausencia de peso —
+    nao erro amostral, e por isso nao vem com IC. `deff_pesos` da o multiplicador
+    que corrige o erro-padrao ingenuo de B (`docs/05`); IC calculado sem ele e
+    estreito demais.
+
+    O alvo e binarizado em diabetes diagnosticado (classe 2) contra o resto: a
+    classe 1 fica **fora**, nao no meio, porque pre-diabetes tem mecanismo proprio
+    (`docs/07` §3). Como sempre, o alvo mede diagnostico autorrelatado, nao doenca.
+    """
     da, db = _desfecho_binario(a[TARGET]), _desfecho_binario(b[TARGET])
     peso = b["_LLCPWT"]
 
@@ -141,6 +161,7 @@ def _prev_por_faixa_imc(imc: pd.Series, desfecho: pd.Series,
 
 
 def main() -> None:
+    """Compara arquivo entregue e BRFSS completo e grava `gold/_eda_comparativa.json`."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--xpt", type=Path, required=True)
     ap.add_argument("--silver", type=Path, default=Path("data/processed/diabetes_silver.parquet"))

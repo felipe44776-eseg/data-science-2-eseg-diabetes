@@ -1,0 +1,75 @@
+name: pages
+
+# Publica os entregaveis HTML em https://felipe44776-eseg.github.io/data-science-2-eseg-diabetes/
+#
+# O site NAO e construido aqui: os tres artefatos (calculadora, deck, figuras) e
+# a pagina de entrada sao gerados localmente pelo pipeline e versionados em
+# `reports/`. O workflow so os arruma na estrutura de URLs e publica.
+#
+# A razao: gerar aqui exigiria o PDF de 109 MB e o XPT de 1,17 GB, que estao
+# fora do git por decisao de arquitetura (invariante 6). Publicar o que ja foi
+# gerado e verificado localmente e mais honesto do que fingir que o CI reproduz.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'reports/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# uma publicacao por vez; nao cancela a que ja esta rodando
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  publicar:
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: montar o site
+        run: |
+          set -euo pipefail
+          mkdir -p site/calculadora site/deck site/figuras
+
+          cp reports/site/index.html          site/index.html
+          cp reports/produto/index.html       site/calculadora/index.html
+          cp reports/produto/modelo.json      site/calculadora/modelo.json
+          cp reports/deck/apresentacao.html   site/deck/index.html
+          cp reports/figures/index.html       site/figuras/index.html
+          cp reports/figures/*.svg            site/figuras/
+
+          # sem isto o Jekyll do Pages ignora arquivos iniciados por _
+          touch site/.nojekyll
+
+          echo "--- publicado ---"
+          find site -type f | sort
+
+      - name: conferir que nada ficou vazio
+        run: |
+          set -euo pipefail
+          for f in site/index.html site/calculadora/index.html site/deck/index.html; do
+            test -s "$f" || { echo "vazio: $f"; exit 1; }
+          done
+          # a calculadora e autocontida: nao pode depender de host externo
+          if grep -qE 'src="https?://|href="https?://[^"]*\.(css|js)"' site/calculadora/index.html; then
+            echo "a calculadora referencia recurso externo — ela precisa rodar offline"
+            exit 1
+          fi
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deploy
+        uses: actions/deploy-pages@v4

@@ -54,6 +54,15 @@ def _faixa_oms(imc: pd.Series) -> pd.Series:
 
 
 def limpar(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, dict]:
+    """Aplica R1–R7 e devolve (silver, quarentena, relatorio de qualidade).
+
+    A ordem nao e livre: o dominio (R3) e conferido **antes** do downcast (R2),
+    senao `astype("uint8")` truncaria em silencio justamente o valor invalido que
+    deveria ir para a quarentena. A quarentena e a unica saida de linha do
+    pipeline; R4, R5 e R6 apenas **marcam** (`flag_*`) — deduplicar e decisao da
+    camada de modelagem, nao da limpeza (ADR 0002). As derivadas de R7 sao
+    ponto-medio de faixa (idade, renda), portanto aproximacoes, nao medidas.
+    """
     rel: dict = {"entrada_linhas": len(df)}
 
     # R1 — nomes
@@ -129,6 +138,7 @@ def limpar(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, dict]:
 
 
 def main() -> None:
+    """Le o CSV bronze, aplica `limpar` e grava silver, quarentena e relatorio de limpeza."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--entrada", type=Path, required=True)
     ap.add_argument("--saida", type=Path, required=True)

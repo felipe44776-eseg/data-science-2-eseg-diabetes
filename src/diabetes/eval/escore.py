@@ -127,6 +127,13 @@ def pontos_inteiros(coef: pd.Series, variaveis: list[str]) -> dict:
 
 
 def aplicar(faixas: pd.DataFrame, tabela: dict, variaveis: list[str]) -> pd.Series:
+    """Soma os pontos da tabela por linha, no formato em que o papel seria preenchido.
+
+    Item nao respondido vira NaN e contamina a soma inteira, de proposito: escore
+    parcial nao e comparavel com a calibracao de `calibrar`, que foi construida
+    sobre a soma completa. Faixa que nao exista na tabela tambem cai em NaN, o que
+    faz uma categoria nova falhar visivelmente em vez de valer 0 ponto.
+    """
     total = pd.Series(0.0, index=faixas.index)
     for v in variaveis:
         mapa = tabela["pontos"][v]
@@ -155,6 +162,14 @@ def calibrar(pontos: pd.Series, y: pd.Series, w: pd.Series,
 
 
 def risco_do_escore(pontos: pd.Series, cal: dict) -> pd.Series:
+    """Traduz soma de pontos em risco absoluto pela tabela devolvida por `calibrar`.
+
+    E este passo que absorve o erro do arredondamento: o risco devolvido e o
+    **observado** na faixa durante o treino, nao o predito pela logistica que gerou
+    os pontos. Como os cortes vao de -inf a +inf, escore fora do intervalo visto no
+    treino cai na faixa extrema — o risco satura, nao extrapola. NaN entra, NaN
+    sai.
+    """
     faixa = pd.cut(pontos, cal["cortes"], labels=False, include_lowest=True)
     mapa = {f["faixa"]: f["risco_%"] / 100 for f in cal["faixas"]}
     return faixa.map(mapa)
@@ -184,6 +199,7 @@ def findrisc(df: pd.DataFrame) -> pd.Series:
 
 
 def main() -> None:
+    """Constroi os escores A e B, compara com o FINDRISC e grava `gold/_trilhaC_escore.json`."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--entrada", type=Path, default=ENTRADA)
     ap.add_argument("--saida", type=Path,

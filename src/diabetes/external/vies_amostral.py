@@ -61,6 +61,14 @@ def comparar_prevalencia(bruto: pd.DataFrame, mantidos: pd.DataFrame) -> pd.Data
     linhas = []
 
     def add(rotulo, serie, pesos, nota):
+        """Acrescenta uma das quatro estimativas de prevalencia a tabela.
+
+        Sem peso, `n_efetivo` e o proprio n; com peso, e o n efetivo de Kish, e e dele
+        que sai o IC — usar n bruto num ponto ponderado daria um intervalo de amostra
+        aleatoria simples que a estimativa nao tem. Mesmo assim o IC entra com
+        `deff = 1`: nao corrige estrato nem PSU, entao e um **piso**. O DEFF real do
+        BRFSS 2015, por linearizacao de Taylor, e 2,94 (`docs/11` §A).
+        """
         if pesos is None:
             props = serie.value_counts(normalize=True)
             n_ef = len(serie)
@@ -127,6 +135,7 @@ def perfil_excluidos(bruto: pd.DataFrame, mantidos_idx: pd.Index) -> pd.DataFram
 
 
 def main() -> None:
+    """Mede o vies do pre-processamento (prevalencia e perfil dos excluidos) e grava `_analise_vies.json`."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--xpt", type=Path, required=True)
     ap.add_argument("--saida", type=Path, default=Path("data/external/brfss2015/_analise_vies.json"))

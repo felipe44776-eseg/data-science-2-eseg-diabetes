@@ -83,6 +83,14 @@ def _categorizar(df: pd.DataFrame) -> pd.DataFrame:
 # --------------------------------------------------------------------------
 
 def rodar_mca(cat: pd.DataFrame, n_comp: int = 6) -> tuple:
+    """MCA da matriz indicadora; devolve coordenadas, inercia e os polos dos 2 eixos.
+
+    Analise de correspondencia multipla, nao PCA — a metrica e qui-quadrado sobre a
+    matriz indicadora, que e o analogo correto para variavel categorica (cabecalho
+    do modulo). A inercia percentual da MCA e baixa por construcao, porque a matriz
+    indicadora infla o total: o numero **nao** se compara com o de um PCA. O que se
+    le e a ordenacao dos eixos e quais categorias ocupam cada polo.
+    """
     import prince
 
     m = prince.MCA(n_components=n_comp, random_state=SEED)
@@ -107,6 +115,17 @@ def rodar_mca(cat: pd.DataFrame, n_comp: int = 6) -> tuple:
 
 def fenotipos(coord: pd.DataFrame, cat: pd.DataFrame, y: np.ndarray,
               w: np.ndarray, k: int = 5) -> list[dict]:
+    """k-means sobre as coordenadas da MCA; devolve (perfis, rotulos do cluster).
+
+    Agrupar nas coordenadas da MCA — e nao nas variaveis originais — e o que torna
+    a distancia euclidiana legitima aqui. O `perfil_modal` e a categoria mais
+    frequente de cada variavel dentro do cluster: **descreve** o cluster, nao o
+    define, e categorias com 40% e 39% aparecem como se a primeira mandasse. A
+    prevalencia sai ponderada por `_LLCPWT`; o tamanho do cluster, nao — ele e
+    contagem da amostra de MCA.
+
+    A anotacao de retorno cobre so o primeiro elemento; a funcao devolve tupla.
+    """
     km = KMeans(n_clusters=k, n_init=10, random_state=SEED)
     rot = km.fit_predict(coord.to_numpy())
     saida = []
@@ -184,6 +203,7 @@ def atipicos(X: pd.DataFrame, y: np.ndarray, p_oculto: np.ndarray) -> dict:
 
 
 def main() -> None:
+    """Roda MCA, fenotipos, FP-Growth e atipicos e grava `gold/_naosupervisionada.json`."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--entrada", type=Path, default=ENTRADA)
     ap.add_argument("--saida", type=Path,

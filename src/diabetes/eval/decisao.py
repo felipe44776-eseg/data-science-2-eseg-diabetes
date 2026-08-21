@@ -157,6 +157,7 @@ def _modelo_completo(df: pd.DataFrame, te: np.ndarray) -> np.ndarray:
 
 
 def main() -> None:
+    """Avalia modelo, escore e FINDRISC por decisao clinica e grava `gold/_trilhaC_decisao.json`."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--entrada", type=Path, default=ENTRADA)
     ap.add_argument("--saida", type=Path,

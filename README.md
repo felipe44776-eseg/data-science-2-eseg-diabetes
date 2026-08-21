@@ -4,7 +4,15 @@
 
 Análise de 253.680 respostas da pesquisa BRFSS 2015 (CDC) para identificar
 fatores associados a diabetes e predizer ocorrências — com validação contra
-**cinco bases externas** e um **produto** aplicável.
+**seis bases externas** e um **produto** aplicável.
+
+### 🔗 https://felipe44776-eseg.github.io/data-science-2-eseg-diabetes/
+
+| link direto | o que é |
+|---|---|
+| [🧮 **Calculadora de risco**](https://felipe44776-eseg.github.io/data-science-2-eseg-diabetes/calculadora/) | 12 perguntas → risco estimado. Roda no navegador, offline |
+| [🎤 **Apresentação**](https://felipe44776-eseg.github.io/data-science-2-eseg-diabetes/deck/) | 26 slides · `←` `→` navega · `Ctrl+P` exporta em PDF |
+| [📊 **Figuras**](https://felipe44776-eseg.github.io/data-science-2-eseg-diabetes/figuras/) | 6 gráficos com os números por trás |
 
 ---
 
@@ -12,11 +20,19 @@ fatores associados a diabetes e predizer ocorrências — com validação contra
 
 **Se você tem 10 minutos e quer o todo:** [`docs/23-sintese-final.md`](docs/23-sintese-final.md).
 
-**Se você vai apresentar:** abra `reports/deck/apresentacao.html` — 19 slides,
-navegação por `←` `→`, e `Ctrl+P` exporta em PDF (paisagem, sem margens).
+**Se você vai apresentar:** [abra o deck](https://felipe44776-eseg.github.io/data-science-2-eseg-diabetes/deck/)
+— 26 slides, navegação por `←` `→`, e `Ctrl+P` exporta em PDF (paisagem, sem
+margens). Localmente: `reports/deck/apresentacao.html`.
 
-**Se você tem 2 minutos:** abra `reports/produto/index.html` (duplo clique,
-funciona offline). É a calculadora de risco — o produto do trabalho.
+**Se você tem 2 minutos:** [abra a calculadora](https://felipe44776-eseg.github.io/data-science-2-eseg-diabetes/calculadora/)
+— ou `reports/produto/index.html` com duplo clique, que funciona offline. É o
+produto do trabalho.
+
+**Se você quer a base teórica:** [`docs/24`](docs/24-fundamentacao-teorica.md) —
+método por método, com a bibliografia completa.
+
+**Se você quer o percurso:** [`docs/25`](docs/25-linha-do-tempo.md) — as 11 fases,
+o que cada uma travou e o que descobriu.
 
 **Se você quer ver a análise em Python:** `notebooks/` — seis notebooks
 executados, com as saídas gravadas.
@@ -59,15 +75,19 @@ ausente**, com hash e idade de cada artefato, e aponta a próxima etapa acionáv
 explicação de cada resposta, contrafactuais e o escore de papel de 5 perguntas.
 
 **A garantia:** o EBM é aditivo, então exportamos as tabelas de consulta e a
-predição roda em JavaScript com o **mesmo número** do Python.
+predição roda em JavaScript com o **mesmo número** do Python. São **duas**
+verificações independentes:
 
 ```
-casos verificados      500
-erro máximo Py ↔ JS    1,110 × 10⁻¹⁶
-casos com ausente      290 (todos válidos)
+no build (Python, contra o sklearn)     3.000 casos · erro máx. 1,110 × 10⁻¹⁶
+na suíte (Node, o mesmo JS da página)     500 casos · tolerância 1 × 10⁻¹²
+                                          290 deles com valor ausente
 ```
 
-Verificado no build e na suíte de testes. Detalhe em [`docs/17`](docs/17-produto-calculadora.md).
+A segunda existe porque a primeira já passou uma vez com um bug real: o JSON
+tinha `-Infinity`, que o `JSON.parse` rejeita — e a checagem em Python passava
+porque nunca serializava para texto. Hoje a paridade **atravessa o JSON como
+texto** e o build roda `node --check` na página. Detalhe em [`docs/17`](docs/17-produto-calculadora.md).
 
 ---
 
@@ -93,6 +113,8 @@ Verificado no build e na suíte de testes. Detalhe em [`docs/17`](docs/17-produt
 | Isso é causal? | [`docs/21`](docs/21-camada-causal.md) DAG, refutação e E-value |
 | O modelo ainda funciona hoje? | [`docs/22`](docs/22-validacao-temporal.md) 2015 → 2023 |
 | **Tudo, resumido** | **[`docs/23`](docs/23-sintese-final.md) síntese final** |
+| De onde vem cada método? | [`docs/24`](docs/24-fundamentacao-teorica.md) fundamentação teórica e bibliografia |
+| Como o trabalho foi construído? | [`docs/25`](docs/25-linha-do-tempo.md) linha do tempo, fase a fase |
 | Por que decidimos X? | [`docs/adr/`](docs/adr/) — 5 decisões registradas |
 
 ---
@@ -126,6 +148,8 @@ Ou etapa por etapa:
 | `.\tasks.ps1 vigitel` | comparação binacional | não (baixa sozinho) |
 | `.\tasks.ps1 medicaid` | DiD do Medicaid | não (usa API do CDC) |
 | `.\tasks.ps1 figuras` | 6 SVG + página | não |
+| `.\tasks.ps1 deck` | 26 slides HTML | **sim** |
+| `.\tasks.ps1 site` | página de entrada do GitHub Pages | **sim** |
 | `.\tasks.ps1 test` | ruff + pytest | não |
 | `.\tasks.ps1 status` | **o que rodou, o que está velho** | não |
 | `.\tasks.ps1 log` | histórico de execuções | não |
@@ -139,7 +163,9 @@ em paralelo sem conflito:
 
 | frente | arquivos | pré-requisito | estado |
 |---|---|---|---|
-| **Revisar o roteiro do deck** | `src/diabetes/produto/deck.py` | — | ✅ 19 slides |
+| **Revisar o roteiro do deck** | `src/diabetes/produto/deck.py` | — | ✅ 26 slides |
+| **Revisar a página pública** | `src/diabetes/produto/site.py` | — | ✅ no ar |
+| **Fundamentação e bibliografia** | `docs/24`, `docs/25` | — | ✅ 60+ referências |
 | **Revisar os notebooks** | `src/diabetes/produto/notebooks.py` | — | ✅ 6 executados |
 | **Análise causal (DAG, E-value)** | `src/diabetes/causal/dag.py` | — | ✅ [`docs/21`](docs/21-camada-causal.md) |
 | **Não supervisionada (MCA, fenótipos)** | `src/diabetes/eda/naosupervisionada.py` | — | ✅ [`docs/20`](docs/20-analise-nao-supervisionada.md) |
@@ -183,8 +209,8 @@ Nenhuma é estética; cada uma evita um erro concreto que já apareceu.
 
 ```
 data/          bronze / interim / silver+gold / external   (conteúdo fora do git)
-docs/          17 documentos + ADRs + dicionário + enunciado
-src/diabetes/  6.500+ linhas em 33 módulos
+docs/          25 documentos + 5 ADRs + dicionário + enunciado
+src/diabetes/  9.500+ linhas em 46 módulos
   schema.py      contrato único de dados
   ingest/        PDF → CSV por coordenada
   clean/         7 regras rastreadas
@@ -193,15 +219,17 @@ src/diabetes/  6.500+ linhas em 33 módulos
   models/        escada, explicativo, PU, EBM, conforme
   eval/          escore, curva de decisão, equidade
   external/      BRFSS, Vigitel, Medicaid, pesos
-  produto/       exportação do modelo e página
+  causal/        DAG, refutação, E-value
+  produto/       exportação do modelo, página, deck e site
   viz/           figuras SVG
   pipeline/      observabilidade (status, log)
 reports/
   produto/       🧮 a calculadora
   figures/       6 SVG + página com tabelas
-  deck/          🎤 apresentacao.html — 19 slides, exporta em PDF
+  deck/          🎤 apresentacao.html — 26 slides, exporta em PDF
+  site/          🌐 index.html — raiz do GitHub Pages
 notebooks/       6 notebooks executados, com saídas
-tests/           97 testes, incl. paridade Python↔JavaScript
+tests/           100 testes, incl. paridade Python↔JavaScript
 ```
 
 ---
@@ -214,7 +242,8 @@ tests/           97 testes, incl. paridade Python↔JavaScript
 | Testes | **100**, incluindo teste de vazamento e paridade Py↔JS |
 | Lint | `ruff` limpo |
 | CI | GitHub Actions verde a cada push |
-| Documentos | **23** + 5 ADRs · 6 notebooks · 19 slides |
+| Documentos | **25** + 5 ADRs · 6 notebooks · 26 slides |
+| Publicação | GitHub Pages, deploy automático a cada mudança em `reports/` |
 | Bases externas | BRFSS **2015 e 2023** · Vigitel 2015/2023 · NHANES (prior) · CDC Open Data · painel Medicaid |
 
 ---

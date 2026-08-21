@@ -189,6 +189,7 @@ def raking(cats: pd.DataFrame, alvo: dict[str, pd.Series], variaveis: list[str],
 
 
 def main() -> None:
+    """Roda inferencia complexa e raking; grava `gold/_frente5_pesos.json` e o parquet de pesos."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--expandido", type=Path, default=EXPANDIDO)
     ap.add_argument("--silver", type=Path, default=SILVER)

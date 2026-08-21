@@ -80,6 +80,18 @@ def _limiar_para_recall(y: np.ndarray, p: np.ndarray, alvo: float) -> float:
 # --------------------------------------------------------------------------
 
 def ajustar_ebm(df: pd.DataFrame, te: np.ndarray) -> dict:
+    """Ajusta o EBM em `EBM_VARS` e extrai importancia e funcoes de forma.
+
+    Aditivo generalizado com 8 interacoes de pares: as funcoes de forma **sao** o
+    modelo, nao aproximacao post hoc como SHAP — e por isso que se pode levar o
+    grafico para um medico conferir. Sao exportadas apenas `_AGE80` e `_BMI5`, as
+    duas nao-linearidades que motivaram a frente (`docs/06` §3.1: queda em 80+ por
+    mortalidade seletiva e curva em J do IMC).
+
+    O `interpret` devolve ora as bordas dos bins (n+1 valores para n scores), ora os
+    proprios rotulos; a conversao para centro de bin cobre os dois formatos, senao a
+    curva sairia deslocada meio bin.
+    """
     from interpret.glassbox import ExplainableBoostingClassifier
 
     y = df["diabetes"].to_numpy()
@@ -124,6 +136,14 @@ def ajustar_ebm(df: pd.DataFrame, te: np.ndarray) -> dict:
 # --------------------------------------------------------------------------
 
 def ajustar_monotonico(df: pd.DataFrame, te: np.ndarray, impor: bool) -> np.ndarray:
+    """Boosting nas 60 variaveis de risco, com ou sem restricao de direcao.
+
+    O par existe para medir o **custo** da monotonicidade, nao para escolher um dos
+    dois — por isso a mesma funcao roda as duas versoes com o mesmo seed e o mesmo
+    early stopping. Variavel fora de `MONOTONICAS` recebe 0 (livre); em particular
+    `_AGE80`, deixada livre de proposito, porque o risco cai em 80+ e impor +1
+    forcaria o modelo a mentir justamente na cauda.
+    """
     y = df["diabetes"].to_numpy()
     X = df[RISCO].astype("float32").to_numpy()
     restr = [MONOTONICAS.get(c, 0) for c in RISCO] if impor else None
@@ -166,6 +186,17 @@ def conforme_mondrian(p_cal: np.ndarray, y_cal: np.ndarray, p_te: np.ndarray,
 
 
 def avaliar_conforme(cj: dict, y_te: np.ndarray, alfa: float) -> dict:
+    """Cobertura observada por classe e distribuicao do tamanho do conjunto.
+
+    A cobertura e o teste do procedimento: deve ficar em torno de 1-alfa em **cada**
+    classe, e nao so na media — a garantia Mondrian e condicional por classe.
+
+    O tamanho e a leitura operacional. Conjunto **vazio** significa que nenhuma
+    classe passou no limiar, ou seja, o perfil e atipico o bastante para o metodo se
+    recusar a decidir. **Unitario** e decisao. **Ambiguo** (as duas classes) e
+    abstencao explicita, que num rastreamento vira "peca o exame". E
+    `%_singleton_diabetes` e a fatia em que o conjunto afirma diabetes sozinho.
+    """
     cob = {}
     for cls, inc in ((0, cj["inclui0"]), (1, cj["inclui1"])):
         m = y_te == cls
@@ -206,6 +237,7 @@ def controle_de_risco(p_cal: np.ndarray, y_cal: np.ndarray, p_te: np.ndarray,
 
 
 def main() -> None:
+    """Mede o custo da monotonicidade, ajusta o EBM e o conforme; grava `gold/_frente3_glassbox.json`."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--entrada", type=Path, default=ENTRADA)
     ap.add_argument("--saida", type=Path,

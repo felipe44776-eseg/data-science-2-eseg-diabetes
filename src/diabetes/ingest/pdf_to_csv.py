@@ -57,6 +57,22 @@ def _rows_from_page(page) -> list[list[str]]:
 
 
 def extract(pdf_path: Path, out_csv: Path, manifest_path: Path | None = None) -> dict:
+    """Reconstroi o CSV por coordenadas e devolve o manifesto de integridade.
+
+    Percorre pagina a pagina agrupando palavras por baseline (`_rows_from_page`), o
+    que torna a leitura deterministica — a ordem de leitura de um PDF nao e (ADR
+    0001). O cabecalho e a primeira linha cujo primeiro token nao e numerico; toda
+    repeticao dele nas paginas seguintes e descartada.
+
+    Duas validacoes derrubam linha: cardinalidade diferente de `N_COLS` e token nao
+    parseavel como float. Nenhuma some em silencio — vao para `quarentena` com
+    pagina, linha e motivo, e a contagem entra no manifesto. Cabecalho com numero
+    errado de colunas, ao contrario, e erro fatal: sem ele o arquivo inteiro estaria
+    desalinhado.
+
+    O manifesto grava o SHA-256 do PDF e do CSV: e o que sustenta a reproducao, ja
+    que o PDF de 109 MB fica fora do git.
+    """
     doc = fitz.open(pdf_path)
     header: list[str] | None = None
     n_rows = 0
@@ -122,6 +138,7 @@ def extract(pdf_path: Path, out_csv: Path, manifest_path: Path | None = None) ->
 
 
 def main() -> None:
+    """Extrai o CSV bruto do PDF entregue e imprime o manifesto (hash, contagens, quarentena)."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--pdf", type=Path, required=True)
     ap.add_argument("--out", type=Path, required=True)

@@ -30,7 +30,7 @@
       "renda_g"
     ],
     "iteracoes": 300,
-    "desvio_final": 0.001241068777322163,
+    "desvio_final": 0.0012410687773222184,
     "limite_de_aparo": 8.0,
     "peso_min": 0.1237,
     "peso_mediana": 0.7054,

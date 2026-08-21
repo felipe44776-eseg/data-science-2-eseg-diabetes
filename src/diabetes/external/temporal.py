@@ -137,6 +137,17 @@ def _modelo():
 
 
 def avaliar(y: np.ndarray, p: np.ndarray, w: np.ndarray | None = None) -> dict:
+    """Discriminacao e calibracao no mesmo dicionario, para comparar 2015 com 2023.
+
+    O peso entra **so** na prevalencia. As metricas de ranqueamento e de calibracao
+    saem sem peso de proposito: `_LLCPWT` de 2015 e de 2023 sao calibrados para
+    populacoes-alvo diferentes, e ponderar cada ano com o seu tornaria as duas
+    colunas incomparaveis — que e justamente o que este modulo mede.
+
+    `risco_medio_previsto_%` ao lado de `prevalencia_%` e o diagnostico rapido de
+    label shift: se o primeiro ficou para tras do segundo, o modelo continua
+    ordenando bem e so perdeu o nivel, e recalibrar resolve.
+    """
     prev = float(np.average(y, weights=w)) if w is not None else float(y.mean())
     return {
         "n": int(len(y)),
@@ -197,6 +208,7 @@ def deslocamento(X15: pd.DataFrame, X23: pd.DataFrame,
 
 
 def main() -> None:
+    """Aplica o modelo de 2015 ao BRFSS 2023 e grava `gold/_validacao_temporal.json`."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--xpt2015", type=Path, default=XPT_2015)
     ap.add_argument("--xpt2023", type=Path, default=XPT_2023)
@@ -228,6 +240,15 @@ def main() -> None:
     b23 = b23.rename(columns={mapa[v]: v for v in [*comuns, "DIABETE3"]})
 
     def montar(b: pd.DataFrame) -> tuple[pd.DataFrame, np.ndarray, np.ndarray]:
+        """Recorta o ano ja renomeado e devolve (X, y, peso) prontos para o modelo.
+
+        `DIABETE3` fica restrito a 1/2/3: pre-diabetes (codigo 4) sai da amostra, nao
+        vira categoria do meio, e diabetes gestacional (2) conta como negativo — a
+        mesma convencao do resto do projeto. `_limpar_codigos` traduz os codigos de
+        nao-resposta (7, 9, 77, 99…) antes de o modelo ver o numero; sem isso eles
+        entrariam como quantidade. O indice e zerado porque 2015 e 2023 sao
+        concatenados adiante no detector de deslocamento.
+        """
         d = b[b["DIABETE3"].isin([1, 2, 3])].copy()
         y = (d["DIABETE3"] == 1).astype(int).to_numpy()
         X = pd.DataFrame({c: _limpar_codigos(d[c], c) for c in comuns},

@@ -70,6 +70,12 @@ LIMITES_IDADE = [25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80]
 
 
 def faixa_etaria(anos: pd.Series) -> pd.Series:
+    """Idade em anos -> faixa `_AGEG5YR` do BRFSS (1 = 18-24 … 13 = 80+).
+
+    `digitize + 1` alinha a numeracao do BRFSS. Nao ha checagem de piso: o Vigitel
+    so entrevista maiores de 18, entao qualquer valor abaixo de 25 pertence mesmo a
+    faixa 1.
+    """
     return pd.Series(np.digitize(anos.to_numpy(float), LIMITES_IDADE) + 1,
                      index=anos.index).astype("Float32")
 
@@ -147,6 +153,15 @@ def carregar_vigitel(caminho: Path) -> pd.DataFrame:
 
 
 def carregar_brfss(xpt: Path) -> pd.DataFrame:
+    """Harmoniza o BRFSS 2015 no mesmo esquema em que o Vigitel foi harmonizado.
+
+    Parte de `reconstruir_sem_descarte`, nao do arquivo entregue: a comparacao
+    binacional precisa da amostra completa dos EUA, nao da subamostra enviesada por
+    acesso (`docs/05`). O alvo e diabetes diagnosticado (classe 2) contra o resto,
+    o que joga pre-diabetes em 0 — e o que o Vigitel tambem faz, por nao perguntar.
+    `imc5` e IMC/5 para que o OR saia por 5 kg/m2: o desvio-padrao do IMC difere
+    entre os dois paises e OR por DP nao seria comparavel.
+    """
     bruto = carregar_xpt(xpt, colunas=COLUNAS_BRFSS + DESENHO)
     b = reconstruir_sem_descarte(bruto)
     out = pd.DataFrame(index=b.index)
@@ -181,6 +196,13 @@ def ajustar(df: pd.DataFrame, variaveis: list[str]) -> pd.DataFrame:
 
 
 def prevalencia(df: pd.DataFrame) -> dict:
+    """Prevalencia bruta e ponderada, sempre em par, com o n efetivo de Kish.
+
+    Nenhuma das duas e reportada sozinha: a bruta superestima diabetes (`docs/05`)
+    e a ponderada esconde o custo em precisao. `n_efetivo` e o que deve entrar em
+    qualquer IC calculado sobre `ponderada_%` — o n bruto daria intervalo estreito
+    demais.
+    """
     d = df[["diabetes", "peso"]].dropna()
     return {
         "n": int(len(d)),
@@ -191,6 +213,17 @@ def prevalencia(df: pd.DataFrame) -> dict:
 
 
 def comparar(br: pd.DataFrame, us: pd.DataFrame) -> dict:
+    """Ajusta o MESMO modelo nos dois paises e devolve os OR pareados e o acesso.
+
+    `razao_BR_EUA` e a leitura principal: razao proxima de 1 significa fator robusto
+    ao sistema de saude; divergencia grande aponta efeito do acesso sobre o
+    **diagnostico**, nunca sobre a doenca. `ic_sobrepoe` compara intervalos, criterio
+    conservador — nao e teste de diferenca entre os dois coeficientes.
+
+    `acesso_saude` sai do modelo comum e vira bloco proprio: q88 mede plano
+    **privado** no Brasil e HLTHPLN1 mede qualquer cobertura nos EUA. Sob o SUS os
+    construtos nao coincidem, e mistura-los produziria um OR sem significado.
+    """
     o_br, o_us = ajustar(br, COMUM), ajustar(us, COMUM)
     comp = pd.DataFrame({
         "OR_Brasil": o_br["or"].round(3),
@@ -224,6 +257,7 @@ def comparar(br: pd.DataFrame, us: pd.DataFrame) -> dict:
 
 
 def main() -> None:
+    """Compara Vigitel 2015 e BRFSS 2015 e grava `_comparacao_binacional.json`."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--vigitel", type=Path,
                     default=VIGITEL / "vigitel2015_bruto.parquet")

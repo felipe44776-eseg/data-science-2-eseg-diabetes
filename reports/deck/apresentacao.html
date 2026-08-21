@@ -75,12 +75,12 @@ tr.destaque td{background:color-mix(in srgb,var(--s1) 10%,transparent);font-weig
   .prog,.ajuda{display:none}
 }
 </style></head><body>
-<div class="prog"></div><section data-n="1/19" class="slide capa"><div class="corpo">
+<div class="prog"></div><section data-n="1/26" class="slide capa"><div class="corpo">
       <h1>Diabetes:<br>o que os dados escondem</h1>
       <p class="sub">253.680 respostas do BRFSS 2015 — e o que aparece quando
       comparamos com <b>cinco bases externas</b>.</p>
       <div class="rodape-capa">Data Science 2 · Projeto 1 · ESEG<br>
-      Prof. Marino Catarino</div></div></section><section data-n="2/19" class="slide "><div class="olho">o começo</div><div class="corpo">
+      Prof. Marino Catarino</div></div></section><section data-n="2/26" class="slide "><div class="olho">o começo</div><div class="corpo">
       <h2>Os dados não vieram como dados</h2>
       <div class="duas">
         <div>
@@ -96,10 +96,10 @@ tr.destaque td{background:color-mix(in srgb,var(--s1) 10%,transparent);font-weig
           <div style="margin-top:20px">
             <span class="tag ok">0 em quarentena</span>
             <span class="tag ok">0 fora do domínio</span>
-            <span class="tag">48,6s</span>
+            <span class="tag">39,7s</span>
           </div>
         </div>
-      </div></div></section><section data-n="3/19" class="slide "><div class="olho">diagnóstico</div><div class="corpo">
+      </div></div></section><section data-n="3/26" class="slide "><div class="olho">diagnóstico</div><div class="corpo">
       <h2>Quatro problemas definiram o trabalho</h2>
       <div class="tres">
         <div class="cartao"><h3>Duplicatas</h3>
@@ -118,12 +118,12 @@ tr.destaque td{background:color-mix(in srgb,var(--s1) 10%,transparent);font-weig
       </div>
       <p style="margin-top:22px">E o quarto: <b>zero códigos 77/99 de renda</b> —
       a amostra foi <b>truncada</b> antes de chegar. Foi o fio que abriu o resto.</p>
-      </div></section><section data-n="4/19" class="slide "><div class="olho">a virada</div><div class="corpo">
+      </div></section><section data-n="4/26" class="slide "><div class="olho">a virada</div><div class="corpo">
       <h2>Se a amostra foi truncada,<br>quanto isso distorce?</h2>
       <p class="sub">O arquivo entregue tem 253.680 respondentes.<br>
       O <b>BRFSS 2015 original do CDC tem 441.456</b>.</p>
       <p style="margin-top:26px">Baixamos a fonte, reconstruímos as 22 colunas e
-      comparamos célula a célula.</p></div></section><section data-n="5/19" class="slide "><div class="olho">validação</div><div class="corpo">
+      comparamos célula a célula.</p></div></section><section data-n="5/26" class="slide "><div class="olho">validação</div><div class="corpo">
       <h2>A reconstrução bate exatamente</h2>
       <div class="duas">
         <div>
@@ -138,7 +138,7 @@ tr.destaque td{background:color-mix(in srgb,var(--s1) 10%,transparent);font-weig
           <h3>Depois disso, o viés fica mensurável</h3>
           <table><thead><tr><th></th><th class="n">arquivo</th><th class="n">população</th></tr></thead><tbody><tr><td>prevalência de diabetes</td><td class="n">13,93%</td><td class="n">10,50%</td></tr><tr><td>fez exame de colesterol</td><td class="n">96,27%</td><td class="n">77,93%</td></tr><tr><td>tem plano de saúde</td><td class="n">95,11%</td><td class="n">87,83%</td></tr></tbody></table>
         </div>
-      </div></div></section><section data-n="6/19" class="slide "><div class="olho">o viés</div><div class="corpo">
+      </div></div></section><section data-n="6/26" class="slide "><div class="olho">o viés</div><div class="corpo">
       <h2>De onde vem o viés de prevalência</h2>
       <div class="passos">
         <div class="passo"><b>13,93%</b>arquivo entregue</div>
@@ -154,13 +154,13 @@ tr.destaque td{background:color-mix(in srgb,var(--s1) 10%,transparent);font-weig
       <div class="citacao" style="margin-top:34px">
         A maior parte do viés <b>não</b> vem de terem jogado fora 187.776 pessoas.<br>
         Vem de terem jogado fora <b>três colunas</b>: os pesos amostrais.
-      </div></div></section><section data-n="7/19" class="slide "><div class="olho">o achado central</div><div class="corpo">
+      </div></div></section><section data-n="7/26" class="slide "><div class="olho">o achado central</div><div class="corpo">
       <h2>O arquivo é uma amostra de quem<br>tem acesso ao sistema de saúde</h2>
       <div class="barra-lista"><div class="bl"><div class="rot">fez exame de colesterol — arquivo</div><div class="tr"><i style="width:96.3%;background:var(--s2)"></i></div><div class="v">96,27%</div></div><div class="bl"><div class="rot">fez exame de colesterol — população</div><div class="tr"><i style="width:77.9%;background:var(--s1)"></i></div><div class="v">77,93%</div></div><div class="bl"><div class="rot">sem consulta por custo — arquivo</div><div class="tr"><i style="width:8.4%;background:var(--s2)"></i></div><div class="v">8,42%</div></div><div class="bl"><div class="rot">sem consulta por custo — população</div><div class="tr"><i style="width:13.3%;background:var(--s1)"></i></div><div class="v">13,27%</div></div></div>
       <p style="margin-top:26px">O mecanismo: <b>59.154 nulos</b> em “tem colesterol
       alto?” são <b>salto de questionário</b> — 84% deles <b>nunca fizeram o exame</b>,
       então nunca foram perguntados. O <code>dropna()</code> removeu exatamente a
-      população de menor acesso.</p></div></section><section data-n="8/19" class="slide "><div class="olho">exploratória</div><div class="corpo">
+      população de menor acesso.</p></div></section><section data-n="8/26" class="slide "><div class="olho">exploratória</div><div class="corpo">
       <h2>Nenhum fator isolado explica diabetes</h2>
       <div class="duas">
         <div>
@@ -178,7 +178,7 @@ tr.destaque td{background:color-mix(in srgb,var(--s1) 10%,transparent);font-weig
           <p style="margin-top:14px">A queda em 80+ é <b>mortalidade seletiva</b>:
           diabéticos têm menor chance de chegar lá.</p>
         </div>
-      </div></div></section><section data-n="9/19" class="slide "><div class="olho">explicativa</div><div class="corpo">
+      </div></div></section><section data-n="9/26" class="slide "><div class="olho">explicativa</div><div class="corpo">
       <h2>O efeito protetor da atividade física desaparece</h2>
       <div class="duas">
         <div>
@@ -194,7 +194,7 @@ tr.destaque td{background:color-mix(in srgb,var(--s1) 10%,transparent);font-weig
           <p style="margin-top:12px">Renda mantém efeito <b>mesmo controlando</b>
           IMC, dieta, atividade física e escolaridade.</p>
         </div>
-      </div></div></section><section data-n="10/19" class="slide "><div class="olho">descoberta</div><div class="corpo">
+      </div></div></section><section data-n="10/26" class="slide "><div class="olho">descoberta</div><div class="corpo">
       <h2>Pré-diabetes não é o mesmo continuum</h2>
       <table><thead><tr><th>fator</th><th class="n">OR pré-diabetes</th><th class="n">OR diabetes</th></tr></thead><tbody><tr><td>sexo (masculino)</td><td class="n">1,00</td><td class="n">1,26</td></tr><tr><td>doença cardíaca</td><td class="n">0,92</td><td class="n">1,25</td></tr><tr><td>dias de saúde mental</td><td class="n">1,07</td><td class="n">0,95</td></tr><tr><td>hipertensão</td><td class="n">1,47</td><td class="n">2,11</td></tr></tbody></table>
       <p style="margin-top:22px"><b>9 variáveis</b> têm efeito materialmente
@@ -202,14 +202,14 @@ tr.destaque td{background:color-mix(in srgb,var(--s1) 10%,transparent);font-weig
       A especificação correta é <b>multinomial</b>, não ordinal.</p>
       <p><b>Lição:</b> o teste por logits cumulativos <b>não rejeitou</b> — falso
       negativo, porque a classe pré-diabetes tem 1,6% e os dois contrastes ficam
-      quase idênticos por construção.</p></div></section><section data-n="11/19" class="slide "><div class="olho">Brasil × EUA</div><div class="corpo">
+      quase idênticos por construção.</p></div></section><section data-n="11/26" class="slide "><div class="olho">Brasil × EUA</div><div class="corpo">
       <h2>Seis de oito fatores convergem</h2>
       <table><thead><tr><th>fator</th><th class="n">OR Brasil</th><th class="n">OR EUA</th><th class="n">razão</th></tr></thead><tbody><tr><td>hipertensão</td><td class="n">3,136</td><td class="n">3,146</td><td class="n">1,00</td></tr><tr><td>idade</td><td class="n">1,234</td><td class="n">1,240</td><td class="n">1,00</td></tr><tr><td>escolaridade</td><td class="n">0,732</td><td class="n">0,768</td><td class="n">0,95</td></tr><tr class="destaque"><td>IMC (por 5 kg/m²)</td><td class="n">1,228</td><td class="n">1,454</td><td class="n">0,84</td></tr><tr><td>frutas</td><td class="n">1,299</td><td class="n">0,898</td><td class="n">1,45</td></tr></tbody></table>
       <p style="margin-top:20px">Vigitel 2015 × BRFSS 2015 — <b>mesmo ano, mesmo
       desenho de inquérito, mesmo modelo</b>. Hipertensão e idade coincidem na
       <b>terceira casa decimal</b>, em dois países e dois sistemas de saúde.</p>
       <p><b>Mas o IMC pesa 16% menos no Brasil</b> — um escore calibrado nos EUA
-      superestima o IMC aqui. E <b>frutas inverte de direção</b>.</p></div></section><section data-n="12/19" class="slide "><div class="olho">o rótulo mente</div><div class="corpo">
+      superestima o IMC aqui. E <b>frutas inverte de direção</b>.</p></div></section><section data-n="12/26" class="slide "><div class="olho">o rótulo mente</div><div class="corpo">
       <h2>O alvo não é diabetes.<br>É <i>diagnóstico</i> de diabetes.</h2>
       <div class="duas">
         <div>
@@ -229,14 +229,14 @@ tr.destaque td{background:color-mix(in srgb,var(--s1) 10%,transparent);font-weig
           74,9% — mas têm <b>um terço do check-up</b> e o dobro de renúncia a
           consulta por custo.</p>
         </div>
-      </div></div></section><section data-n="13/19" class="slide "><div class="olho">predição</div><div class="corpo">
+      </div></div></section><section data-n="13/26" class="slide "><div class="olho">predição</div><div class="corpo">
       <h2>O teto não é o algoritmo. É a informação.</h2>
       <table><thead><tr><th>modelo</th><th class="n">variáveis</th><th class="n">PR-AUC</th></tr></thead><tbody><tr><td>prevalência constante</td><td class="n">—</td><td class="n">0,1428</td></tr><tr><td>regra clínica</td><td class="n">3</td><td class="n">0,3350</td></tr><tr><td>logística</td><td class="n">18</td><td class="n">0,4139</td></tr><tr><td>gradient boosting calibrado</td><td class="n">18</td><td class="n">0,4504</td></tr><tr class="destaque"><td>boosting + 39 variáveis recuperadas</td><td class="n">60</td><td class="n">0,4733</td></tr></tbody></table>
       <p style="margin-top:22px">A escada inteira de modelos rendeu <b>+0,036</b> de
       PR-AUC. <b>Recuperar variáveis descartadas rendeu +0,029</b> — quase o mesmo,
       sem tocar no algoritmo.</p>
       <p>E o ruído de rótulo limita a acurácia a <b>99,3%</b>: o teto de Bayes
-      <b>não</b> é a restrição.</p></div></section><section data-n="14/19" class="slide "><div class="olho">equidade</div><div class="corpo">
+      <b>não</b> é a restrição.</p></div></section><section data-n="14/26" class="slide "><div class="olho">equidade</div><div class="corpo">
       <h2>O ganho médio escondia uma redistribuição</h2>
       <div class="barra-lista"><div class="bl"><div class="rot">branco não-hispânico</div><div class="tr"><i style="width:3.4%;background:var(--alerta)"></i></div><div class="v">-0,45 pp</div></div><div class="bl"><div class="rot">negro não-hispânico</div><div class="tr"><i style="width:79.0%;background:var(--s3)"></i></div><div class="v">10,59 pp</div></div><div class="bl"><div class="rot">hispânico</div><div class="tr"><i style="width:80.7%;background:var(--s3)"></i></div><div class="v">10,81 pp</div></div><div class="bl"><div class="rot">multirracial</div><div class="tr"><i style="width:100.0%;background:var(--s3)"></i></div><div class="v">13,40 pp</div></div></div>
       <p style="margin-top:24px">Ganho de <i>recall</i> ao recuperar as variáveis.
@@ -245,7 +245,7 @@ tr.destaque td{background:color-mix(in srgb,var(--s1) 10%,transparent);font-weig
         O modelo de 21 variáveis era sistematicamente pior para minorias — e
         <b>ninguém podia saber</b>, porque a variável que revela isso tinha sido
         removida da base.
-      </div></div></section><section data-n="15/19" class="slide "><div class="olho">o entregável</div><div class="corpo">
+      </div></div></section><section data-n="15/26" class="slide "><div class="olho">o entregável</div><div class="corpo">
       <h2>Cinco perguntas que cabem numa folha de papel</h2>
       <div class="duas">
         <div>
@@ -258,7 +258,7 @@ tr.destaque td{background:color-mix(in srgb,var(--s1) 10%,transparent);font-weig
         </div>
       </div>
       <p style="margin-top:20px">ROC-AUC <b>0,804</b> contra <b>0,766</b> do
-      <b>FINDRISC</b> — o padrão internacional desde 2003, na mesma amostra.</p></div></section><section data-n="16/19" class="slide "><div class="olho">decisão</div><div class="corpo">
+      <b>FINDRISC</b> — o padrão internacional desde 2003, na mesma amostra.</p></div></section><section data-n="16/26" class="slide "><div class="olho">decisão</div><div class="corpo">
       <h2>Do modelo ao orçamento</h2>
       <table><thead><tr><th>testar</th><th class="n">casos encontrados</th><th class="n">NNS</th><th class="n">custo por caso</th></tr></thead><tbody><tr><td>5%</td><td class="n">21,0%</td><td class="n">2,23</td><td class="n">R$ 71</td></tr><tr class="destaque"><td>10%</td><td class="n">40,2%</td><td class="n">2,33</td><td class="n">R$ 75</td></tr><tr><td>15%</td><td class="n">54,4%</td><td class="n">2,59</td><td class="n">R$ 83</td></tr><tr><td>20%</td><td class="n">65,4%</td><td class="n">2,87</td><td class="n">R$ 92</td></tr><tr><td>25%</td><td class="n">73,6%</td><td class="n">3,19</td><td class="n">R$ 102</td></tr><tr><td>30%</td><td class="n">79,2%</td><td class="n">3,55</td><td class="n">R$ 114</td></tr></tbody></table>
       <p style="margin-top:22px">Testando <b>10% da população</b> encontramos
@@ -266,7 +266,7 @@ tr.destaque td{background:color-mix(in srgb,var(--s1) 10%,transparent);font-weig
       <p>As duas faixas superiores do escore concentram <b>60,5% dos casos</b> a
       R$ 69–109. A faixa mais baixa custa <b>R$ 3.593</b> — <b>52× mais</b>.</p>
       <p><b>Rastrear por ordem de escore é a diferença entre um programa viável e
-      um inviável.</b></p></div></section><section data-n="17/19" class="slide "><div class="olho">o produto</div><div class="corpo">
+      um inviável.</b></p></div></section><section data-n="17/26" class="slide "><div class="olho">o produto</div><div class="corpo">
       <h2>Uma calculadora que roda no navegador</h2>
       <div class="duas">
         <div>
@@ -287,7 +287,112 @@ tr.destaque td{background:color-mix(in srgb,var(--s1) 10%,transparent);font-weig
           demonstra em um clique que um instrumento que exige exame prévio
           <b>exclui quem mais precisa dele</b>.</p>
         </div>
-      </div></div></section><section data-n="18/19" class="slide "><div class="olho">honestidade</div><div class="corpo">
+      </div></div></section><section data-n="18/26" class="slide "><div class="olho">Brasil, na prática</div><div class="corpo">
+      <h2>Levar o escore para o Brasil: o que transfere e o que não</h2>
+      <div class="duas">
+        <div>
+          <p>Aplicamos o escore de 5 perguntas em <b>15.925</b>
+          entrevistas do Vigitel, sem tocar em nada.</p>
+          <table><thead><tr><th></th><th class="n">ROC-AUC</th><th class="n">previsto/observado</th></tr></thead><tbody><tr><td>escore dos EUA, cru</td><td class="n">0,8020</td><td class="n">1,536</td></tr><tr class="destaque"><td>recalibrado no Vigitel</td><td class="n">0,8046</td><td class="n">1,132</td></tr></tbody></table>
+          <p style="margin-top:14px">A ordenação de risco atravessa o equador
+          intacta. O <b>nível</b> não: cru, o escore
+          <span class="queda">superestima o risco em 54%</span>.</p>
+        </div>
+        <div>
+          <div class="numerao">3,48
+            <small> p.p.</small></div>
+          <p class="legenda">erro de calibração antes</p>
+          <div class="numerao" style="margin-top:18px;color:var(--s3)">
+            0,86<small> p.p.</small></div>
+          <p class="legenda">depois — <b>75% do erro eliminado</b> com um
+          deslocamento de intercepto</p>
+          <p style="margin-top:20px;font-size:17px">E o IMC cai de 20,0% para
+          <b>9,1%</b> do peso do escore. Testamos três explicações: imputação
+          (não), mediação (não), <b>saturação</b> — sim.</p>
+        </div>
+      </div></div></section><section data-n="19/26" class="slide "><div class="olho">o contraste mais limpo</div><div class="corpo">
+      <h2>Mesmo risco, menos diagnóstico</h2>
+      <p class="sub">No decil superior de risco, com um modelo que
+      <b>não usa nenhuma variável de acesso</b>:</p>
+      <div class="duas" style="margin-top:24px">
+        <div class="cartao"><h3>Foi testado</h3>
+          <div class="numerao">53,4<small>%</small></div>
+          <p>têm diagnóstico · n = 39.524</p></div>
+        <div class="cartao"><h3>Não foi testado</h3>
+          <div class="numerao" style="color:var(--alerta)">
+            39,9<small>%</small></div>
+          <p>têm diagnóstico · n = 4.544</p></div>
+      </div>
+      <div class="citacao" style="margin-top:28px">
+        <b>13,5 pontos</b> de diferença
+        entre pessoas que o modelo considera <b>igualmente doentes</b>.<br>
+        Isso não é fisiologia. É quem passou pela porta do sistema de saúde.
+      </div>
+      <p style="margin-top:20px;font-size:16px;color:var(--tinta2)">E uma previsão
+      nossa caiu aqui: dissemos que pré-diabetes seria “largamente artefato de
+      detecção”. Medido, o risco prediz <b>0,771</b>
+      contra <b>0,644</b> do acesso —
+      o exagero era nosso.</p></div></section><section data-n="20/26" class="slide "><div class="olho">sem rótulo</div><div class="corpo">
+      <h2>Cinco fenótipos que os dados formam sozinhos</h2>
+      <p class="sub">MCA (não PCA — os dados são categóricos) + k-means, com o alvo
+      <b>escondido</b> do algoritmo. Depois medimos a prevalência em cada grupo.</p>
+      <div class="barra-lista"><div class="bl"><div class="rot">fenótipo 4 · 9,2% da amostra</div><div class="tr"><i style="width:100.0%;background:#d03b3b"></i></div><div class="v">40,12%</div></div><div class="bl"><div class="rot">fenótipo 3 · 12,7% da amostra</div><div class="tr"><i style="width:64.2%;background:#eb6834"></i></div><div class="v">25,76%</div></div><div class="bl"><div class="rot">fenótipo 1 · 24,3% da amostra</div><div class="tr"><i style="width:53.2%;background:#eb6834"></i></div><div class="v">21,34%</div></div><div class="bl"><div class="rot">fenótipo 0 · 25,3% da amostra</div><div class="tr"><i style="width:24.2%;background:#2a78d6"></i></div><div class="v">9,71%</div></div><div class="bl"><div class="rot">fenótipo 2 · 28,5% da amostra</div><div class="tr"><i style="width:5.9%;background:#2a78d6"></i></div><div class="v">2,36%</div></div></div>
+      <div class="duas" style="margin-top:22px">
+        <div><p><b>Gradiente de 17×</b> entre o fenótipo mais leve e o mais grave,
+        sem que o algoritmo jamais tenha visto quem tem diabetes.</p></div>
+        <div><p>O eixo 1 da MCA (16,2% da inércia)
+        <b>não é diabetes</b> — é <b>morbidade acumulada</b>. E o FP-Growth
+        reconstruiu a síndrome metabólica sozinho: colesterol + hipertensão +
+        IMC 30+ + saúde ruim, <b>lift 3,83</b>.</p></div>
+      </div></div></section><section data-n="21/26" class="slide "><div class="olho">isso é causal?</div><div class="corpo">
+      <h2>A mesma pergunta, quatro respostas</h2>
+      <p class="sub">“Atividade física reduz o risco de diabetes?” — o número
+      depende inteiramente do que se ajusta. O DAG é o que diz qual é a pergunta.</p>
+      <table><thead><tr><th>conjunto de ajuste</th><th class="n">OR</th><th class="n">leitura</th></tr></thead><tbody><tr><td>sem ajuste</td><td class="n">0,5099</td><td class="n">confundido por idade e renda</td></tr><tr class="destaque"><td>backdoor — só confundidores</td><td class="n">0,7459</td><td class="n">efeito TOTAL, sob o DAG</td></tr><tr><td>+ mediadores</td><td class="n">0,8642</td><td class="n">efeito direto — não é o total</td></tr><tr><td>+ consequências</td><td class="n">0,9826</td><td class="n">INVÁLIDO — viés de colisor</td></tr></tbody></table>
+      <div class="duas" style="margin-top:20px">
+        <div><p>As três refutações <b>passam</b> — placebo, confundidor aleatório
+        e subamostra. <span class="tag ok">especificação estável</span></p></div>
+        <div><p>Mas o <b>E-value é 2,02</b> —
+        contra 7,80 da hipertensão.
+        Um confundidor não medido plausível — <b>capacidade funcional prévia</b> —
+        derrubaria o efeito.</p></div>
+      </div>
+      <div class="citacao" style="margin-top:18px">
+        O efeito <b>sobrevive a todas as refutações</b> e
+        <b>não sobrevive a um confundidor plausível</b>. As duas coisas ao mesmo tempo.
+      </div></div></section><section data-n="22/26" class="slide "><div class="olho">ainda funciona?</div><div class="corpo">
+      <h2>O modelo de 2015, aplicado ao BRFSS 2023</h2>
+      <p class="sub">Todo holdout do projeto é aleatório <i>dentro</i> de 2015.
+      Isso testa gente nova, não um <b>mundo</b> novo. Baixamos 2023 —
+      421.745 respostas, oito anos e uma pandemia depois.</p>
+      <table><thead><tr><th></th><th class="n">ROC-AUC</th><th class="n">ECE</th><th class="n">prevalência</th></tr></thead><tbody><tr><td>holdout 2015 (interno)</td><td class="n">0,8494</td><td class="n">0,0031</td><td class="n">13,47%</td></tr><tr class="destaque"><td>BRFSS 2023 (externo)</td><td class="n">0,8376</td><td class="n">0,0067</td><td class="n">14,18%</td></tr><tr><td>treinado em 2023</td><td class="n">0,8396</td><td class="n">0,0030</td><td class="n">14,27%</td></tr></tbody></table>
+      <div class="tres" style="margin-top:22px">
+        <div class="cartao"><h3>Perda em 8 anos</h3>
+          <div class="numerao" style="font-size:44px">
+            11,8<small> milésimos</small></div>
+          <p>de ROC-AUC</p></div>
+        <div class="cartao"><h3>Para o modelo nativo</h3>
+          <div class="numerao" style="font-size:44px;color:var(--s3)">
+            2,0
+            <small> milésimos</small></div>
+          <p>retreinar quase não ganha</p></div>
+        <div class="cartao"><h3>Concept drift</h3>
+          <div class="numerao" style="font-size:44px;color:var(--s3)">~0</div>
+          <p>P(y|X) quase não mudou</p></div>
+      </div>
+      <p style="margin-top:18px;font-size:16px;color:var(--tinta2)">A pandemia
+      aparece: dias ruins de saúde mental sobem de
+      <b>3,29</b> para
+      <b>4,33</b>
+      por mês — <b>+32%</b>.</p></div></section><section data-n="23/26" class="slide "><div class="olho">o padrão</div><div class="corpo">
+      <h2>Quatro transposições, uma assinatura só</h2>
+      <table><thead><tr><th>quando o mundo muda…</th><th class="n">discriminação</th><th class="n">calibração</th></tr></thead><tbody><tr><td>arquivo entregue → população</td><td class="n">robusta</td><td class="n">erro de +3,26 p.p.</td></tr><tr><td>EUA → Brasil</td><td class="n">0,804 → 0,802</td><td class="n">superestima 54%</td></tr><tr><td>2015 → 2023</td><td class="n">−11,8 milésimos</td><td class="n">ECE 4× pior</td></tr><tr><td>class_weight → calibrado</td><td class="n">idêntica</td><td class="n">ECE 67× pior</td></tr></tbody></table>
+      <div class="citacao" style="margin-top:30px">
+        <b>AUC é a métrica que quase todo mundo reporta — e a que menos se quebra.</b><br>
+        O que quebra é a calibração, e quase ninguém a mede.
+      </div>
+      <p style="margin-top:24px">E recalibrar foi <b>sempre barato</b>: 20% de dados
+      novos e um deslocamento de intercepto. <b>Nunca foi preciso retreinar.</b></p></div></section><section data-n="24/26" class="slide "><div class="olho">honestidade</div><div class="corpo">
       <h2>O que este trabalho <i>não</i> mostra</h2>
       <div class="tres">
         <div class="cartao"><h3>Não é causal</h3>
@@ -297,14 +402,51 @@ tr.destaque td{background:color-mix(in srgb,var(--s1) 10%,transparent);font-weig
         <div class="cartao"><h3>Não é a doença</h3>
           <p>O alvo é <b>diagnóstico autorrelatado</b>. O modelo prediz quem
           <i>consta</i> como diabético.</p></div>
-        <div class="cartao"><h3>Não é o Brasil</h3>
-          <p>Treinado nos EUA de 2015. O IMC pesa <b>16% menos</b> aqui —
-          recalibração local é requisito.</p></div>
+        <div class="cartao"><h3>Não nasceu no Brasil</h3>
+          <p>Treinado nos EUA de 2015; o IMC pesa <b>16% menos</b> aqui.
+          Recalibramos no Vigitel — mas com <b>5 variáveis</b>, não com o modelo
+          completo, que o Vigitel não permite reproduzir.</p></div>
       </div>
-      <p style="margin-top:30px">Três previsões nossas <b>não se confirmaram</b> e
-      foram corrigidas na fonte: o vazamento por duplicata quase não infla a
-      métrica, os proxies de acesso quase não melhoram a predição, e o teto de
-      Bayes não é a restrição.</p></div></section><section data-n="19/19" class="slide "><div class="olho">conclusão</div><div class="corpo">
+      <p style="margin-top:30px"><b>Nove previsões nossas não se confirmaram</b> e
+      foram corrigidas na fonte — entre elas: o vazamento por duplicata quase não
+      infla a métrica (+0,1 a 1,2%), não há curva em J no IMC após ajuste, o DEFF
+      real é 2,94 e não 4,04, e o Isolation Forest <i>não</i> acha os casos
+      ocultos (lift 0,81 — as listas se evitam).</p></div></section><section data-n="25/26" class="slide "><div class="olho">o percurso</div><div class="corpo">
+      <h2>Como o trabalho foi construído</h2>
+      <div class="passos">
+        <div class="passo"><b>1</b> PDF → dados<br><small>coordenada de bbox</small></div>
+        <span class="seta">→</span>
+        <div class="passo"><b>2</b> Limpeza rastreada<br><small>7 regras, 0 silêncio</small></div>
+        <span class="seta">→</span>
+        <div class="passo"><b>3</b> BRFSS original<br><small>bate 100,000000%</small></div>
+        <span class="seta">→</span>
+        <div class="passo"><b>4</b> EDA + explicativa<br><small>base dupla</small></div>
+      </div>
+      <div class="passos">
+        <div class="passo"><b>5</b> Escada de modelos<br><small>prevalência → GB calibrado</small></div>
+        <span class="seta">→</span>
+        <div class="passo"><b>6</b> 5 expansões<br><small>PU, EBM, pesos, DiD</small></div>
+        <span class="seta">→</span>
+        <div class="passo"><b>7</b> Escore + decisão<br><small>5 perguntas, R$ 75/caso</small></div>
+        <span class="seta">→</span>
+        <div class="passo"><b>8</b> Produto<br><small>calculadora offline</small></div>
+      </div>
+      <div class="passos">
+        <div class="passo"><b>9</b> Brasil<br><small>Vigitel recalibrado</small></div>
+        <span class="seta">→</span>
+        <div class="passo"><b>10</b> Fenótipos<br><small>MCA sem rótulo</small></div>
+        <span class="seta">→</span>
+        <div class="passo"><b>11</b> Causal<br><small>DAG + E-value</small></div>
+        <span class="seta">→</span>
+        <div class="passo"><b>12</b> 2015 → 2023<br><small>validação temporal</small></div>
+      </div>
+      <div class="duas" style="margin-top:26px">
+        <div><p><b>24 etapas</b> de pipeline com detector de
+        obsolescência — <code>tasks.ps1 status</code> diz o que está velho antes
+        de alguém apresentar número errado.</p></div>
+        <div><p><b>6 bases externas</b> · 24 documentos · 5 ADRs ·
+        100 testes automatizados · CI verde a cada push.</p></div>
+      </div></div></section><section data-n="26/26" class="slide "><div class="olho">conclusão</div><div class="corpo">
       <h2>O que fica</h2>
       <div class="duas">
         <div>
@@ -323,10 +465,12 @@ tr.destaque td{background:color-mix(in srgb,var(--s1) 10%,transparent);font-weig
           predição verificada contra o Python.</p>
         </div>
       </div>
-      <div class="citacao" style="margin-top:34px">
+      <div class="citacao" style="margin-top:30px">
         O achado mais útil não foi sobre diabetes.<br>
         Foi sobre <b>quem os dados de saúde deixam de fora</b>.
-      </div></div></section>
+      </div>
+      <p style="margin-top:22px;font-size:17px">Teste agora:
+      <b>felipe44776-eseg.github.io/data-science-2-eseg-diabetes</b></p></div></section>
 <div class="ajuda">← → navega · Ctrl+P exporta em PDF (paisagem, sem margens)</div>
 <script>
 const slides = [...document.querySelectorAll(".slide")];

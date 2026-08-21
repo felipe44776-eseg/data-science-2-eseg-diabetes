@@ -85,15 +85,19 @@ conjuntas ausentes como explicação do resíduo de raking (`docs/11` §B).
 | **Escore brasileiro** — recalibrado no Vigitel | `docs/18` |
 | **Pesos publicáveis** — corrigem 95,6% do viés do CSV do Kaggle | `docs/11` |
 | **6 notebooks** executados, com saídas | `notebooks/` |
-| **23 documentos + 5 ADRs** | `docs/` |
-| **Pipeline de 23 etapas** com detector de obsolescência | `.\tasks.ps1 status` |
+| **25 documentos + 5 ADRs** | `docs/` |
+| **Pipeline de 24 etapas** com detector de obsolescência | `.\tasks.ps1 status` |
+| **Site público** — calculadora, deck e figuras com link | [felipe44776-eseg.github.io/data-science-2-eseg-diabetes](https://felipe44776-eseg.github.io/data-science-2-eseg-diabetes/) |
 
 ---
 
 ## Como ler, por perfil
 
-**Professor / avaliador** → o deck (19 slides), depois `docs/23` (este) e
-`docs/16` (o valor agregado).
+**Professor / avaliador** → o deck (26 slides), depois `docs/23` (este),
+`docs/16` (o valor agregado) e `docs/24` (de onde vem cada método).
+
+**Quem quiser só testar** → a [calculadora](https://felipe44776-eseg.github.io/data-science-2-eseg-diabetes/calculadora/),
+no navegador, sem instalar nada.
 
 **Colega do grupo** → `README.md` → notebooks 01 a 06, na ordem.
 
@@ -102,6 +106,9 @@ de cada documento — é onde estão as próximas perguntas.
 
 **Quem duvidar de um número** → todo número tem um comando que o reproduz, no
 cabeçalho do documento correspondente.
+
+**Quem quiser a base teórica** → `docs/24` (método por método, com bibliografia)
+e `docs/25` (como o trabalho foi construído, fase a fase).
 
 ---
 

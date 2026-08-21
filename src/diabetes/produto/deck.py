@@ -22,12 +22,16 @@ import json
 from html import escape
 from pathlib import Path
 
+from diabetes.pipeline.estado import ETAPAS
+
 RAIZ = Path(".")
 GOLD = RAIZ / "data" / "processed" / "gold"
 SAIDA = RAIZ / "reports" / "deck"
 
 
 def ler(nome: str, base: Path = GOLD) -> dict:
+    """Le um artefato JSON do pipeline. Falha alto se faltar — slide sem numero
+    e pior que slide ausente, porque so aparece na hora de apresentar."""
     return json.loads((base / nome).read_text(encoding="utf-8"))
 
 
@@ -154,6 +158,12 @@ prog.style.width = (1/slides.length*100) + "%";
 
 def barras(itens: list[tuple[str, float, str]], sufixo: str = "%",
            maximo: float | None = None) -> str:
+    """Lista de barras horizontais ancoradas na base, com o valor a direita.
+
+    `maximo` fixa a escala entre slides que comparam a mesma grandeza; sem ele
+    cada slide normaliza pelo proprio maximo e as barras deixam de ser
+    comparaveis entre si.
+    """
     mx = maximo or max(abs(v) for _, v, _ in itens) or 1
     linhas = []
     for rot, v, cor in itens:
@@ -165,6 +175,11 @@ def barras(itens: list[tuple[str, float, str]], sufixo: str = "%",
 
 
 def tabela(cabecalho: list[str], linhas: list[list], destaque: int | None = None) -> str:
+    """Tabela HTML com a primeira coluna textual e as demais alinhadas a direita.
+
+    `destaque` marca a linha que sustenta o argumento do slide — em geral a
+    estimativa que o projeto adota, nao a de melhor metrica.
+    """
     # cabecalho da coluna numerica acompanha o alinhamento da celula
     th = "".join(f'<th class="n">{escape(str(c))}</th>' if k else f"<th>{escape(str(c))}</th>"
                  for k, c in enumerate(cabecalho))
@@ -179,6 +194,8 @@ def tabela(cabecalho: list[str], linhas: list[list], destaque: int | None = None
 
 
 def slide(olho: str, corpo: str, classe: str = "") -> str:
+    """Uma secao de 1280x720. `olho` e o rotulo curto no topo, `classe` permite
+    variantes de layout (hoje so `capa`)."""
     topo = f'<div class="olho">{escape(olho)}</div>' if olho else ""
     return f'<section class="slide {classe}">{topo}<div class="corpo">{corpo}</div></section>'
 
@@ -186,6 +203,12 @@ def slide(olho: str, corpo: str, classe: str = "") -> str:
 # --------------------------------------------------------------------------
 
 def montar() -> str:
+    """Monta os 26 slides a partir dos artefatos do pipeline.
+
+    A ordem e narrativa, nao cronologica: o viés do arquivo (slides 3-7) vem
+    antes de qualquer modelo, porque e ele que define a pergunta. As cinco
+    frentes finais (18-22) fecham no padrao dos quatro contextos (23).
+    """
     man = ler("_manifest_ingestao.json", RAIZ / "data" / "raw")["manifest"]
     rel = ler("_relatorio_limpeza.json", RAIZ / "data" / "processed")
     eda = ler("_eda_comparativa.json")
@@ -197,6 +220,11 @@ def montar() -> str:
     tc = ler("_trilhaC_escore.json")
     td = ler("_trilhaC_decisao.json")
     prod = ler("modelo.json", RAIZ / "reports" / "produto")
+    ebr = ler("_escore_brasil.json")
+    pre = ler("_prediabetes.json")
+    ns = ler("_naosupervisionada.json")
+    cau = ler("_causal.json")
+    tmp = ler("_validacao_temporal.json")
 
     S = []
 
@@ -523,7 +551,168 @@ def montar() -> str:
         </div>
       </div>"""))
 
-    # 18 · limitacoes
+    # 18 · o escore recalibrado para o Brasil
+    cru, rec = ebr["escore_eua_aplicado_cru"], ebr["escore_recalibrado_br"]
+    S.append(slide("Brasil, na prática", f"""
+      <h2>Levar o escore para o Brasil: o que transfere e o que não</h2>
+      <div class="duas">
+        <div>
+          <p>Aplicamos o escore de 5 perguntas em <b>{num(ebr['premissa']['n_avaliacao'])}</b>
+          entrevistas do Vigitel, sem tocar em nada.</p>
+          {tabela(["", "ROC-AUC", "previsto/observado"], [
+            ["escore dos EUA, cru", num(cru['roc_auc'], 4),
+             num(cru['calibracao']['razao_previsto_observado'], 3)],
+            ["recalibrado no Vigitel", num(rec['roc_auc'], 4),
+             num(rec['calibracao']['razao_previsto_observado'], 3)],
+          ], destaque=1)}
+          <p style="margin-top:14px">A ordenação de risco atravessa o equador
+          intacta. O <b>nível</b> não: cru, o escore
+          <span class="queda">superestima o risco em 54%</span>.</p>
+        </div>
+        <div>
+          <div class="numerao">{num(ebr['comparacao']['erro_de_calibracao_antes_pp'], 2)}
+            <small> p.p.</small></div>
+          <p class="legenda">erro de calibração antes</p>
+          <div class="numerao" style="margin-top:18px;color:var(--s3)">
+            {num(ebr['comparacao']['erro_de_calibracao_depois_pp'], 2)}<small> p.p.</small></div>
+          <p class="legenda">depois — <b>75% do erro eliminado</b> com um
+          deslocamento de intercepto</p>
+          <p style="margin-top:20px;font-size:17px">E o IMC cai de 20,0% para
+          <b>9,1%</b> do peso do escore. Testamos três explicações: imputação
+          (não), mediação (não), <b>saturação</b> — sim.</p>
+        </div>
+      </div>"""))
+
+    # 19 · pre-diabetes como problema proprio
+    h4t, h4n = pre["H4_risco_alto"][0], pre["H4_risco_alto"][1]
+    S.append(slide("o contraste mais limpo", f"""
+      <h2>Mesmo risco, menos diagnóstico</h2>
+      <p class="sub">No decil superior de risco, com um modelo que
+      <b>não usa nenhuma variável de acesso</b>:</p>
+      <div class="duas" style="margin-top:24px">
+        <div class="cartao"><h3>Foi testado</h3>
+          <div class="numerao">{num(h4t['%_diabetes'], 1)}<small>%</small></div>
+          <p>têm diagnóstico · n = {num(h4t['n'])}</p></div>
+        <div class="cartao"><h3>Não foi testado</h3>
+          <div class="numerao" style="color:var(--alerta)">
+            {num(h4n['%_diabetes'], 1)}<small>%</small></div>
+          <p>têm diagnóstico · n = {num(h4n['n'])}</p></div>
+      </div>
+      <div class="citacao" style="margin-top:28px">
+        <b>{num(h4t['%_diabetes'] - h4n['%_diabetes'], 1)} pontos</b> de diferença
+        entre pessoas que o modelo considera <b>igualmente doentes</b>.<br>
+        Isso não é fisiologia. É quem passou pela porta do sistema de saúde.
+      </div>
+      <p style="margin-top:20px;font-size:16px;color:var(--tinta2)">E uma previsão
+      nossa caiu aqui: dissemos que pré-diabetes seria “largamente artefato de
+      detecção”. Medido, o risco prediz <b>{num(pre['H1_blocos']['risco (60 vars)']['roc_auc'], 3)}</b>
+      contra <b>{num(pre['H1_blocos']['acesso (9 vars)']['roc_auc'], 3)}</b> do acesso —
+      o exagero era nosso.</p>"""))
+
+    # 20 · fenotipos (nao supervisionada)
+    fen = ns["fenotipos"]
+    S.append(slide("sem rótulo", f"""
+      <h2>Cinco fenótipos que os dados formam sozinhos</h2>
+      <p class="sub">MCA (não PCA — os dados são categóricos) + k-means, com o alvo
+      <b>escondido</b> do algoritmo. Depois medimos a prevalência em cada grupo.</p>
+      {barras([(f"fenótipo {f['cluster']} · {num(f['%_da_amostra'], 1)}% da amostra",
+                f["prevalencia_diabetes_%"],
+                "#d03b3b" if f["prevalencia_diabetes_%"] > 30 else
+                ("#eb6834" if f["prevalencia_diabetes_%"] > 15 else "#2a78d6"))
+               for f in fen])}
+      <div class="duas" style="margin-top:22px">
+        <div><p><b>Gradiente de 17×</b> entre o fenótipo mais leve e o mais grave,
+        sem que o algoritmo jamais tenha visto quem tem diabetes.</p></div>
+        <div><p>O eixo 1 da MCA ({num(ns['mca']['inercia_%'][0], 1)}% da inércia)
+        <b>não é diabetes</b> — é <b>morbidade acumulada</b>. E o FP-Growth
+        reconstruiu a síndrome metabólica sozinho: colesterol + hipertensão +
+        IMC 30+ + saúde ruim, <b>lift {num(ns['regras_de_associacao'][0]['lift'], 2)}</b>.</p></div>
+      </div>"""))
+
+    # 21 · camada causal
+    S.append(slide("isso é causal?", f"""
+      <h2>A mesma pergunta, quatro respostas</h2>
+      <p class="sub">“Atividade física reduz o risco de diabetes?” — o número
+      depende inteiramente do que se ajusta. O DAG é o que diz qual é a pergunta.</p>
+      {tabela(["conjunto de ajuste", "OR", "leitura"], [
+        ["sem ajuste", num(cau['efeitos_por_conjunto'][0]['or'], 4),
+         "confundido por idade e renda"],
+        ["backdoor — só confundidores",
+         num(cau['efeitos_por_conjunto'][1]['or'], 4),
+         "efeito TOTAL, sob o DAG"],
+        ["+ mediadores", num(cau['efeitos_por_conjunto'][2]['or'], 4),
+         "efeito direto — não é o total"],
+        ["+ consequências", num(cau['efeitos_por_conjunto'][3]['or'], 4),
+         "INVÁLIDO — viés de colisor"],
+      ], destaque=1)}
+      <div class="duas" style="margin-top:20px">
+        <div><p>As três refutações <b>passam</b> — placebo, confundidor aleatório
+        e subamostra. <span class="tag ok">especificação estável</span></p></div>
+        <div><p>Mas o <b>E-value é {num(cau['e_value']['e_value_estimativa'], 2)}</b> —
+        contra {num(cau['escala_de_referencia'][0]['e_value'], 2)} da hipertensão.
+        Um confundidor não medido plausível — <b>capacidade funcional prévia</b> —
+        derrubaria o efeito.</p></div>
+      </div>
+      <div class="citacao" style="margin-top:18px">
+        O efeito <b>sobrevive a todas as refutações</b> e
+        <b>não sobrevive a um confundidor plausível</b>. As duas coisas ao mesmo tempo.
+      </div>"""))
+
+    # 22 · validacao temporal
+    t15, t23, tnat = (tmp["modelo_2015_no_holdout_2015"], tmp["modelo_2015_em_2023"],
+                      tmp["modelo_treinado_em_2023"])
+    S.append(slide("ainda funciona?", f"""
+      <h2>O modelo de 2015, aplicado ao BRFSS 2023</h2>
+      <p class="sub">Todo holdout do projeto é aleatório <i>dentro</i> de 2015.
+      Isso testa gente nova, não um <b>mundo</b> novo. Baixamos 2023 —
+      {num(t23['n'])} respostas, oito anos e uma pandemia depois.</p>
+      {tabela(["", "ROC-AUC", "ECE", "prevalência"], [
+        ["holdout 2015 (interno)", num(t15['roc_auc'], 4),
+         num(t15['ece'], 4), f"{num(t15['prevalencia_%'], 2)}%"],
+        ["BRFSS 2023 (externo)", num(t23['roc_auc'], 4),
+         num(t23['ece'], 4), f"{num(t23['prevalencia_%'], 2)}%"],
+        ["treinado em 2023", num(tnat['roc_auc'], 4),
+         num(tnat['ece'], 4), f"{num(tnat['prevalencia_%'], 2)}%"],
+      ], destaque=1)}
+      <div class="tres" style="margin-top:22px">
+        <div class="cartao"><h3>Perda em 8 anos</h3>
+          <div class="numerao" style="font-size:44px">
+            {num(tmp['veredito']['perda_roc_milesimos'], 1)}<small> milésimos</small></div>
+          <p>de ROC-AUC</p></div>
+        <div class="cartao"><h3>Para o modelo nativo</h3>
+          <div class="numerao" style="font-size:44px;color:var(--s3)">
+            {num(tmp['veredito']['distancia_para_o_modelo_nativo_milesimos'], 1)}
+            <small> milésimos</small></div>
+          <p>retreinar quase não ganha</p></div>
+        <div class="cartao"><h3>Concept drift</h3>
+          <div class="numerao" style="font-size:44px;color:var(--s3)">~0</div>
+          <p>P(y|X) quase não mudou</p></div>
+      </div>
+      <p style="margin-top:18px;font-size:16px;color:var(--tinta2)">A pandemia
+      aparece: dias ruins de saúde mental sobem de
+      <b>{num(tmp['deslocamento']['variaveis_que_mais_mudaram'][2]['media_2015'], 2)}</b> para
+      <b>{num(tmp['deslocamento']['variaveis_que_mais_mudaram'][2]['media_2023'], 2)}</b>
+      por mês — <b>+32%</b>.</p>"""))
+
+    # 23 · o padrao que se repete
+    S.append(slide("o padrão", f"""
+      <h2>Quatro transposições, uma assinatura só</h2>
+      {tabela(["quando o mundo muda…", "discriminação", "calibração"], [
+        ["arquivo entregue → população", "robusta", "erro de +3,26 p.p."],
+        ["EUA → Brasil", f"0,804 → {num(cru['roc_auc'], 3)}",
+         "superestima 54%"],
+        ["2015 → 2023", f"−{num(tmp['veredito']['perda_roc_milesimos'], 1)} milésimos",
+         "ECE 4× pior"],
+        ["class_weight → calibrado", "idêntica", "ECE 67× pior"],
+      ])}
+      <div class="citacao" style="margin-top:30px">
+        <b>AUC é a métrica que quase todo mundo reporta — e a que menos se quebra.</b><br>
+        O que quebra é a calibração, e quase ninguém a mede.
+      </div>
+      <p style="margin-top:24px">E recalibrar foi <b>sempre barato</b>: 20% de dados
+      novos e um deslocamento de intercepto. <b>Nunca foi preciso retreinar.</b></p>"""))
+
+    # 24 · limitacoes
     S.append(slide("honestidade", """
       <h2>O que este trabalho <i>não</i> mostra</h2>
       <div class="tres">
@@ -534,16 +723,56 @@ def montar() -> str:
         <div class="cartao"><h3>Não é a doença</h3>
           <p>O alvo é <b>diagnóstico autorrelatado</b>. O modelo prediz quem
           <i>consta</i> como diabético.</p></div>
-        <div class="cartao"><h3>Não é o Brasil</h3>
-          <p>Treinado nos EUA de 2015. O IMC pesa <b>16% menos</b> aqui —
-          recalibração local é requisito.</p></div>
+        <div class="cartao"><h3>Não nasceu no Brasil</h3>
+          <p>Treinado nos EUA de 2015; o IMC pesa <b>16% menos</b> aqui.
+          Recalibramos no Vigitel — mas com <b>5 variáveis</b>, não com o modelo
+          completo, que o Vigitel não permite reproduzir.</p></div>
       </div>
-      <p style="margin-top:30px">Três previsões nossas <b>não se confirmaram</b> e
-      foram corrigidas na fonte: o vazamento por duplicata quase não infla a
-      métrica, os proxies de acesso quase não melhoram a predição, e o teto de
-      Bayes não é a restrição.</p>"""))
+      <p style="margin-top:30px"><b>Nove previsões nossas não se confirmaram</b> e
+      foram corrigidas na fonte — entre elas: o vazamento por duplicata quase não
+      infla a métrica (+0,1 a 1,2%), não há curva em J no IMC após ajuste, o DEFF
+      real é 2,94 e não 4,04, e o Isolation Forest <i>não</i> acha os casos
+      ocultos (lift 0,81 — as listas se evitam).</p>"""))
 
-    # 19 · fecho
+    # 25 · como foi feito (linha do tempo)
+    S.append(slide("o percurso", f"""
+      <h2>Como o trabalho foi construído</h2>
+      <div class="passos">
+        <div class="passo"><b>1</b> PDF → dados<br><small>coordenada de bbox</small></div>
+        <span class="seta">→</span>
+        <div class="passo"><b>2</b> Limpeza rastreada<br><small>7 regras, 0 silêncio</small></div>
+        <span class="seta">→</span>
+        <div class="passo"><b>3</b> BRFSS original<br><small>bate 100,000000%</small></div>
+        <span class="seta">→</span>
+        <div class="passo"><b>4</b> EDA + explicativa<br><small>base dupla</small></div>
+      </div>
+      <div class="passos">
+        <div class="passo"><b>5</b> Escada de modelos<br><small>prevalência → GB calibrado</small></div>
+        <span class="seta">→</span>
+        <div class="passo"><b>6</b> 5 expansões<br><small>PU, EBM, pesos, DiD</small></div>
+        <span class="seta">→</span>
+        <div class="passo"><b>7</b> Escore + decisão<br><small>5 perguntas, R$ 75/caso</small></div>
+        <span class="seta">→</span>
+        <div class="passo"><b>8</b> Produto<br><small>calculadora offline</small></div>
+      </div>
+      <div class="passos">
+        <div class="passo"><b>9</b> Brasil<br><small>Vigitel recalibrado</small></div>
+        <span class="seta">→</span>
+        <div class="passo"><b>10</b> Fenótipos<br><small>MCA sem rótulo</small></div>
+        <span class="seta">→</span>
+        <div class="passo"><b>11</b> Causal<br><small>DAG + E-value</small></div>
+        <span class="seta">→</span>
+        <div class="passo"><b>12</b> 2015 → 2023<br><small>validação temporal</small></div>
+      </div>
+      <div class="duas" style="margin-top:26px">
+        <div><p><b>{len(ETAPAS)} etapas</b> de pipeline com detector de
+        obsolescência — <code>tasks.ps1 status</code> diz o que está velho antes
+        de alguém apresentar número errado.</p></div>
+        <div><p><b>6 bases externas</b> · 24 documentos · 5 ADRs ·
+        100 testes automatizados · CI verde a cada push.</p></div>
+      </div>"""))
+
+    # 26 · fecho
     S.append(slide("conclusão", """
       <h2>O que fica</h2>
       <div class="duas">
@@ -563,10 +792,12 @@ def montar() -> str:
           predição verificada contra o Python.</p>
         </div>
       </div>
-      <div class="citacao" style="margin-top:34px">
+      <div class="citacao" style="margin-top:30px">
         O achado mais útil não foi sobre diabetes.<br>
         Foi sobre <b>quem os dados de saúde deixam de fora</b>.
-      </div>"""))
+      </div>
+      <p style="margin-top:22px;font-size:17px">Teste agora:
+      <b>felipe44776-eseg.github.io/data-science-2-eseg-diabetes</b></p>"""))
 
     corpo = "".join(
         s.replace('class="slide ', f'data-n="{i+1}/{len(S)}" class="slide ')
@@ -582,6 +813,7 @@ def montar() -> str:
 
 
 def main() -> None:
+    """Grava `reports/deck/apresentacao.html` e imprime o numero de slides."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--saida", type=Path, default=SAIDA / "apresentacao.html")
     args = ap.parse_args()

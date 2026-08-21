@@ -259,9 +259,20 @@ desigual é **apropriada** quando a prevalência é desigual — selecionar negr
    (convocação, logística, perda de seguimento, confirmação diagnóstica).
 2. **Escore treinado e validado nos EUA.** `docs/09` mostrou que o IMC pesa **16%
    menos no Brasil** — recalibração local é requisito, não refinamento.
+   *Resolvido em `docs/18`:* recalibrado no Vigitel, o erro de calibração cai de
+   3,48 p.p. para 0,86.
 3. **`saude_geral` é a variável mais forte e a mais problemática** — quem já sabe
    do diagnóstico avalia a própria saúde pior. O escore prediz bem; não explica.
 4. **Sem análise de custo-efetividade completa** — falta o modelo de Markov de
    progressão da doença para converter casos encontrados em QALY.
 5. **A correção PU da auditoria usa reponderação**, não rótulos verdadeiros. Só o
    NHANES individual com HbA1c permitiria a auditoria definitiva.
+6. **As cinco variáveis foram fixadas *a priori***, por critério clínico
+   (`VARS_B` em `eval/escore.py`), não escolhidas pela curva de parcimônia de
+   `docs/08`. Isso importa: aquela curva faz seleção gulosa **olhando para o
+   mesmo holdout** em que reporta a métrica, e portanto é otimista. Ela serviu
+   para dimensionar *quantas* perguntas bastam; o número publicado aqui sai de
+   variáveis fixas com partição própria. Ainda assim, a decisão de parar em cinco
+   foi informada por ela — resíduo de otimismo que só uma amostra externa
+   eliminaria, e `docs/18` (Vigitel) e `docs/22` (2023) são o que mais perto
+   chegam disso.

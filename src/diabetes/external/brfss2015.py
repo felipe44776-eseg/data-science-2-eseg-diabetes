@@ -186,6 +186,7 @@ def reconstruir_sem_descarte(bruto: pd.DataFrame) -> pd.DataFrame:
 
 
 def main() -> None:
+    """Reconstroi as 22 colunas do XPT do CDC e grava reconstruido, excluidos e a cascata."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--xpt", type=Path, required=True)
     ap.add_argument("--saida", type=Path, default=Path("data/external/brfss2015/brfss2015_reconstruido.parquet"))

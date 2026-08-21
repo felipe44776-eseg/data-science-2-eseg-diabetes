@@ -156,6 +156,7 @@ def por_faixa(pontos: pd.Series, y: pd.Series, w: pd.Series,
 # --------------------------------------------------------------------------
 
 def main() -> None:
+    """Recalibra o escore de 5 perguntas no Vigitel e grava `gold/_escore_brasil.json`."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--vigitel", type=Path, default=VIGITEL)
     ap.add_argument("--expandido", type=Path, default=EXPANDIDO)

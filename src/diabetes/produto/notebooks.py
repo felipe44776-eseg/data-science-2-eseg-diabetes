@@ -44,11 +44,15 @@ def _linhas(texto: str) -> list[str]:
 
 
 def md(texto: str) -> dict:
+    """Celula de markdown, com id gerado e `source` ja quebrado em linhas com 
+    .
+    """
     return {"cell_type": "markdown", "id": _proximo_id(), "metadata": {},
             "source": _linhas(texto)}
 
 
 def cod(texto: str) -> dict:
+    """Celula de codigo sem saida — quem executa e grava resultado e `executar_notebooks`."""
     return {"cell_type": "code", "id": _proximo_id(), "execution_count": None,
             "metadata": {}, "outputs": [], "source": _linhas(texto)}
 
@@ -608,6 +612,13 @@ demonstra, em um clique, a tese que o projeto inteiro sustenta.
 
 
 def construir(nome: str, celulas: list[dict]) -> dict:
+    """Envelope nbformat em volta das celulas ja montadas.
+
+    `nbformat_minor` 5 e o que torna o `id` por celula valido; com minor 4 o campo
+    seria ignorado e o Jupyter reclamaria. `metadata.titulo` e chave nossa, fora do
+    padrao — o formato preserva metadados desconhecidos, entao serve de rotulo sem
+    quebrar leitor nenhum.
+    """
     return {
         "cells": celulas,
         "metadata": {
@@ -621,6 +632,7 @@ def construir(nome: str, celulas: list[dict]) -> dict:
 
 
 def main() -> None:
+    """Gera todos os notebooks da apresentacao em `notebooks/`, sem saidas."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--saida", type=Path, default=SAIDA)
     args = ap.parse_args()

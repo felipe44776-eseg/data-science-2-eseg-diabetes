@@ -23,6 +23,16 @@ TEMPO_LIMITE = 900
 
 
 def executar(caminho: Path, timeout: int = TEMPO_LIMITE) -> tuple[bool, str]:
+    """Executa o notebook no lugar, regrava com as saidas e devolve (ok, motivo).
+
+    Duas formas de falha, e as duas contam: excecao levantada pelo `NotebookClient`
+    e celula que terminou com output do tipo `error`. A segunda **nao** levanta
+    nada — sem a varredura de `outputs`, um notebook quebrado seria gravado no repo
+    com o traceback como saida oficial.
+
+    So regrava se passar nas duas: notebook que falha mantem no disco a ultima
+    versao boa, em vez de ficar com saida parcial.
+    """
     import nbformat
     from nbclient import NotebookClient
 
@@ -43,6 +53,7 @@ def executar(caminho: Path, timeout: int = TEMPO_LIMITE) -> tuple[bool, str]:
 
 
 def main() -> None:
+    """Executa todos os notebooks da pasta e falha o build se algum quebrar."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--pasta", type=Path, default=SAIDA)
     args = ap.parse_args()

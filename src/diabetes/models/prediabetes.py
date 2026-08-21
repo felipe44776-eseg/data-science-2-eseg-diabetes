@@ -70,6 +70,14 @@ SEED = 42
 #: E o melhor marcador disponivel de contato recente com o sistema de saude —
 #: quem faz esse exame e quem faz glicemia na mesma coleta.
 def testado(bruto: pd.DataFrame) -> pd.Series:
+    """Proxy de "foi testado": fez exame de colesterol nos ultimos 5 anos.
+
+    Nao ha no BRFSS pergunta direta sobre teste de glicemia utilizavel — `PDIABTST`
+    esta em `VAZAMENTO`, porque decorre da propria suspeita de diabetes. `CHOLCHK`
+    e o melhor marcador disponivel de contato recente com o sistema de saude: a
+    glicemia costuma sair na mesma coleta. Toda a leitura de H2 e H4 depende desta
+    suposicao — se ela cair, cai o modulo.
+    """
     return (bruto["CHOLCHK"] == 1)
 
 
@@ -83,6 +91,15 @@ def _modelo():
 
 
 def rodar(X: pd.DataFrame, y: np.ndarray, te: np.ndarray, rotulo: str) -> dict:
+    """Ajusta um contraste e devolve (metricas, modelo ajustado, predicao no teste).
+
+    `pr_auc_ganho` normaliza pela prevalencia do proprio teste: os contrastes deste
+    modulo (pre vs sem, diabetes vs sem, pre vs diabetes, so testados) tem
+    prevalencias muito diferentes, e a PR-AUC crua nao e comparavel entre eles — o
+    que se compara e quantas vezes cada modelo bate o classificador constante.
+
+    A anotacao de retorno cobre so o primeiro elemento; sai uma tupla.
+    """
     m = _modelo()
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
@@ -104,6 +121,16 @@ def rodar(X: pd.DataFrame, y: np.ndarray, te: np.ndarray, rotulo: str) -> dict:
 
 def importancia(m, X: pd.DataFrame, y: np.ndarray, te: np.ndarray,
                 n: int = 8000) -> list[dict]:
+    """Importancia por permutacao no teste, com cada variavel rotulada por bloco.
+
+    Permutacao e nao ganho de impureza: o modelo e um `CalibratedClassifierCV`, que
+    nao expoe importancia nativa, e a permutacao mede o que a **metrica** perde, nao
+    como a arvore foi construida. Subamostra de 8 mil linhas e 3 repeticoes por
+    custo — o topo do ranking e estavel, a ordem exata no meio da lista nao e.
+
+    O campo `bloco` e a resposta a H1: o que interessa e quantas das primeiras
+    colocadas sao de acesso, e nao de risco.
+    """
     rng = np.random.default_rng(SEED)
     idx = np.where(te)[0]
     sub = rng.choice(idx, min(n, len(idx)), replace=False)
@@ -118,6 +145,7 @@ def importancia(m, X: pd.DataFrame, y: np.ndarray, te: np.ndarray,
 
 
 def main() -> None:
+    """Testa H1-H4 sobre pre-diabetes como artefato de deteccao; grava `gold/_prediabetes.json`."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--xpt", type=Path, default=XPT)
     ap.add_argument("--saida", type=Path,

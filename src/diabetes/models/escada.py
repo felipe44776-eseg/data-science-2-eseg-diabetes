@@ -86,6 +86,13 @@ def erro_calibracao(y: np.ndarray, p: np.ndarray, faixas: int = 10) -> float:
 
 
 def curva_calibracao(y: np.ndarray, p: np.ndarray, faixas: int = 10) -> list[dict]:
+    """Risco previsto contra observado, por decil de risco — o insumo do grafico.
+
+    Complementa o ECE, que resume tudo num numero e apaga a direcao do erro: aqui se
+    ve se o modelo e otimista na cauda alta ou pessimista no meio, que e o que
+    importa para escolher limiar. Decil vazio e omitido, entao a lista pode vir com
+    menos de `faixas` entradas.
+    """
     bordas = np.quantile(p, np.linspace(0, 1, faixas + 1))
     bordas[-1] += 1e-9
     out = []
@@ -99,6 +106,14 @@ def curva_calibracao(y: np.ndarray, p: np.ndarray, faixas: int = 10) -> list[dic
 
 
 def avaliar(y: np.ndarray, p: np.ndarray) -> dict:
+    """Painel de metricas do protocolo. Acuracia nao entra, por decisao (ADR 0005).
+
+    `pr_auc_ganho` e a PR-AUC dividida pela prevalencia: a PR-AUC bruta nao e
+    comparavel entre amostras de prevalencia diferente, e o que se le e o ganho
+    sobre o classificador constante. `recall_esp90` e `esp95` traduzem a curva em
+    operacao de rastreamento. `brier` e `ece` medem calibracao — dimensao que
+    PR-AUC e ROC-AUC ignoram por completo, e que e a que a Trilha C consome.
+    """
     prev = float(y.mean())
     return {
         "pr_auc": round(float(average_precision_score(y, p)), 4),
@@ -183,11 +198,31 @@ ESCADA = ["0_prevalencia", "1_regra_clinica", "2_logistica_l2", "3_spline",
 
 
 def variaveis_de(nome: str, bloco: list[str]) -> list[str]:
+    """Degrau 1 usa a regra clinica de 3 variaveis; todo o resto usa o bloco inteiro.
+
+    O baseline clinico precisa ficar identico nos dois blocos (com e sem proxies de
+    acesso). Se ele acompanhasse o bloco, a comparacao entre blocos estaria mudando
+    duas coisas ao mesmo tempo e a diferenca deixaria de ser atribuivel aos proxies.
+    """
     return REGRA_CLINICA if nome == "1_regra_clinica" else bloco
 
 
 def rodar_bloco(df: pd.DataFrame, folds: pd.DataFrame, bloco: list[str],
                 rotulo: str) -> dict:
+    """Roda a escada inteira num bloco de variaveis e devolve metricas por degrau.
+
+    Restringe ao alvo binario 0 vs 2: pre-diabetes e **excluido**, nao tratado como
+    ponto intermediario, porque tem mecanismo proprio (`docs/07` §3).
+
+    A validacao cruzada usa os folds ja congelados em `folds.parquet`
+    (StratifiedGroupKFold por hash das 21 features), entao nenhuma duplicata exata
+    cruza treino e validacao — ADR 0002. O vetor `oof` nasce NaN e so e preenchido
+    nas linhas de treino: qualquer metrica que tente ler predicao out-of-fold no
+    holdout quebra, em vez de misturar as duas particoes em silencio.
+
+    O holdout de 20% e tocado uma unica vez por degrau, no ajuste final; nada —
+    hiperparametro, limiar, escolha de variavel — e decidido olhando para ele.
+    """
     d = df.loc[df[TARGET].isin([0, 2])].copy()
     f = folds.loc[d.index]
     y = (d[TARGET] == 2).astype(int).to_numpy()
@@ -297,6 +332,16 @@ def curva_de_parcimonia(df: pd.DataFrame, folds: pd.DataFrame, bloco: list[str],
     treino = ~f["holdout"].to_numpy()
 
     def pr_auc(variaveis: list[str]) -> float:
+        """PR-AUC no holdout de um subconjunto de variaveis, com a logistica L2.
+
+        Reajusta o modelo do zero a cada candidato — a selecao gulosa chama isto O(k·p)
+        vezes, e e por isso que o degrau avaliado e a logistica e nao o boosting.
+
+        Ressalva que vale para toda a curva: a selecao escolhe a variavel **olhando para
+        o mesmo holdout** onde reporta a metrica. A curva serve para dimensionar quantas
+        perguntas bastam, nao para publicar o numero final do escore — esse sai da
+        Trilha C, com particao propria.
+        """
         X = d[variaveis].astype("float32").to_numpy()
         m = construir("2_logistica_l2", len(variaveis))
         with warnings.catch_warnings():
@@ -328,6 +373,7 @@ def curva_de_parcimonia(df: pd.DataFrame, folds: pd.DataFrame, bloco: list[str],
 
 
 def main() -> None:
+    """Roda a escada nos dois blocos, teto de Bayes, parcimonia e vazamento; grava `gold/_escada_modelos.json`."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--silver", type=Path,
                     default=Path("data/processed/diabetes_silver.parquet"))

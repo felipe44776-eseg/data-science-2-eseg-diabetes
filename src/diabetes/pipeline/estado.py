@@ -159,10 +159,14 @@ ETAPAS: list[Etapa] = [
         "medicaid", "Frente 4 — expansao do Medicaid (DiD)",
         ".\\tasks.ps1 medicaid",
         ("src/diabetes/external/medicaid.py",),
-        ("data/external/medicaid/_frente4_medicaid.json",
-         "data/external/medicaid/painel_brfss_estados.parquet"),
+        ("data/external/medicaid/_frente4_medicaid.json",),
         opcional=True,
-        nota="painel via data.cdc.gov; nao depende do XPT local",
+        # `painel_brfss_estados.parquet` NAO entra aqui de proposito: e cache de
+        # download (so se refaz com --rebaixar), nao artefato do pipeline, e
+        # ninguem o consome. Declarado como saida, deixava a etapa OBSOLETA para
+        # sempre — mesmo bug que o parquet do vigitel teve, com o outro desfecho:
+        # la o arquivo era artefato de verdade e o cache e que saiu.
+        nota="painel via data.cdc.gov (em cache local); nao depende do XPT",
     ),
     Etapa(
         "trilhac", "Trilha C — escore, decisao e equidade",
@@ -194,14 +198,6 @@ ETAPAS: list[Etapa] = [
             "03-analise-exploratoria-e-explicativa", "04-modelagem-preditiva",
             "05-comparacao-entre-bases", "06-escore-decisao-e-produto")),
         nota="gerados de src/, nunca escritos a mao (regra 7)",
-    ),
-    Etapa(
-        "deck", "Deck da apresentacao",
-        ".\\tasks.ps1 deck",
-        ("data/processed/gold/_trilhaC_decisao.json",
-         "reports/produto/modelo.json", "src/diabetes/produto/deck.py"),
-        ("reports/deck/apresentacao.html",),
-        nota="1280x720, autocontido, Ctrl+P exporta em PDF",
     ),
     Etapa(
         "escorebr", "Escore recalibrado para o Brasil",
@@ -244,6 +240,30 @@ ETAPAS: list[Etapa] = [
          "src/diabetes/external/temporal.py"),
         ("data/processed/gold/_validacao_temporal.json",),
         nota="perde so 11,8 milesimos em 8 anos; sem concept drift",
+    ),
+    Etapa(
+        "deck", "Deck da apresentacao",
+        ".\\tasks.ps1 deck",
+        ("data/processed/gold/_trilhaC_decisao.json",
+         "data/processed/gold/_escore_brasil.json",
+         "data/processed/gold/_prediabetes.json",
+         "data/processed/gold/_naosupervisionada.json",
+         "data/processed/gold/_causal.json",
+         "data/processed/gold/_validacao_temporal.json",
+         "reports/produto/modelo.json", "src/diabetes/produto/deck.py"),
+        ("reports/deck/apresentacao.html",),
+        nota="26 slides 1280x720, autocontido, Ctrl+P exporta em PDF",
+    ),
+    Etapa(
+        "site", "Pagina de entrada do site publico",
+        ".\\tasks.ps1 site",
+        ("data/processed/gold/_trilhaC_escore.json",
+         "data/processed/gold/_trilhaC_decisao.json",
+         "data/processed/gold/_escore_brasil.json",
+         "data/processed/gold/_validacao_temporal.json",
+         "reports/produto/modelo.json", "src/diabetes/produto/site.py"),
+        ("reports/site/index.html",),
+        nota="raiz do GitHub Pages; publicada por .github/workflows/pages.yml",
     ),
 ]
 
@@ -291,6 +311,16 @@ def _idade(ts: float) -> str:
 
 
 def inspecionar(caminho: str, raiz: Path = RAIZ) -> dict:
+    """Metadados de um artefato: existencia, tamanho, data e hash de versao.
+
+    `mtime` e o que alimenta o detector de obsolescencia em `status`. O hash serve
+    para **identificar versao**, nao para provar integridade: acima de
+    `LIMITE_HASH_COMPLETO` (50 MB) ele e amostrado (inicio, meio, fim + tamanho) e
+    vem prefixado com `amostra:` em vez de `sha256:`.
+
+    `caminho` e relativo a `raiz`. Arquivo ausente devolve so `{caminho, existe}` —
+    quem consome precisa checar `existe` antes de ler qualquer outro campo.
+    """
     p = raiz / caminho
     if not p.exists():
         return {"caminho": caminho, "existe": False}
@@ -367,6 +397,13 @@ def registrar(etapa: str, evento: str, **extra) -> None:
 
 
 def execucoes(limite: int = 25) -> list[dict]:
+    """Ultimos `limite` eventos do log de execucao, ja decodificados.
+
+    Le o JSONL inteiro e corta o fim; cabe porque e uma linha por evento de etapa.
+    Linha corrompida — escrita interrompida no meio — e pulada em silencio: o log e
+    observabilidade, nao fonte de verdade, e nao pode derrubar quem consulta o
+    estado do pipeline.
+    """
     if not LOG_EXECUCAO.exists():
         return []
     linhas = LOG_EXECUCAO.read_text(encoding="utf-8").strip().splitlines()
@@ -385,6 +422,16 @@ MARCA = {"ok": "[ok]     ", "obsoleto": "[OBSOLETO]", "ausente": "[ausente]"}
 
 
 def imprimir(linhas: list[dict]) -> None:
+    """Imprime a tabela de estado, o resumo por contagem e a proxima etapa.
+
+    O bloco de ATENCAO cobre o caso perigoso do modulo: artefato que **existe** mas
+    e mais velho que a entrada que o gerou. Sem esse aviso, alguem le um grafico
+    produzido a partir de uma versao anterior dos dados sem perceber.
+
+    Quando nao ha proxima etapa acionavel, distingue "pipeline completo" de "todas
+    as pendentes bloqueadas por entrada ausente" — situacoes opostas que o mesmo
+    silencio esconderia.
+    """
     print("\nESTADO DO PIPELINE\n" + "=" * 78)
     for ln in linhas:
         opc = " (opcional)" if ln["opcional"] else ""
@@ -423,6 +470,7 @@ def imprimir(linhas: list[dict]) -> None:
 
 
 def imprimir_execucoes(regs: list[dict]) -> None:
+    """Historico do log em uma linha por evento, com duracao e detalhe quando houver."""
     if not regs:
         print("Sem execucoes registradas em reports/execucao.jsonl")
         return
@@ -434,6 +482,7 @@ def imprimir_execucoes(regs: list[dict]) -> None:
 
 
 def main() -> None:
+    """CLI de observabilidade: tabela de estado do pipeline, `--json` ou `--execucoes`."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--json", action="store_true", help="saida em JSON")
     ap.add_argument("--execucoes", action="store_true", help="historico do log")

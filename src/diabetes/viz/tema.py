@@ -80,6 +80,13 @@ def _vars(d: dict) -> str:
 
 
 def estilo() -> str:
+    """Bloco `<style>` com os tokens dos dois modos, para embutir em cada SVG.
+
+    Os tokens entram como variaveis CSS em `:root` mais um `prefers-color-scheme`,
+    entao o `.svg` aberto sozinho no navegador continua respeitando o tema do
+    sistema. Sem isso o arquivo isolado sairia com a paleta clara chumbada e ficaria
+    ilegivel em modo escuro.
+    """
     return ESTILO_SVG.format(claro=_vars(CLARO), escuro=_vars(ESCURO), fonte=FONTE)
 
 
@@ -102,6 +109,12 @@ class Escala:
 
 def txt(x: float, y: float, s: str, classe: str = "rot", anchor: str = "start",
         extra: str = "") -> str:
+    """Elemento `<text>` com conteudo escapado; a classe define cor e tamanho.
+
+    A cor vem sempre da classe (`rot`, `eixo`, `val`, `titulo`, `sub`) e nunca da
+    cor da serie — texto em tinta e regra de marca do projeto. O conteudo passa por
+    `escape`, entao rotulo com `&`, `<` ou aspas nao quebra o SVG.
+    """
     return (f'<text x="{x:.1f}" y="{y:.1f}" class="{classe}" '
             f'text-anchor="{anchor}" {extra}>{escape(str(s))}</text>')
 
@@ -130,6 +143,11 @@ def barra_v(x: float, y: float, larg: float, alt: float, cor: str,
 
 
 def linha(pontos: list[tuple[float, float]], cor: str, largura: float = 2) -> str:
+    """Polilinha de serie, 2px, com junta e ponta arredondadas.
+
+    `fill="none"` e explicito: sem ele o SVG fecharia o caminho e pintaria a area
+    sob a curva, transformando um grafico de linha num de area por acidente.
+    """
     d = "M" + " L".join(f"{x:.1f},{y:.1f}" for x, y in pontos)
     return (f'<path d="{d}" fill="none" stroke="{cor}" stroke-width="{largura}" '
             f'stroke-linejoin="round" stroke-linecap="round"/>')
@@ -152,6 +170,16 @@ def legenda(x: float, y: float, itens: list[tuple[str, str]]) -> str:
 
 
 def svg(largura: int, altura: int, corpo: str, titulo: str = "") -> str:
+    """Envelope do SVG: viewBox, estilo embutido, fundo de superficie e rotulo ARIA.
+
+    `role="img"` com `aria-label` e o que da nome acessivel a figura. `viewBox` ao
+    lado de `width`/`height` mantem o arquivo escalavel e ainda assim com tamanho
+    natural ao ser colado no relatorio.
+
+    O retangulo de fundo em `var(--superficie)` nao e decoracao: SVG e transparente
+    por padrao, e sem ele o texto em tinta ficaria sobre o fundo de quem embute — o
+    que inverte a legibilidade quando os temas divergem.
+    """
     return (
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {largura} {altura}" '
         f'width="{largura}" height="{altura}" role="img" '

@@ -18,7 +18,7 @@
       "ece": 0.00226,
       "prevalencia": 0.1328,
       "n_variaveis": 21,
-      "segundos": 11.3
+      "segundos": 13.1
     },
     "60_risco": {
       "pr_auc": 0.4733,
@@ -31,7 +31,7 @@
       "ece": 0.0032,
       "prevalencia": 0.1328,
       "n_variaveis": 60,
-      "segundos": 19.8
+      "segundos": 23.0
     },
     "69_com_deteccao": {
       "pr_auc": 0.4874,
@@ -44,7 +44,7 @@
       "ece": 0.00311,
       "prevalencia": 0.1328,
       "n_variaveis": 69,
-      "segundos": 22.7
+      "segundos": 29.6
     },
     "ganho_pr_auc_%": 6.62,
     "ganho_roc_auc_milesimos": 10.9,

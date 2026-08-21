@@ -318,6 +318,17 @@ montarFormulario(); abas(); calcular();
 
 
 def montar(modelo: dict) -> str:
+    """Monta o HTML autocontido: CSS, JavaScript e modelo embutidos num arquivo.
+
+    O JSON do modelo entra dentro do proprio HTML — nenhuma requisicao, abre offline
+    por duplo clique, que e o requisito da apresentacao.
+
+    Armadilha na tabela do escore: `replace(".", ",", 1)` troca a **primeira**
+    ocorrencia de ponto na linha, que hoje e o separador decimal do risco, porque os
+    campos anteriores (`pontos_min`, `pontos_max`) sao inteiros. Se algum campo com
+    ponto passar a vir antes dele, a virgula cai no lugar errado — em atributo HTML,
+    inclusive.
+    """
     fx = modelo["escore_papel"]["calibracao"]["faixas"]
     linhas_tab = "".join(
         f'<tr data-min="{f["pontos_min"]}"><td>{f["pontos_min"]}–{f["pontos_max"]}</td>'
@@ -450,6 +461,7 @@ def verificar_js(js: str) -> None:
 
 
 def main() -> None:
+    """Confere o JavaScript com `node --check` e grava `reports/produto/index.html`."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--modelo", type=Path, default=SAIDA / "modelo.json")
     ap.add_argument("--saida", type=Path, default=SAIDA / "index.html")
