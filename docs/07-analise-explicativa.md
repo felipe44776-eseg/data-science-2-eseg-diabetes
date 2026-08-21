@@ -158,8 +158,9 @@ Cada classe contra a referência, separadamente (base B ponderada, especificaç�
 | `saude_mental_dias` | **1,07** | [1,02; 1,13] | **0,95** | [0,93; 0,98] | 0,89 | **não** |
 | `alcool_excessivo` | **0,87** | [0,66; 1,15] | **0,52** | [0,45; 0,60] | 0,60 | **não** |
 
-**Oito variáveis com IC que não se sobrepõem.** Duas **invertem de direção** entre as
-classes (`doenca_cardiaca`, `saude_mental_dias`).
+**Nove variáveis com IC que não se sobrepõem** — hipertensão, doença cardíaca, saúde geral,
+sexo, IMC, escolaridade, idade, dias de saúde mental e álcool excessivo. Duas delas
+**invertem de direção** entre as classes (`doenca_cardiaca`, `saude_mental_dias`).
 
 > ### Decisão: **modelo multinomial, não ordinal.**
 > Pré-diabetes e diabetes não são dois pontos de um mesmo continuum latente nesta base.

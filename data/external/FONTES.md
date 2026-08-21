@@ -90,11 +90,64 @@ gestacional 0,8% · Não 87,4%.
 
 ---
 
+## Vigitel 2015 e 2023 (Ministério da Saúde) — `vigitel/`
+
+| | |
+|---|---|
+| **Baixado em** | 2026-08-21 |
+| **Origem** | https://svs.aids.gov.br/daent/cgdnt/vigitel/ |
+| **Acesso** | direto, sem bloqueio |
+
+| arquivo | bytes | SHA-256 (32 primeiros) |
+|---|---|---|
+| `vigitel-2015-peso-rake.zip` | 10.775.599 | `2e24a11ec1a43d74e4cfe9087ab533f0` |
+| `vigitel-2023-peso-rake.zip` | 15.935.870 | `566fc89d38cafbf2451ff41cd7796ebf` |
+| `dicionario-vigitel-2006-2024.xlsx` | 93.263 | `c67e63f6f10c2aae7694f3f67b5d2c89` |
+
+Conteúdo extraído: `Vigitel-2015-peso-rake.xls` (**54.174 × 190**, formato OLE2 — exige
+`xlrd`) e `Vigitel-2023-peso-rake.xlsx`. Peso de pós-estratificação: **`pesorake`**.
+
+### Prova de integridade
+
+A harmonização reproduz o número publicado do Vigitel 2015:
+
+| | nosso cálculo | publicado |
+|---|---|---|
+| diabetes, homens | **6,92%** | 6,9% |
+| diabetes, mulheres | **7,84%** | 7,8% |
+
+Detalhe em `docs/09-comparacao-binacional.md` §0.
+
+### Variáveis usadas (2015)
+
+| projeto | Vigitel | codificação |
+|---|---|---|
+| `diabetes` | `q76` (+ `r138` gestacional) | 1 = sim · 2 = não · 777 = não sabe |
+| `hipertensao` | `q75` | 1 = sim · 2 = não · 777 |
+| `imc` | `q9_i` / (`q11_i`/100)² | peso e altura imputados |
+| `fumante` | `q60` ou `q64` | atual ou ex — casa com `SMOKE100` |
+| `atividade_fisica` | `q42` | 1 = sim · 2 = não |
+| `frutas` | `q27` = 4 | "todos os dias" ≈ `_FRTLT1` |
+| `acesso_saude` | `q88` ∈ {1,2} | plano **privado** — ver ressalva abaixo |
+| `sexo` | `q7` | 1 = masculino · 2 = feminino |
+| `idade_faixa` | `q6` (anos) → faixa BRFSS | |
+| `escolaridade` | `fesc` | 1 = 0-8 anos · 2 = 9-11 · 3 = 12+ |
+
+> **`q88` não é comparável a `HLTHPLN1`.** No Brasil mede plano **privado**; a cobertura
+> pública pelo SUS é universal e não aparece na variável. Fora do modelo comum, por isso.
+>
+> **`alcool_excessivo` também não é comparável:** BRFSS mede volume semanal, Vigitel mede
+> *binge*. Construtos distintos — a lista completa está em `NAO_COMPARAVEL`,
+> em `src/diabetes/external/vigitel.py`.
+
+Reproduzir: `.	asks.ps1 vigitel`
+
+---
+
 ## Pendentes (ver `docs/03-fontes-externas.md`)
 
 | # | Fonte | Uso |
 |---|---|---|
-| 2 | **Vigitel** (Ministério da Saúde) — microdados 2006–2024 | comparação binacional de odds ratio |
 | 3 | **NHANES** (CDC/NCHS) | prior de subdiagnóstico para a formulação Positive-Unlabeled |
 | 4 | IDF Atlas · NCD-RisC | contexto internacional |
 | 5 | PNS 2019 (IBGE) | subdiagnóstico brasileiro (HbA1c) |

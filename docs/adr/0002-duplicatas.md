@@ -21,6 +21,24 @@ A decisão de deduplicar pertence à modelagem, e é tomada por objetivo:
 | Estimar teto de Bayes | **usar os conflitos** — é justamente o sinal desejado |
 
 ## Consequências
-- Elimina o vazamento treino/teste que infla o AUC na maioria dos notebooks públicos deste dataset.
 - Um teste em CI garante que nenhum grupo de duplicata cruze a partição.
-- Reportamos o AUC com e sem vazamento, para dimensionar o efeito com número.
+- Reportamos a métrica com e sem vazamento, para dimensionar o efeito com número.
+
+## Adendo (2026-08-21) — o efeito medido é pequeno
+
+A decisão está mantida, mas a justificativa foi corrigida por medição (`docs/08` §2.1):
+
+| modelo | split aleatório | split por grupo | inflação |
+|---|---|---|---|
+| gradient boosting | 0,4498 | 0,4494 | +0,09% |
+| árvore sem poda | 0,1999 | 0,1993 | +0,3% |
+| kNN k=1 | 0,1914 | 0,1890 | +1,2% |
+
+O raciocínio do "Contexto" acima já continha a explicação e não foi seguido até o fim:
+como a colisão é **legítima**, a gêmea no treino carrega *um* rótulo da distribuição
+conflitante, não o rótulo da linha de teste. Memorizá-la devolve a classe majoritária do
+grupo — que é o que um bom modelo preveria de qualquer forma.
+
+**A decisão continua correta**: a partição por grupo é gratuita e é a única defensável por
+princípio, e nada garante que o efeito seja pequeno em outro modelo ou outro dataset.
+O que muda é a **magnitude alegada**, que estava exagerada.

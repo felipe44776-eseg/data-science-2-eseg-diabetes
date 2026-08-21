@@ -1,0 +1,1012 @@
+{
+  "protocolo": {
+    "alvo": "diabetes (classe 2) vs sem diabetes (classe 0); classe 1 excluida",
+    "particao": "StratifiedGroupKFold(5) por hash das features + holdout 20%",
+    "seed": 42,
+    "desbalanceamento": "class_weight balanced (ADR 0004) — sem reamostragem",
+    "metrica_principal": "PR-AUC (ADR 0005) — acuracia nao reportada"
+  },
+  "teto_de_bayes": {
+    "grupos": 220794,
+    "linhas_em_grupo_conflitante": 5531,
+    "acerto_maximo_por_grupo": 0.9969,
+    "acerto_maximo_ponderado": 0.993
+  },
+  "parcimonia": {
+    "teto_referencia": 0.4526,
+    "curva": [
+      {
+        "n_variaveis": 1,
+        "adicionada": "saude_geral",
+        "pr_auc": 0.2706,
+        "%_do_teto": 59.8,
+        "variaveis": [
+          "saude_geral"
+        ]
+      },
+      {
+        "n_variaveis": 2,
+        "adicionada": "imc",
+        "pr_auc": 0.3362,
+        "%_do_teto": 74.3,
+        "variaveis": [
+          "saude_geral",
+          "imc"
+        ]
+      },
+      {
+        "n_variaveis": 3,
+        "adicionada": "hipertensao",
+        "pr_auc": 0.378,
+        "%_do_teto": 83.5,
+        "variaveis": [
+          "saude_geral",
+          "imc",
+          "hipertensao"
+        ]
+      },
+      {
+        "n_variaveis": 4,
+        "adicionada": "colesterol_alto",
+        "pr_auc": 0.3984,
+        "%_do_teto": 88.0,
+        "variaveis": [
+          "saude_geral",
+          "imc",
+          "hipertensao",
+          "colesterol_alto"
+        ]
+      },
+      {
+        "n_variaveis": 5,
+        "adicionada": "idade_faixa",
+        "pr_auc": 0.4039,
+        "%_do_teto": 89.2,
+        "variaveis": [
+          "saude_geral",
+          "imc",
+          "hipertensao",
+          "colesterol_alto",
+          "idade_faixa"
+        ]
+      },
+      {
+        "n_variaveis": 6,
+        "adicionada": "alcool_excessivo",
+        "pr_auc": 0.4073,
+        "%_do_teto": 90.0,
+        "variaveis": [
+          "saude_geral",
+          "imc",
+          "hipertensao",
+          "colesterol_alto",
+          "idade_faixa",
+          "alcool_excessivo"
+        ]
+      },
+      {
+        "n_variaveis": 7,
+        "adicionada": "sexo",
+        "pr_auc": 0.4095,
+        "%_do_teto": 90.5,
+        "variaveis": [
+          "saude_geral",
+          "imc",
+          "hipertensao",
+          "colesterol_alto",
+          "idade_faixa",
+          "alcool_excessivo",
+          "sexo"
+        ]
+      },
+      {
+        "n_variaveis": 8,
+        "adicionada": "doenca_cardiaca",
+        "pr_auc": 0.411,
+        "%_do_teto": 90.8,
+        "variaveis": [
+          "saude_geral",
+          "imc",
+          "hipertensao",
+          "colesterol_alto",
+          "idade_faixa",
+          "alcool_excessivo",
+          "sexo",
+          "doenca_cardiaca"
+        ]
+      }
+    ]
+  },
+  "sem_proxies_de_acesso": {
+    "rotulo": "sem proxies de acesso",
+    "n": 249049,
+    "n_treino": 199590,
+    "n_holdout": 49459,
+    "prevalencia": 0.1419,
+    "modelos": {
+      "0_prevalencia": {
+        "variaveis": 18,
+        "segundos": 0.1,
+        "cv_oof": {
+          "pr_auc": 0.1417,
+          "pr_auc_ganho": 1.0,
+          "roc_auc": 0.5,
+          "recall_esp90": 0.4,
+          "recall_esp95": 0.4,
+          "brier": 0.12162,
+          "log_loss": 0.40804,
+          "ece": 1e-05,
+          "prevalencia": 0.1417
+        },
+        "holdout": {
+          "pr_auc": 0.1428,
+          "pr_auc_ganho": 1.0,
+          "roc_auc": 0.5,
+          "recall_esp90": 1.0,
+          "recall_esp95": 1.0,
+          "brier": 0.12243,
+          "log_loss": 0.41006,
+          "ece": 0.00112,
+          "prevalencia": 0.1428
+        },
+        "calibracao_holdout": [
+          {
+            "previsto": 0.1417,
+            "observado": 0.1428,
+            "n": 49459
+          }
+        ]
+      },
+      "1_regra_clinica": {
+        "variaveis": 3,
+        "segundos": 0.4,
+        "cv_oof": {
+          "pr_auc": 0.3363,
+          "pr_auc_ganho": 2.37,
+          "roc_auc": 0.7763,
+          "recall_esp90": 0.3671,
+          "recall_esp95": 0.2252,
+          "brier": 0.10733,
+          "log_loss": 0.34932,
+          "ece": 0.00836,
+          "prevalencia": 0.1417
+        },
+        "holdout": {
+          "pr_auc": 0.335,
+          "pr_auc_ganho": 2.35,
+          "roc_auc": 0.7771,
+          "recall_esp90": 0.3645,
+          "recall_esp95": 0.2288,
+          "brier": 0.10813,
+          "log_loss": 0.35092,
+          "ece": 0.0085,
+          "prevalencia": 0.1428
+        },
+        "calibracao_holdout": [
+          {
+            "previsto": 0.02,
+            "observado": 0.0111,
+            "n": 4878
+          },
+          {
+            "previsto": 0.034,
+            "observado": 0.02,
+            "n": 5008
+          },
+          {
+            "previsto": 0.0467,
+            "observado": 0.0364,
+            "n": 4888
+          },
+          {
+            "previsto": 0.0606,
+            "observado": 0.0586,
+            "n": 4952
+          },
+          {
+            "previsto": 0.0801,
+            "observado": 0.0802,
+            "n": 4925
+          },
+          {
+            "previsto": 0.1134,
+            "observado": 0.1388,
+            "n": 4986
+          },
+          {
+            "previsto": 0.1654,
+            "observado": 0.1721,
+            "n": 4898
+          },
+          {
+            "previsto": 0.2183,
+            "observado": 0.2205,
+            "n": 4894
+          },
+          {
+            "previsto": 0.2755,
+            "observado": 0.2831,
+            "n": 5006
+          },
+          {
+            "previsto": 0.4087,
+            "observado": 0.4013,
+            "n": 5024
+          }
+        ]
+      },
+      "2_logistica_l2": {
+        "variaveis": 18,
+        "segundos": 1.1,
+        "cv_oof": {
+          "pr_auc": 0.4157,
+          "pr_auc_ganho": 2.93,
+          "roc_auc": 0.8256,
+          "recall_esp90": 0.4584,
+          "recall_esp95": 0.2958,
+          "brier": 0.17501,
+          "log_loss": 0.52405,
+          "ece": 0.24319,
+          "prevalencia": 0.1417
+        },
+        "holdout": {
+          "pr_auc": 0.4139,
+          "pr_auc_ganho": 2.9,
+          "roc_auc": 0.8252,
+          "recall_esp90": 0.4601,
+          "recall_esp95": 0.2886,
+          "brier": 0.17678,
+          "log_loss": 0.52899,
+          "ece": 0.24558,
+          "prevalencia": 0.1428
+        },
+        "calibracao_holdout": [
+          {
+            "previsto": 0.0479,
+            "observado": 0.0026,
+            "n": 4946
+          },
+          {
+            "previsto": 0.0947,
+            "observado": 0.0111,
+            "n": 4946
+          },
+          {
+            "previsto": 0.1473,
+            "observado": 0.021,
+            "n": 4946
+          },
+          {
+            "previsto": 0.2109,
+            "observado": 0.0378,
+            "n": 4946
+          },
+          {
+            "previsto": 0.29,
+            "observado": 0.0657,
+            "n": 4945
+          },
+          {
+            "previsto": 0.3846,
+            "observado": 0.112,
+            "n": 4946
+          },
+          {
+            "previsto": 0.4921,
+            "observado": 0.1512,
+            "n": 4946
+          },
+          {
+            "previsto": 0.6094,
+            "observado": 0.2264,
+            "n": 4946
+          },
+          {
+            "previsto": 0.734,
+            "observado": 0.3245,
+            "n": 4946
+          },
+          {
+            "previsto": 0.873,
+            "observado": 0.4757,
+            "n": 4946
+          }
+        ]
+      },
+      "3_spline": {
+        "variaveis": 18,
+        "segundos": 9.2,
+        "cv_oof": {
+          "pr_auc": 0.4382,
+          "pr_auc_ganho": 3.09,
+          "roc_auc": 0.8301,
+          "recall_esp90": 0.4802,
+          "recall_esp95": 0.3122,
+          "brier": 0.17359,
+          "log_loss": 0.51466,
+          "ece": 0.23934,
+          "prevalencia": 0.1417
+        },
+        "holdout": {
+          "pr_auc": 0.4402,
+          "pr_auc_ganho": 3.08,
+          "roc_auc": 0.8312,
+          "recall_esp90": 0.4792,
+          "recall_esp95": 0.3137,
+          "brier": 0.17474,
+          "log_loss": 0.51795,
+          "ece": 0.24165,
+          "prevalencia": 0.1428
+        },
+        "calibracao_holdout": [
+          {
+            "previsto": 0.0344,
+            "observado": 0.003,
+            "n": 4946
+          },
+          {
+            "previsto": 0.0803,
+            "observado": 0.0109,
+            "n": 4946
+          },
+          {
+            "previsto": 0.1354,
+            "observado": 0.0212,
+            "n": 4945
+          },
+          {
+            "previsto": 0.2042,
+            "observado": 0.0336,
+            "n": 4946
+          },
+          {
+            "previsto": 0.2869,
+            "observado": 0.0691,
+            "n": 4946
+          },
+          {
+            "previsto": 0.3871,
+            "observado": 0.1021,
+            "n": 4946
+          },
+          {
+            "previsto": 0.4955,
+            "observado": 0.1545,
+            "n": 4946
+          },
+          {
+            "previsto": 0.6155,
+            "observado": 0.2103,
+            "n": 4946
+          },
+          {
+            "previsto": 0.738,
+            "observado": 0.3257,
+            "n": 4946
+          },
+          {
+            "previsto": 0.8674,
+            "observado": 0.4978,
+            "n": 4946
+          }
+        ]
+      },
+      "4_gradient_boosting": {
+        "variaveis": 18,
+        "segundos": 9.2,
+        "cv_oof": {
+          "pr_auc": 0.4453,
+          "pr_auc_ganho": 3.14,
+          "roc_auc": 0.8329,
+          "recall_esp90": 0.4839,
+          "recall_esp95": 0.3226,
+          "brier": 0.17271,
+          "log_loss": 0.50502,
+          "ece": 0.23378,
+          "prevalencia": 0.1417
+        },
+        "holdout": {
+          "pr_auc": 0.4494,
+          "pr_auc_ganho": 3.15,
+          "roc_auc": 0.8347,
+          "recall_esp90": 0.4926,
+          "recall_esp95": 0.3209,
+          "brier": 0.17387,
+          "log_loss": 0.50824,
+          "ece": 0.23606,
+          "prevalencia": 0.1428
+        },
+        "calibracao_holdout": [
+          {
+            "previsto": 0.0262,
+            "observado": 0.0024,
+            "n": 4946
+          },
+          {
+            "previsto": 0.0593,
+            "observado": 0.0079,
+            "n": 4946
+          },
+          {
+            "previsto": 0.1095,
+            "observado": 0.0208,
+            "n": 4946
+          },
+          {
+            "previsto": 0.1847,
+            "observado": 0.0384,
+            "n": 4946
+          },
+          {
+            "previsto": 0.2815,
+            "observado": 0.0665,
+            "n": 4945
+          },
+          {
+            "previsto": 0.3972,
+            "observado": 0.0973,
+            "n": 4946
+          },
+          {
+            "previsto": 0.5127,
+            "observado": 0.1502,
+            "n": 4946
+          },
+          {
+            "previsto": 0.6284,
+            "observado": 0.2143,
+            "n": 4946
+          },
+          {
+            "previsto": 0.7382,
+            "observado": 0.3239,
+            "n": 4946
+          },
+          {
+            "previsto": 0.851,
+            "observado": 0.5065,
+            "n": 4946
+          }
+        ]
+      },
+      "5_gb_calibrado": {
+        "variaveis": 18,
+        "segundos": 18.9,
+        "cv_oof": {
+          "pr_auc": 0.4464,
+          "pr_auc_ganho": 3.15,
+          "roc_auc": 0.8329,
+          "recall_esp90": 0.4857,
+          "recall_esp95": 0.3252,
+          "brier": 0.09697,
+          "log_loss": 0.31319,
+          "ece": 0.00114,
+          "prevalencia": 0.1417
+        },
+        "holdout": {
+          "pr_auc": 0.4504,
+          "pr_auc_ganho": 3.15,
+          "roc_auc": 0.8347,
+          "recall_esp90": 0.4904,
+          "recall_esp95": 0.3284,
+          "brier": 0.09722,
+          "log_loss": 0.31321,
+          "ece": 0.0035,
+          "prevalencia": 0.1428
+        },
+        "calibracao_holdout": [
+          {
+            "previsto": 0.0036,
+            "observado": 0.0026,
+            "n": 4911
+          },
+          {
+            "previsto": 0.01,
+            "observado": 0.0082,
+            "n": 4851
+          },
+          {
+            "previsto": 0.0203,
+            "observado": 0.0193,
+            "n": 5030
+          },
+          {
+            "previsto": 0.0399,
+            "observado": 0.0413,
+            "n": 4992
+          },
+          {
+            "previsto": 0.0637,
+            "observado": 0.0617,
+            "n": 4941
+          },
+          {
+            "previsto": 0.1038,
+            "observado": 0.1045,
+            "n": 4907
+          },
+          {
+            "previsto": 0.152,
+            "observado": 0.1452,
+            "n": 4967
+          },
+          {
+            "previsto": 0.2167,
+            "observado": 0.2092,
+            "n": 4889
+          },
+          {
+            "previsto": 0.3164,
+            "observado": 0.3219,
+            "n": 4995
+          },
+          {
+            "previsto": 0.5027,
+            "observado": 0.51,
+            "n": 4976
+          }
+        ]
+      }
+    }
+  },
+  "com_proxies_de_acesso": {
+    "rotulo": "com proxies de acesso",
+    "n": 249049,
+    "n_treino": 199590,
+    "n_holdout": 49459,
+    "prevalencia": 0.1419,
+    "modelos": {
+      "0_prevalencia": {
+        "variaveis": 21,
+        "segundos": 0.1,
+        "cv_oof": {
+          "pr_auc": 0.1417,
+          "pr_auc_ganho": 1.0,
+          "roc_auc": 0.5,
+          "recall_esp90": 0.4,
+          "recall_esp95": 0.4,
+          "brier": 0.12162,
+          "log_loss": 0.40804,
+          "ece": 1e-05,
+          "prevalencia": 0.1417
+        },
+        "holdout": {
+          "pr_auc": 0.1428,
+          "pr_auc_ganho": 1.0,
+          "roc_auc": 0.5,
+          "recall_esp90": 1.0,
+          "recall_esp95": 1.0,
+          "brier": 0.12243,
+          "log_loss": 0.41006,
+          "ece": 0.00112,
+          "prevalencia": 0.1428
+        },
+        "calibracao_holdout": [
+          {
+            "previsto": 0.1417,
+            "observado": 0.1428,
+            "n": 49459
+          }
+        ]
+      },
+      "1_regra_clinica": {
+        "variaveis": 3,
+        "segundos": 0.4,
+        "cv_oof": {
+          "pr_auc": 0.3363,
+          "pr_auc_ganho": 2.37,
+          "roc_auc": 0.7763,
+          "recall_esp90": 0.3671,
+          "recall_esp95": 0.2252,
+          "brier": 0.10733,
+          "log_loss": 0.34932,
+          "ece": 0.00836,
+          "prevalencia": 0.1417
+        },
+        "holdout": {
+          "pr_auc": 0.335,
+          "pr_auc_ganho": 2.35,
+          "roc_auc": 0.7771,
+          "recall_esp90": 0.3645,
+          "recall_esp95": 0.2288,
+          "brier": 0.10813,
+          "log_loss": 0.35092,
+          "ece": 0.0085,
+          "prevalencia": 0.1428
+        },
+        "calibracao_holdout": [
+          {
+            "previsto": 0.02,
+            "observado": 0.0111,
+            "n": 4878
+          },
+          {
+            "previsto": 0.034,
+            "observado": 0.02,
+            "n": 5008
+          },
+          {
+            "previsto": 0.0467,
+            "observado": 0.0364,
+            "n": 4888
+          },
+          {
+            "previsto": 0.0606,
+            "observado": 0.0586,
+            "n": 4952
+          },
+          {
+            "previsto": 0.0801,
+            "observado": 0.0802,
+            "n": 4925
+          },
+          {
+            "previsto": 0.1134,
+            "observado": 0.1388,
+            "n": 4986
+          },
+          {
+            "previsto": 0.1654,
+            "observado": 0.1721,
+            "n": 4898
+          },
+          {
+            "previsto": 0.2183,
+            "observado": 0.2205,
+            "n": 4894
+          },
+          {
+            "previsto": 0.2755,
+            "observado": 0.2831,
+            "n": 5006
+          },
+          {
+            "previsto": 0.4087,
+            "observado": 0.4013,
+            "n": 5024
+          }
+        ]
+      },
+      "2_logistica_l2": {
+        "variaveis": 21,
+        "segundos": 1.4,
+        "cv_oof": {
+          "pr_auc": 0.4173,
+          "pr_auc_ganho": 2.94,
+          "roc_auc": 0.827,
+          "recall_esp90": 0.4598,
+          "recall_esp95": 0.2954,
+          "brier": 0.17461,
+          "log_loss": 0.52233,
+          "ece": 0.24205,
+          "prevalencia": 0.1417
+        },
+        "holdout": {
+          "pr_auc": 0.4152,
+          "pr_auc_ganho": 2.91,
+          "roc_auc": 0.8266,
+          "recall_esp90": 0.4614,
+          "recall_esp95": 0.2879,
+          "brier": 0.17655,
+          "log_loss": 0.5277,
+          "ece": 0.24472,
+          "prevalencia": 0.1428
+        },
+        "calibracao_holdout": [
+          {
+            "previsto": 0.0433,
+            "observado": 0.0028,
+            "n": 4946
+          },
+          {
+            "previsto": 0.091,
+            "observado": 0.0099,
+            "n": 4946
+          },
+          {
+            "previsto": 0.1443,
+            "observado": 0.0196,
+            "n": 4946
+          },
+          {
+            "previsto": 0.2094,
+            "observado": 0.0388,
+            "n": 4946
+          },
+          {
+            "previsto": 0.2893,
+            "observado": 0.0637,
+            "n": 4945
+          },
+          {
+            "previsto": 0.3852,
+            "observado": 0.112,
+            "n": 4946
+          },
+          {
+            "previsto": 0.493,
+            "observado": 0.1537,
+            "n": 4946
+          },
+          {
+            "previsto": 0.6108,
+            "observado": 0.2262,
+            "n": 4946
+          },
+          {
+            "previsto": 0.7354,
+            "observado": 0.3257,
+            "n": 4946
+          },
+          {
+            "previsto": 0.8737,
+            "observado": 0.4757,
+            "n": 4946
+          }
+        ]
+      },
+      "3_spline": {
+        "variaveis": 21,
+        "segundos": 11.3,
+        "cv_oof": {
+          "pr_auc": 0.4392,
+          "pr_auc_ganho": 3.1,
+          "roc_auc": 0.8315,
+          "recall_esp90": 0.4825,
+          "recall_esp95": 0.3122,
+          "brier": 0.17315,
+          "log_loss": 0.513,
+          "ece": 0.2382,
+          "prevalencia": 0.1417
+        },
+        "holdout": {
+          "pr_auc": 0.4411,
+          "pr_auc_ganho": 3.09,
+          "roc_auc": 0.8326,
+          "recall_esp90": 0.4803,
+          "recall_esp95": 0.3143,
+          "brier": 0.17452,
+          "log_loss": 0.51676,
+          "ece": 0.24078,
+          "prevalencia": 0.1428
+        },
+        "calibracao_holdout": [
+          {
+            "previsto": 0.0312,
+            "observado": 0.0028,
+            "n": 4946
+          },
+          {
+            "previsto": 0.0766,
+            "observado": 0.0089,
+            "n": 4946
+          },
+          {
+            "previsto": 0.132,
+            "observado": 0.0208,
+            "n": 4946
+          },
+          {
+            "previsto": 0.202,
+            "observado": 0.0358,
+            "n": 4946
+          },
+          {
+            "previsto": 0.2859,
+            "observado": 0.0679,
+            "n": 4945
+          },
+          {
+            "previsto": 0.3872,
+            "observado": 0.0995,
+            "n": 4946
+          },
+          {
+            "previsto": 0.4964,
+            "observado": 0.1547,
+            "n": 4946
+          },
+          {
+            "previsto": 0.6169,
+            "observado": 0.2129,
+            "n": 4946
+          },
+          {
+            "previsto": 0.7395,
+            "observado": 0.3247,
+            "n": 4946
+          },
+          {
+            "previsto": 0.8683,
+            "observado": 0.5002,
+            "n": 4946
+          }
+        ]
+      },
+      "4_gradient_boosting": {
+        "variaveis": 21,
+        "segundos": 7.9,
+        "cv_oof": {
+          "pr_auc": 0.4467,
+          "pr_auc_ganho": 3.15,
+          "roc_auc": 0.834,
+          "recall_esp90": 0.4877,
+          "recall_esp95": 0.3231,
+          "brier": 0.17244,
+          "log_loss": 0.50379,
+          "ece": 0.2328,
+          "prevalencia": 0.1417
+        },
+        "holdout": {
+          "pr_auc": 0.4498,
+          "pr_auc_ganho": 3.15,
+          "roc_auc": 0.836,
+          "recall_esp90": 0.4939,
+          "recall_esp95": 0.3228,
+          "brier": 0.17381,
+          "log_loss": 0.50752,
+          "ece": 0.23595,
+          "prevalencia": 0.1428
+        },
+        "calibracao_holdout": [
+          {
+            "previsto": 0.0254,
+            "observado": 0.002,
+            "n": 4942
+          },
+          {
+            "previsto": 0.0578,
+            "observado": 0.0071,
+            "n": 4950
+          },
+          {
+            "previsto": 0.1077,
+            "observado": 0.0204,
+            "n": 4946
+          },
+          {
+            "previsto": 0.1836,
+            "observado": 0.0364,
+            "n": 4945
+          },
+          {
+            "previsto": 0.2815,
+            "observado": 0.0681,
+            "n": 4946
+          },
+          {
+            "previsto": 0.3969,
+            "observado": 0.0948,
+            "n": 4946
+          },
+          {
+            "previsto": 0.514,
+            "observado": 0.1516,
+            "n": 4946
+          },
+          {
+            "previsto": 0.6307,
+            "observado": 0.2165,
+            "n": 4946
+          },
+          {
+            "previsto": 0.7398,
+            "observado": 0.3243,
+            "n": 4946
+          },
+          {
+            "previsto": 0.8502,
+            "observado": 0.5069,
+            "n": 4946
+          }
+        ]
+      },
+      "5_gb_calibrado": {
+        "variaveis": 21,
+        "segundos": 20.0,
+        "cv_oof": {
+          "pr_auc": 0.4479,
+          "pr_auc_ganho": 3.16,
+          "roc_auc": 0.834,
+          "recall_esp90": 0.487,
+          "recall_esp95": 0.3258,
+          "brier": 0.0968,
+          "log_loss": 0.31244,
+          "ece": 0.0011,
+          "prevalencia": 0.1417
+        },
+        "holdout": {
+          "pr_auc": 0.4526,
+          "pr_auc_ganho": 3.17,
+          "roc_auc": 0.836,
+          "recall_esp90": 0.4992,
+          "recall_esp95": 0.3246,
+          "brier": 0.09703,
+          "log_loss": 0.31228,
+          "ece": 0.0028,
+          "prevalencia": 0.1428
+        },
+        "calibracao_holdout": [
+          {
+            "previsto": 0.0031,
+            "observado": 0.0013,
+            "n": 4541
+          },
+          {
+            "previsto": 0.0092,
+            "observado": 0.0075,
+            "n": 5331
+          },
+          {
+            "previsto": 0.0195,
+            "observado": 0.0203,
+            "n": 4964
+          },
+          {
+            "previsto": 0.04,
+            "observado": 0.0401,
+            "n": 4938
+          },
+          {
+            "previsto": 0.0631,
+            "observado": 0.0624,
+            "n": 4954
+          },
+          {
+            "previsto": 0.1022,
+            "observado": 0.0977,
+            "n": 4697
+          },
+          {
+            "previsto": 0.1523,
+            "observado": 0.1477,
+            "n": 5144
+          },
+          {
+            "previsto": 0.2174,
+            "observado": 0.2135,
+            "n": 4998
+          },
+          {
+            "previsto": 0.3192,
+            "observado": 0.3247,
+            "n": 4946
+          },
+          {
+            "previsto": 0.5047,
+            "observado": 0.5091,
+            "n": 4946
+          }
+        ]
+      }
+    }
+  },
+  "vazamento": {
+    "split_aleatorio": {
+      "pr_auc": 0.4498,
+      "pr_auc_ganho": 3.17,
+      "roc_auc": 0.8356,
+      "recall_esp90": 0.4892,
+      "recall_esp95": 0.3201,
+      "brier": 0.17189,
+      "log_loss": 0.5034,
+      "ece": 0.2337,
+      "prevalencia": 0.1419
+    },
+    "split_por_grupo": {
+      "pr_auc": 0.4494,
+      "pr_auc_ganho": 3.15,
+      "roc_auc": 0.8347,
+      "recall_esp90": 0.4926,
+      "recall_esp95": 0.3209,
+      "brier": 0.17387,
+      "log_loss": 0.50824,
+      "ece": 0.23606,
+      "prevalencia": 0.1428
+    },
+    "linhas_teste_com_gemea_no_treino": 6811,
+    "pct_teste_contaminado": 13.67,
+    "inflacao_pr_auc_%": 0.09,
+    "inflacao_roc_auc_%": 0.11
+  }
+}

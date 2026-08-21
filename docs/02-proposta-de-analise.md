@@ -49,7 +49,7 @@ Ambas jogam fora informação.
   "quais informações são relevantes" de forma defensável.
 
 > ⚠️ **EXECUTADO — hipótese REJEITADA. Ver `docs/07-analise-explicativa.md` §3.**
-> Oito variáveis têm efeito materialmente diferente em pré-diabetes e em diabetes, e duas
+> Nove variáveis têm efeito materialmente diferente em pré-diabetes e em diabetes, e duas
 > **invertem de direção**. **A especificação adotada é a multinomial.**
 >
 > Lição metodológica que vale registrar: o teste por *logits cumulativos* (`{0}` vs `{1,2}`

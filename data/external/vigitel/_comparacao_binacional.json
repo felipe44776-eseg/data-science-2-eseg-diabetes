@@ -1,0 +1,124 @@
+{
+  "fontes": {
+    "Brasil": "Vigitel 2015 (Ministerio da Saude) — 27 capitais, peso rake",
+    "EUA": "BRFSS 2015 (CDC) — 50 estados + DC + territorios, peso _LLCPWT"
+  },
+  "ressalva_de_cobertura": "Vigitel cobre apenas capitais; BRFSS cobre todo o pais. A diferenca de cobertura geografica e a principal limitacao desta comparacao.",
+  "variaveis_comuns": [
+    "hipertensao",
+    "imc5",
+    "fumante",
+    "atividade_fisica",
+    "frutas",
+    "sexo",
+    "idade_faixa",
+    "escolaridade3"
+  ],
+  "variaveis_nao_comparaveis": {
+    "colesterol_alto": "Vigitel 2015 nao pergunta diagnostico de colesterol alto",
+    "avc": "ausente no Vigitel 2015",
+    "doenca_cardiaca": "ausente no Vigitel 2015",
+    "vegetais": "Vigitel mede feijao e hortalicas com pergunta de forma diferente",
+    "saude_geral": "ausente no Vigitel 2015",
+    "saude_mental_dias": "ausente no Vigitel 2015",
+    "saude_fisica_dias": "ausente no Vigitel 2015",
+    "dificuldade_caminhar": "ausente no Vigitel 2015",
+    "renda_faixa": "Vigitel nao coleta renda de forma comparavel",
+    "sem_consulta_por_custo": "ausente no Vigitel 2015",
+    "exame_colesterol": "Vigitel 2015 pergunta o exame, mas a janela temporal difere",
+    "alcool_excessivo": "BRFSS mede volume semanal; Vigitel mede binge (5/4 doses numa ocasiao). Construtos diferentes — nao comparar"
+  },
+  "prevalencia": {
+    "Brasil_Vigitel_2015": {
+      "n": 54064,
+      "n_efetivo": 10843,
+      "bruta_%": 9.707,
+      "ponderada_%": 7.076
+    },
+    "EUA_BRFSS_2015": {
+      "n": 440658,
+      "n_efetivo": 109019,
+      "bruta_%": 12.993,
+      "ponderada_%": 10.5
+    }
+  },
+  "odds_ratio": {
+    "frutas": {
+      "OR_Brasil": 1.299,
+      "IC_Brasil": "[1.10; 1.53]",
+      "OR_EUA": 0.898,
+      "IC_EUA": "[0.86; 0.94]",
+      "razao_BR_EUA": 1.45,
+      "mesma_direcao": false,
+      "ic_sobrepoe": false
+    },
+    "fumante": {
+      "OR_Brasil": 1.268,
+      "IC_Brasil": "[1.08; 1.49]",
+      "OR_EUA": 1.149,
+      "IC_EUA": "[1.10; 1.20]",
+      "razao_BR_EUA": 1.1,
+      "mesma_direcao": true,
+      "ic_sobrepoe": true
+    },
+    "sexo": {
+      "OR_Brasil": 1.273,
+      "IC_Brasil": "[1.08; 1.50]",
+      "OR_EUA": 1.175,
+      "IC_EUA": "[1.12; 1.23]",
+      "razao_BR_EUA": 1.08,
+      "mesma_direcao": true,
+      "ic_sobrepoe": true
+    },
+    "atividade_fisica": {
+      "OR_Brasil": 0.846,
+      "IC_Brasil": "[0.72; 1.00]",
+      "OR_EUA": 0.795,
+      "IC_EUA": "[0.76; 0.84]",
+      "razao_BR_EUA": 1.06,
+      "mesma_direcao": true,
+      "ic_sobrepoe": true
+    },
+    "idade_faixa": {
+      "OR_Brasil": 1.234,
+      "IC_Brasil": "[1.20; 1.27]",
+      "OR_EUA": 1.24,
+      "IC_EUA": "[1.23; 1.25]",
+      "razao_BR_EUA": 1.0,
+      "mesma_direcao": true,
+      "ic_sobrepoe": true
+    },
+    "hipertensao": {
+      "OR_Brasil": 3.136,
+      "IC_Brasil": "[2.64; 3.73]",
+      "OR_EUA": 3.146,
+      "IC_EUA": "[2.99; 3.31]",
+      "razao_BR_EUA": 1.0,
+      "mesma_direcao": true,
+      "ic_sobrepoe": true
+    },
+    "escolaridade3": {
+      "OR_Brasil": 0.732,
+      "IC_Brasil": "[0.65; 0.82]",
+      "OR_EUA": 0.768,
+      "IC_EUA": "[0.74; 0.80]",
+      "razao_BR_EUA": 0.95,
+      "mesma_direcao": true,
+      "ic_sobrepoe": true
+    },
+    "imc5": {
+      "OR_Brasil": 1.228,
+      "IC_Brasil": "[1.15; 1.31]",
+      "OR_EUA": 1.454,
+      "IC_EUA": "[1.43; 1.48]",
+      "razao_BR_EUA": 0.84,
+      "mesma_direcao": true,
+      "ic_sobrepoe": false
+    }
+  },
+  "acesso": {
+    "Brasil_%_plano_privado": 49.0,
+    "EUA_%_com_cobertura": 87.83,
+    "nota": "no Brasil q88 mede plano PRIVADO — a cobertura publica pelo SUS e universal e nao aparece nesta variavel; nos EUA HLTHPLN1 mede qualquer cobertura. Nao sao a mesma coisa e nao entram no modelo"
+  }
+}

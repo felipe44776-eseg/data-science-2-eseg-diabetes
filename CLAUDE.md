@@ -36,8 +36,11 @@ que reabriria a decisão.
    semântica de coluna. Nenhum literal de nome de coluna fora dele.
 2. **Nenhuma linha é descartada em silêncio.** Toda remoção vai para quarentena com o motivo,
    e toda regra emite contagem no relatório de qualidade.
-3. **Nunca `train_test_split` aleatório.** 23.899 duplicatas exatas → vazamento de 13,65%
-   do conjunto de teste. Usar `features/split.py` (partição por hash das features). ADR 0002.
+3. **Nunca `train_test_split` aleatório.** 23.899 duplicatas exatas contaminam 13,65% do
+   teste. Usar `features/split.py` (partição por hash das features). ADR 0002.
+   *Nota:* a inflação medida é pequena (0,1–1,2%, `docs/08` §2.1) — a regra permanece porque
+   é gratuita e defensável, não porque o efeito seja grande. Não repetir a alegação antiga
+   de que o split ingênuo "infla muito" a métrica.
 4. **Acurácia não é reportada.** PR-AUC, recall @ especificidade, Brier, calibração. ADR 0005.
 5. **SMOTE não é o método adotado** — cost-sensitive + ajuste de limiar. ADR 0004.
    SMOTE entra só como ablação para sustentar a escolha com número.

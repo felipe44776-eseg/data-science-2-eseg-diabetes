@@ -2,81 +2,171 @@
 .SYNOPSIS
     Orquestrador do projeto. Um comando reconstrói tudo a partir do PDF original.
 
+.DESCRIPTION
+    Toda execução é registrada em reports/execucao.jsonl (início, fim, duração,
+    código de saída). Use `.\tasks.ps1 status` para ver o que rodou, o que está
+    obsoleto e qual é a próxima etapa acionável.
+
 .EXAMPLE
-    .\tasks.ps1 all
-    .\tasks.ps1 clean
+    .\tasks.ps1 status      # o que rodou, o que está velho, o que falta
+    .\tasks.ps1 log         # histórico de execuções
+    .\tasks.ps1 all         # PDF -> relatório
 #>
 param(
     [Parameter(Position = 0)]
-    [ValidateSet('ingest', 'clean', 'external', 'eda', 'explicativo', 'features', 'train', 'report', 'test', 'all', 'help')]
+    [ValidateSet('status', 'log', 'ingest', 'clean', 'folds', 'external', 'eda',
+                 'explicativo', 'figuras', 'modelos', 'vigitel',
+                 'test', 'all', 'help')]
     [string]$Task = 'help'
 )
 
 $ErrorActionPreference = 'Stop'
 $env:PYTHONPATH = "$PSScriptRoot\src"
-$PDF = 'data/raw/Diabetes-2026.csv.pdf'
-$CSV = 'data/raw/diabetes_2026_raw.csv'
-$SILVER = 'data/processed/diabetes_silver.parquet'
+$env:PYTHONIOENCODING = 'utf-8'
 
-function Step($msg) { Write-Host "==> $msg" -ForegroundColor Cyan }
+$PDF    = 'data/raw/Diabetes-2026.csv.pdf'
+$CSV    = 'data/raw/diabetes_2026_raw.csv'
+$SILVER = 'data/processed/diabetes_silver.parquet'
+$XPT    = 'data/external/brfss2015/LLCP2015.XPT'
+$LOG    = Join-Path $PSScriptRoot 'reports/execucao.jsonl'
+
+function Write-Log($etapa, $evento, $extra) {
+    $reg = [ordered]@{
+        ts     = (Get-Date).ToString('yyyy-MM-ddTHH:mm:ss')
+        etapa  = $etapa
+        evento = $evento
+        pid    = $PID
+    }
+    if ($extra) { foreach ($k in $extra.Keys) { $reg[$k] = $extra[$k] } }
+    $dir = Split-Path $LOG -Parent
+    if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Force $dir | Out-Null }
+    ($reg | ConvertTo-Json -Compress) | Add-Content -Path $LOG -Encoding utf8
+}
+
+# Envelopa uma etapa: registra início/fim, cronometra e propaga a falha.
+function Invoke-Etapa($chave, $titulo, [scriptblock]$corpo) {
+    Write-Host "==> $titulo" -ForegroundColor Cyan
+    Write-Log $chave 'inicio' @{ detalhe = $titulo }
+    $sw = [Diagnostics.Stopwatch]::StartNew()
+    try {
+        & $corpo
+        if ($LASTEXITCODE -and $LASTEXITCODE -ne 0) { throw "saida $LASTEXITCODE" }
+        $sw.Stop()
+        $s = [math]::Round($sw.Elapsed.TotalSeconds, 1)
+        Write-Log $chave 'fim' @{ segundos = $s }
+        Write-Host "    concluido em ${s}s" -ForegroundColor DarkGray
+    }
+    catch {
+        $sw.Stop()
+        Write-Log $chave 'erro' @{
+            segundos = [math]::Round($sw.Elapsed.TotalSeconds, 1)
+            detalhe  = $_.Exception.Message
+        }
+        Write-Host "    FALHOU: $($_.Exception.Message)" -ForegroundColor Red
+        throw
+    }
+}
+
+function Assert-Arquivo($caminho, $dica) {
+    if (-not (Test-Path (Join-Path $PSScriptRoot $caminho))) {
+        throw "arquivo ausente: $caminho. $dica"
+    }
+}
+
+# --- etapas ---------------------------------------------------------------
 
 function Invoke-Ingest {
-    if (-not (Test-Path $PDF)) { throw "PDF fonte ausente: $PDF" }
-    Step 'ingestao: PDF -> CSV bronze'
-    python -m diabetes.ingest.pdf_to_csv --pdf $PDF --out $CSV `
-        --manifest data/raw/_manifest_ingestao.json
+    Assert-Arquivo $PDF 'Coloque o PDF do professor em data/raw/.'
+    Invoke-Etapa 'ingest' 'Ingestao: PDF -> CSV bronze' {
+        python -m diabetes.ingest.pdf_to_csv --pdf $PDF --out $CSV `
+            --manifest data/raw/_manifest_ingestao.json
+    }
 }
 
 function Invoke-Clean {
     if (-not (Test-Path $CSV)) { Invoke-Ingest }
-    Step 'limpeza: CSV -> Parquet silver'
-    python -m diabetes.clean.pipeline --entrada $CSV --saida $SILVER
+    Invoke-Etapa 'clean' 'Limpeza: CSV -> Parquet silver' {
+        python -m diabetes.clean.pipeline --entrada $CSV --saida $SILVER
+    }
+}
+
+function Invoke-Folds {
+    Invoke-Etapa 'folds' 'Particionamento a prova de vazamento' {
+        python -m diabetes.features.split --silver $SILVER
+    }
 }
 
 function Invoke-External {
-    $xpt = 'data/external/brfss2015/LLCP2015.XPT'
-    if (-not (Test-Path $xpt)) { throw "XPT do BRFSS ausente. URL e hash em data/external/FONTES.md" }
-    Step 'externo: reconstrucao do BRFSS 2015 + cascata de exclusoes'
-    python -m diabetes.external.brfss2015 --xpt $xpt
-    Step 'externo: analise de vies amostral'
-    python -m diabetes.external.vies_amostral --xpt $xpt
+    Assert-Arquivo $XPT 'URL, hash e prova de integridade em data/external/FONTES.md.'
+    Invoke-Etapa 'external' 'BRFSS 2015: reconstrucao + cascata de exclusoes' {
+        python -m diabetes.external.brfss2015 --xpt $XPT
+        python -m diabetes.external.vies_amostral --xpt $XPT
+    }
 }
 
-$XPT = 'data/external/brfss2015/LLCP2015.XPT'
-
 function Invoke-Eda {
-    if (-not (Test-Path $XPT)) { throw "XPT do BRFSS ausente. URL e hash em data/external/FONTES.md" }
-    Step 'EDA comparativa: arquivo entregue vs BRFSS ponderado'
-    python -m diabetes.eda.comparativo --xpt $XPT
+    Assert-Arquivo $XPT 'URL e hash em data/external/FONTES.md.'
+    Invoke-Etapa 'eda' 'EDA comparativa: arquivo entregue vs BRFSS ponderado' {
+        python -m diabetes.eda.comparativo --xpt $XPT
+    }
 }
 
 function Invoke-Explicativo {
-    if (-not (Test-Path $XPT)) { throw "XPT do BRFSS ausente. URL e hash em data/external/FONTES.md" }
-    Step 'modelo explicativo: M1/M2/M3 + odds proporcionais'
-    python -m diabetes.models.explicativo --xpt $XPT
+    Assert-Arquivo $XPT 'URL e hash em data/external/FONTES.md.'
+    Invoke-Etapa 'explicativo' 'Modelo explicativo: M1/M2/M3 + odds proporcionais' {
+        python -m diabetes.models.explicativo --xpt $XPT
+    }
 }
 
-function Invoke-Features { Step 'features: silver -> gold'; python -m diabetes.features.build }
-function Invoke-Train    { Step 'treino: escada de modelos -> MLflow'; python -m diabetes.models.train }
-function Invoke-Report   { Step 'relatorio: figuras e tabelas'; python -m diabetes.viz.report }
+function Invoke-Figuras {
+    Invoke-Etapa 'figuras' 'Figuras do relatorio' { python -m diabetes.viz.figuras }
+}
+
+function Invoke-Modelos {
+    Invoke-Etapa 'modelos' 'Escada de modelos preditivos' {
+        python -m diabetes.models.escada --silver $SILVER
+    }
+}
+
+function Invoke-Vigitel {
+    Invoke-Etapa 'vigitel' 'Vigitel: comparacao binacional de odds ratio' {
+        python -m diabetes.external.vigitel
+    }
+}
 
 function Invoke-Test {
-    Step 'lint'
-    ruff check src tests
-    Step 'testes'
-    pytest -q
+    Invoke-Etapa 'test' 'Lint e testes' {
+        python -m ruff check src tests
+        python -m pytest -q
+    }
 }
 
+# --- despacho -------------------------------------------------------------
+
 switch ($Task) {
-    'ingest'   { Invoke-Ingest }
-    'clean'    { Invoke-Clean }
-    'external' { Invoke-External }
-    'eda'      { Invoke-Eda }
+    'status'      { python -m diabetes.pipeline.estado }
+    'log'         { python -m diabetes.pipeline.estado --execucoes }
+    'ingest'      { Invoke-Ingest }
+    'clean'       { Invoke-Clean }
+    'folds'       { Invoke-Folds }
+    'external'    { Invoke-External }
+    'eda'         { Invoke-Eda }
     'explicativo' { Invoke-Explicativo }
-    'features' { Invoke-Features }
-    'train'    { Invoke-Train }
-    'report'   { Invoke-Report }
-    'test'     { Invoke-Test }
-    'all'      { Invoke-Ingest; Invoke-Clean; Invoke-Features; Invoke-Train; Invoke-Report }
-    default    { Get-Help $PSCommandPath -Detailed }
+    'figuras'     { Invoke-Figuras }
+    'modelos'     { Invoke-Modelos }
+    'vigitel'     { Invoke-Vigitel }
+    'test'        { Invoke-Test }
+    'all' {
+        Invoke-Ingest; Invoke-Clean; Invoke-Folds
+        if (Test-Path (Join-Path $PSScriptRoot $XPT)) {
+            Invoke-External; Invoke-Eda; Invoke-Explicativo
+        }
+        else {
+            Write-Host 'XPT do BRFSS ausente - etapas externas puladas. Ver data/external/FONTES.md' -ForegroundColor Yellow
+            Write-Log 'all' 'pulado' @{ detalhe = 'XPT ausente' }
+        }
+        Invoke-Modelos; Invoke-Figuras
+        python -m diabetes.pipeline.estado
+    }
+    default { Get-Help $PSCommandPath -Detailed }
 }

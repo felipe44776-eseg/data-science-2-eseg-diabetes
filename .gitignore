@@ -13,11 +13,16 @@ data/external/**/*
 !data/**/_analise_*.json
 !data/**/_eda_*.json
 !data/**/_modelo_*.json
+!data/**/_escada_*.json
+!data/**/_comparacao_*.json
 !data/**/*.md
 
 # excecao: o PDF fonte do professor e grande demais (109 MB) para o git
 *.pdf
 !docs/enunciado/*.pdf
+
+# log de execucao: e local da maquina, nao artefato do projeto
+reports/execucao.jsonl
 
 # python
 __pycache__/

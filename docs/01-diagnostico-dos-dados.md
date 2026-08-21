@@ -49,8 +49,16 @@ sobre `diabetes_012_health_indicators_BRFSS2015` comete exatamente isso.
 | `train_test_split` aleatório estratificado | **6.923 de 50.736 — 13,65%** |
 | `StratifiedGroupKFold` por hash das features | **0** (auditado em CI) |
 
-Um em cada sete registros de teste já teria sido visto no treino. Não é margem de erro:
-é a diferença entre medir generalização e medir memorização.
+Um em cada sete registros de teste já teria sido visto no treino.
+
+> ⚠️ **MEDIDO DEPOIS — o efeito na métrica é pequeno. Ver `docs/08` §2.1.**
+> A inflação real de PR-AUC vai de **+0,09%** (gradient boosting) a **+1,2%** (kNN k=1, o
+> memorizador máximo). A contaminação de 13,65% é real, o impacto não é. Motivo: com 21
+> features discretas de baixa cardinalidade, a colisão é **legítima** — a gêmea no treino
+> carrega *um* rótulo da mesma distribuição conflitante, não o rótulo da linha de teste.
+> A partição por grupo segue sendo o procedimento correto (é gratuita e defensável por
+> princípio), mas **não é** a diferença entre generalizar e memorizar. Esta frase, na
+> versão anterior deste documento, exagerava.
 
 **Mitigação adotada:** partição por grupo — chave = `blake2b` das 21 features.
 227.908 grupos distintos; holdout de 19,86% separado por grupo antes de tudo.
@@ -65,8 +73,11 @@ Isso é **ruído irredutível de rótulo**, e é uma oportunidade rara: permite 
 empiricamente um **limite superior de acurácia** (erro de Bayes na região observada).
 Qualquer modelo que ultrapasse esse teto está ajustando ruído — não generalizando.
 
-> É o argumento mais forte do trabalho: em vez de perseguir a terceira casa decimal do AUC,
-> mostramos *onde fica o teto* e quanto do gap restante é irredutível.
+> ⚠️ **MEDIDO — o teto não aperta. Ver `docs/08` §2.3.**
+> O ruído de rótulo limita a acurácia a **99,30%**, e o melhor modelo tem ROC-AUC 0,836 —
+> muito longe disso. **A restrição não é o ruído, é a informação**: as 21 perguntas não
+> contêm o suficiente. O cálculo permanece útil, mas como *descarte de uma hipótese*, não
+> como o achado central que esta seção afirmava.
 
 ### 1.3 — Desbalanceamento severo e assimétrico
 

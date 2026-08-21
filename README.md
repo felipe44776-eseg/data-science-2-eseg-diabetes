@@ -21,7 +21,11 @@ associados a diabetes** e **predizer ocorrências**, com validação contra font
 | **Comparação com o BRFSS original** | ✅ **`docs/05-comparacao-brfss-original.md`** |
 | **EDA bivariada em base dupla** | ✅ **`docs/06-analise-exploratoria.md`** |
 | **Análise explicativa (OR ajustado)** | ✅ **`docs/07-analise-explicativa.md`** |
-| Modelagem preditiva / causal / escore | ⏳ próximos passos |
+| **Modelagem preditiva (escada de modelos)** | ✅ **`docs/08-modelagem-preditiva.md`** |
+| **Comparação binacional Brasil × EUA** | ✅ **`docs/09-comparacao-binacional.md`** |
+| **Figuras** | ✅ `reports/figures/index.html` + 6 SVG |
+| **Observabilidade do pipeline** | ✅ `.\tasks.ps1 status` · `.\tasks.ps1 log` |
+| Trilha C (decisão, escore, fairness) / causal | ⏳ próximos passos |
 
 ---
 
@@ -39,7 +43,10 @@ associados a diabetes** e **predizer ocorrências**, com validação contra font
    população lado a lado.
 7. **`docs/07-analise-explicativa.md`** — OR ajustado, M1/M2/M3, mediação, e por que o alvo
    não é ordinal.
-8. **`docs/adr/`** — decisões técnicas com justificativa.
+8. **`docs/08-modelagem-preditiva.md`** — a escada de modelos, e três previsões minhas que
+   os dados não confirmaram.
+9. **`docs/09-comparacao-binacional.md`** — Vigitel 2015 × BRFSS 2015, mesmo modelo nos dois.
+10. **`docs/adr/`** — decisões técnicas com justificativa.
 
 ---
 
@@ -50,6 +57,16 @@ python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 ```
+
+## Ver o que já rodou
+
+```powershell
+.\tasks.ps1 status   # cada etapa: ok / OBSOLETO / ausente, com hash e idade do artefato
+.\tasks.ps1 log      # histórico de execuções, com duração
+```
+
+`status` marca **OBSOLETO** quando alguma entrada é mais nova que a saída — o artefato
+existe mas não reflete os dados atuais — e aponta a próxima etapa acionável.
 
 ## Reproduzir do zero
 
@@ -74,8 +91,8 @@ Comandos individuais em `docs/04-arquitetura.md` §3.
 | Linhas × colunas | 253.680 × 22 (→ 31 após derivadas) |
 | Nulos / valores fora do domínio | **0** |
 | Distribuição do alvo | 84,24% sem · **1,83% pré** · 13,93% diabetes |
-| Duplicatas exatas | **23.899 (9,4%)** → risco de vazamento treino/teste |
-| Grupos com rótulo contraditório | **1.834** → teto de Bayes mensurável |
+| Duplicatas exatas | **23.899 (9,4%)** → 13,65% do teste contaminado, mas inflação medida de só 0,1–1,2% (`docs/08` §2.1) |
+| Grupos com rótulo contraditório | **1.834** → teto de Bayes de 99,3%: não é a restrição (`docs/08` §2.3) |
 | Códigos 77/99 de renda | **0** → amostra truncada, viés MNAR invisível |
 | Registros com IMC > 60 | 805 (marcados, não removidos) |
 | Base em memória após downcast | 44 MB → **8,6 MB** |

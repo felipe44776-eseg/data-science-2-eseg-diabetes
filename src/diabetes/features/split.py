@@ -58,6 +58,36 @@ def particionar(
     return out
 
 
+def _main() -> None:
+    import argparse
+    import json
+    from pathlib import Path
+
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--silver", type=Path,
+                    default=Path("data/processed/diabetes_silver.parquet"))
+    ap.add_argument("--saida", type=Path,
+                    default=Path("data/processed/gold/folds.parquet"))
+    ap.add_argument("--folds", type=int, default=5)
+    ap.add_argument("--seed", type=int, default=42)
+    args = ap.parse_args()
+
+    df = pd.read_parquet(args.silver)
+    part = particionar(df, n_folds=args.folds, seed=args.seed)
+    auditoria = auditar_vazamento(part)
+    if auditoria["grupos_cruzando_holdout"] or auditoria["grupos_cruzando_folds"]:
+        raise SystemExit(f"VAZAMENTO detectado: {auditoria}")
+
+    args.saida.parent.mkdir(parents=True, exist_ok=True)
+    part[["grupo", "holdout", "fold"]].to_parquet(args.saida, index=False)
+    print(json.dumps({
+        **auditoria,
+        "linhas": int(len(part)),
+        "holdout_%": round(float(part["holdout"].mean() * 100), 2),
+        "saida": str(args.saida),
+    }, ensure_ascii=False, indent=2))
+
+
 def auditar_vazamento(df: pd.DataFrame) -> dict:
     """Verifica que nenhum grupo cruza particoes. Usado em teste e em CI."""
     por_grupo = df.groupby("grupo").agg(
@@ -70,3 +100,7 @@ def auditar_vazamento(df: pd.DataFrame) -> dict:
             (df.loc[~df["holdout"]].groupby("grupo")["fold"].nunique() > 1).sum()
         ),
     }
+
+
+if __name__ == "__main__":
+    _main()
