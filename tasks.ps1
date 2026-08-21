@@ -16,6 +16,7 @@ param(
     [Parameter(Position = 0)]
     [ValidateSet('status', 'log', 'ingest', 'clean', 'folds', 'external', 'eda',
                  'explicativo', 'figuras', 'modelos', 'vigitel',
+                 'expandido', 'pesos', 'pu', 'glassbox', 'medicaid',
                  'test', 'all', 'help')]
     [string]$Task = 'help'
 )
@@ -134,6 +135,36 @@ function Invoke-Vigitel {
     }
 }
 
+function Invoke-Expandido {
+    Assert-Arquivo $XPT 'URL e hash em data/external/FONTES.md.'
+    Invoke-Etapa 'expandido' 'Frente 1: variaveis expandidas + ablacao + auditoria racial' {
+        python -m diabetes.features.expandido --xpt $XPT
+        python -m diabetes.models.expandido
+    }
+}
+
+function Invoke-Pesos {
+    Invoke-Etapa 'pesos' 'Frente 5: inferencia complexa e pesos por raking' {
+        python -m diabetes.external.pesos
+    }
+}
+
+function Invoke-Pu {
+    Invoke-Etapa 'pu' 'Frente 2: Positive-Unlabeled' { python -m diabetes.models.pu }
+}
+
+function Invoke-Glassbox {
+    Invoke-Etapa 'glassbox' 'Frente 3: EBM e predicao conforme' {
+        python -m diabetes.models.glassbox
+    }
+}
+
+function Invoke-Medicaid {
+    Invoke-Etapa 'medicaid' 'Frente 4: expansao do Medicaid (DiD)' {
+        python -m diabetes.external.medicaid
+    }
+}
+
 function Invoke-Test {
     Invoke-Etapa 'test' 'Lint e testes' {
         python -m ruff check src tests
@@ -155,6 +186,11 @@ switch ($Task) {
     'figuras'     { Invoke-Figuras }
     'modelos'     { Invoke-Modelos }
     'vigitel'     { Invoke-Vigitel }
+    'expandido'   { Invoke-Expandido }
+    'pesos'       { Invoke-Pesos }
+    'pu'          { Invoke-Pu }
+    'glassbox'    { Invoke-Glassbox }
+    'medicaid'    { Invoke-Medicaid }
     'test'        { Invoke-Test }
     'all' {
         Invoke-Ingest; Invoke-Clean; Invoke-Folds
@@ -166,6 +202,10 @@ switch ($Task) {
             Write-Log 'all' 'pulado' @{ detalhe = 'XPT ausente' }
         }
         Invoke-Modelos; Invoke-Figuras
+        if (Test-Path (Join-Path $PSScriptRoot $XPT)) {
+            Invoke-Expandido; Invoke-Pesos; Invoke-Pu; Invoke-Glassbox
+        }
+        Invoke-Medicaid
         python -m diabetes.pipeline.estado
     }
     default { Get-Help $PSCommandPath -Detailed }

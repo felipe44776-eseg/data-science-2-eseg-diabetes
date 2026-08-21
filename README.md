@@ -23,6 +23,12 @@ associados a diabetes** e **predizer ocorrências**, com validação contra font
 | **Análise explicativa (OR ajustado)** | ✅ **`docs/07-analise-explicativa.md`** |
 | **Modelagem preditiva (escada de modelos)** | ✅ **`docs/08-modelagem-preditiva.md`** |
 | **Comparação binacional Brasil × EUA** | ✅ **`docs/09-comparacao-binacional.md`** |
+| **Expansão 1 — variáveis recuperadas** | ✅ **`docs/10`** · +6,6% PR-AUC, ganho é das minorias |
+| **Expansão 2 — Positive-Unlabeled** | ✅ **`docs/12`** · prevalência verdadeira 14,29% |
+| **Expansão 3 — EBM e conforme** | ✅ **`docs/13`** · 12 vars = 94,4% do boosting |
+| **Expansão 4 — Medicaid (DiD causal)** | ✅ **`docs/14`** · efeito sobre acesso medido |
+| **Expansão 5 — pesos publicáveis** | ✅ **`docs/11`** · remove 95,6% do viés do CSV |
+| **Síntese das expansões** | ✅ **`docs/15-sintese-das-expansoes.md`** |
 | **Figuras** | ✅ `reports/figures/index.html` + 6 SVG |
 | **Observabilidade do pipeline** | ✅ `.\tasks.ps1 status` · `.\tasks.ps1 log` |
 | Trilha C (decisão, escore, fairness) / causal | ⏳ próximos passos |
@@ -46,7 +52,9 @@ associados a diabetes** e **predizer ocorrências**, com validação contra font
 8. **`docs/08-modelagem-preditiva.md`** — a escada de modelos, e três previsões minhas que
    os dados não confirmaram.
 9. **`docs/09-comparacao-binacional.md`** — Vigitel 2015 × BRFSS 2015, mesmo modelo nos dois.
-10. **`docs/adr/`** — decisões técnicas com justificativa.
+10. **`docs/15-sintese-das-expansoes.md`** — as cinco expansões: por que cada uma, em que
+    ordem, e os sete insights que valem mais que os números. Detalhe em `docs/10`–`docs/14`.
+11. **`docs/adr/`** — decisões técnicas com justificativa.
 
 ---
 
@@ -120,6 +128,20 @@ saúde — o que compromete estruturalmente qualquer análise de desigualdade fe
 Validação final: replicando a metodologia do CDC (mediana entre as 53 jurisdições),
 obtivemos **10,04%** contra os **10,0%** publicados. Passo a passo em
 `docs/05-comparacao-brfss-original.md`.
+
+## O que as expansões acrescentaram
+
+| | |
+|---|---|
+| Prevalência **verdadeira** (corrigido o subdiagnóstico) | **14,29%** contra 10,67% diagnosticada |
+| Frequência de rotulagem `c` — BBE vs NHANES | **0,7283** vs **0,7240**, duas fontes independentes |
+| Ganho com 60 variáveis curadas | **+6,62%** PR-AUC — e **inteiramente das minorias** |
+| Modelo auditável (EBM, 12 variáveis) | **94,4%** do boosting com 60 |
+| Testar 25% da população encontra | **70%** dos casos (NNS 2,7) |
+| Peso publicável para o CSV do Kaggle | remove **95,6%** do viés |
+| Efeito causal do Medicaid sobre cobertura | **+3,11 p.p.** (tendências paralelas verificadas) |
+
+Mapa completo em `docs/15-sintese-das-expansoes.md`.
 
 ---
 

@@ -112,13 +112,28 @@ def test_toda_etapa_declara_entrada_e_saida():
         assert e.comando, e.chave
 
 
+#: artefatos que vem de fora e nao sao produzidos por nenhuma etapa
+FORNECIDOS = {
+    "data/raw/Diabetes-2026.csv.pdf",           # entregue pelo professor
+    "data/external/brfss2015/LLCP2015.XPT",     # baixado (ver data/external/FONTES.md)
+}
+
+
 def test_saida_de_uma_etapa_alimenta_a_seguinte():
-    """O DAG tem de ser conexo: nenhuma etapa orfa depois da ingestao."""
-    produzidas = set()
+    """O DAG tem de ser conexo: nenhuma etapa orfa.
+
+    Toda entrada de uma etapa obrigatoria vem de (a) codigo em `src/`,
+    (b) um artefato fornecido de fora, ou (c) a saida de uma etapa anterior.
+    Se nenhuma das tres valer, a etapa esta desligada do pipeline.
+    """
+    produzidas: set[str] = set()
     for e in ETAPAS:
-        if e.chave != "ingest" and not e.opcional:
-            externas = {c for c in e.entradas if not c.startswith("src/")}
-            assert externas & produzidas or e.chave == "external", e.chave
+        if not e.opcional:
+            pendentes = {c for c in e.entradas
+                         if not c.startswith("src/")
+                         and c not in FORNECIDOS
+                         and c not in produzidas}
+            assert not pendentes, f"{e.chave}: entrada sem origem {sorted(pendentes)}"
         produzidas |= set(e.saidas)
 
 

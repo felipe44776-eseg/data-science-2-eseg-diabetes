@@ -52,8 +52,9 @@ que reabriria a decisão.
    (NHANES). Qualquer conclusão redigida como "tem diabetes" está errada.
 10. **Toda prevalência é reportada em par:** não ponderada (arquivo) e ponderada (`_LLCPWT`
     do BRFSS). Sozinha, a não ponderada superestima diabetes em 32,7%. Ver `docs/05`.
-11. **Todo IC calculado no arquivo entregue é metade do correto** — DEFF = 4,04. Reportar
-    sempre com a ressalva, ou usar `samplics` com o desenho amostral.
+11. **Todo IC calculado como amostra aleatória simples é estreito demais** — o DEFF real,
+    por linearização de Taylor com `_STSTR` e `_PSU`, é **2,94** (multiplicador 1,71×).
+    A aproximação de Kish (4,04) que usávamos era conservadora. Ver `docs/11` §A.
 12. **Análise de desigualdade de acesso não pode ser feita só no arquivo entregue.**
     96,3% fizeram exame de colesterol contra 77,9% na população: a variação de acesso foi
     removida da amostra. Usar `data/external/brfss2015/brfss2015_reconstruido.parquet`.

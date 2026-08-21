@@ -1,0 +1,72 @@
+[
+  {
+    "grupo": "branco nao-hispanico",
+    "n": 66098,
+    "prevalencia_%": 12.25,
+    "recall_orig": 0.4934,
+    "taxa_selecao_orig": 0.1468,
+    "risco_medio_orig": 0.1294,
+    "calibracao_orig": 0.0069,
+    "recall_novo": 0.5144,
+    "taxa_selecao_novo": 0.1477,
+    "risco_medio_novo": 0.1278,
+    "calibracao_novo": 0.0053,
+    "ganho_recall": 0.021
+  },
+  {
+    "grupo": "negro nao-hispanico",
+    "n": 6736,
+    "prevalencia_%": 21.3,
+    "recall_orig": 0.577,
+    "taxa_selecao_orig": 0.2451,
+    "risco_medio_orig": 0.1737,
+    "calibracao_orig": -0.0394,
+    "recall_novo": 0.5993,
+    "taxa_selecao_novo": 0.2524,
+    "risco_medio_novo": 0.1787,
+    "calibracao_novo": -0.0344,
+    "ganho_recall": 0.0223
+  },
+  {
+    "grupo": "outro nao-hispanico",
+    "n": 3827,
+    "prevalencia_%": 13.27,
+    "recall_orig": 0.4409,
+    "taxa_selecao_orig": 0.1131,
+    "risco_medio_orig": 0.1016,
+    "calibracao_orig": -0.0311,
+    "recall_novo": 0.4488,
+    "taxa_selecao_novo": 0.1163,
+    "risco_medio_novo": 0.1049,
+    "calibracao_novo": -0.0278,
+    "ganho_recall": 0.0079
+  },
+  {
+    "grupo": "multirracial nao-hispanico",
+    "n": 1511,
+    "prevalencia_%": 14.82,
+    "recall_orig": 0.5446,
+    "taxa_selecao_orig": 0.1694,
+    "risco_medio_orig": 0.1335,
+    "calibracao_orig": -0.0148,
+    "recall_novo": 0.5848,
+    "taxa_selecao_novo": 0.1787,
+    "risco_medio_novo": 0.1354,
+    "calibracao_novo": -0.0128,
+    "ganho_recall": 0.0402
+  },
+  {
+    "grupo": "hispanico",
+    "n": 7021,
+    "prevalencia_%": 14.88,
+    "recall_orig": 0.5273,
+    "taxa_selecao_orig": 0.1547,
+    "risco_medio_orig": 0.1245,
+    "calibracao_orig": -0.0243,
+    "recall_novo": 0.5636,
+    "taxa_selecao_novo": 0.1668,
+    "risco_medio_novo": 0.1301,
+    "calibracao_novo": -0.0187,
+    "ganho_recall": 0.0363
+  }
+]

@@ -226,8 +226,12 @@ de diabetes. O gradiente socioeconômico **não** é apenas hábitos de vida.
 2. **O rótulo é diagnóstico autorrelatado**, não a doença (`docs/01` §2). ~27,6% dos
    diabéticos não sabem (NHANES).
 3. **Inferência ponderada é aproximada.** Usamos `freq_weights` reescalados ao n efetivo de
-   Kish. A linearização de Taylor com `_STSTR` e `_PSU` (via `samplics`) seria exata; a
-   aproximação já corrige a ordem de grandeza do IC, que é o erro que importa.
+   Kish.
+
+   > ✅ **VERIFICADO — a aproximação erra para o lado seguro. Ver `docs/11` §A.**
+   > Com linearização de Taylor usando `_STSTR` e `_PSU`, o **DEFF real é 2,94**, não os
+   > 4,04 de Kish. Nossa aproximação **superestimava a incerteza em ~7%** — os IC deste
+   > documento são **conservadores**, não otimistas, e nenhuma conclusão precisa ser revista.
 4. **Exclusão par a par** na base B faz o n variar entre estimativas, e a não-resposta
    continua sendo MNAR. Não conserta o viés — deixa de amplificá-lo e torna o n explícito.
 5. **Linearidade assumida** nas ordinais padronizadas. A inflexão etária em 80+

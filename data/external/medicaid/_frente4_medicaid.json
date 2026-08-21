@@ -1,0 +1,665 @@
+{
+  "desenho": {
+    "tratados": [
+      "AR",
+      "AZ",
+      "CA",
+      "CO",
+      "CT",
+      "DC",
+      "DE",
+      "HI",
+      "IA",
+      "IL",
+      "KY",
+      "MA",
+      "MD",
+      "MN",
+      "ND",
+      "NJ",
+      "NM",
+      "NV",
+      "NY",
+      "OH",
+      "OR",
+      "RI",
+      "VT",
+      "WA",
+      "WV"
+    ],
+    "controles": [
+      "AL",
+      "FL",
+      "GA",
+      "KS",
+      "MO",
+      "MS",
+      "NC",
+      "OK",
+      "SC",
+      "SD",
+      "TN",
+      "TX",
+      "WY"
+    ],
+    "excluidos_escalonados": [
+      "AK",
+      "ID",
+      "IN",
+      "LA",
+      "ME",
+      "MI",
+      "MT",
+      "NE",
+      "NH",
+      "PA",
+      "UT",
+      "VA",
+      "WI"
+    ],
+    "populacao": "adultos com renda < 25 mil USD",
+    "controle_interno": "adultos com renda >= 50 mil USD",
+    "periodo": [
+      2011,
+      2019
+    ],
+    "ano_referencia": 2013,
+    "erro_padrao": "agrupado por estado",
+    "fonte": "data.cdc.gov dttw-5yxu (BRFSS ponderado pelo CDC)"
+  },
+  "did_baixa_renda": [
+    {
+      "desfecho": "diabetes",
+      "estrato": "baixa renda",
+      "n_estado_ano": 341,
+      "n_estados": 38,
+      "efeito_pp": -0.3969,
+      "ee": 0.3231,
+      "ic95": [
+        -1.0301,
+        0.2364
+      ],
+      "p": 0.2193,
+      "media_pre_tratados": 13.479,
+      "media_pre_controles": 14.622
+    },
+    {
+      "desfecho": "cobertura",
+      "estrato": "baixa renda",
+      "n_estado_ano": 341,
+      "n_estados": 38,
+      "efeito_pp": 3.1133,
+      "ee": 1.5781,
+      "ic95": [
+        0.0203,
+        6.2062
+      ],
+      "p": 0.0485,
+      "media_pre_tratados": 70.668,
+      "media_pre_controles": 63.238
+    },
+    {
+      "desfecho": "barreira_custo",
+      "estrato": "baixa renda",
+      "n_estado_ano": 265,
+      "n_estados": 38,
+      "efeito_pp": -2.2429,
+      "ee": 1.1441,
+      "ic95": [
+        -4.4853,
+        -0.0006
+      ],
+      "p": 0.0499,
+      "media_pre_tratados": 27.167,
+      "media_pre_controles": 32.88
+    },
+    {
+      "desfecho": "colesterol_checado",
+      "estrato": "baixa renda",
+      "n_estado_ano": 114,
+      "n_estados": 38,
+      "efeito_pp": 1.0819,
+      "ee": 0.9219,
+      "ic95": [
+        -0.725,
+        2.8888
+      ],
+      "p": 0.2406,
+      "media_pre_tratados": 71.604,
+      "media_pre_controles": 71.138
+    }
+  ],
+  "placebo_renda_alta": [
+    {
+      "desfecho": "diabetes",
+      "estrato": "renda alta",
+      "n_estado_ano": 341,
+      "n_estados": 38,
+      "efeito_pp": 0.0805,
+      "ee": 0.2076,
+      "ic95": [
+        -0.3263,
+        0.4873
+      ],
+      "p": 0.6982,
+      "media_pre_tratados": 6.423,
+      "media_pre_controles": 7.456
+    },
+    {
+      "desfecho": "cobertura",
+      "estrato": "renda alta",
+      "n_estado_ano": 341,
+      "n_estados": 38,
+      "efeito_pp": 0.4797,
+      "ee": 0.2802,
+      "ic95": [
+        -0.0695,
+        1.0288
+      ],
+      "p": 0.0869,
+      "media_pre_tratados": 95.328,
+      "media_pre_controles": 94.305
+    },
+    {
+      "desfecho": "barreira_custo",
+      "estrato": "renda alta",
+      "n_estado_ano": 265,
+      "n_estados": 38,
+      "efeito_pp": -0.2017,
+      "ee": 0.3,
+      "ic95": [
+        -0.7896,
+        0.3862
+      ],
+      "p": 0.5013,
+      "media_pre_tratados": 5.544,
+      "media_pre_controles": 5.9
+    },
+    {
+      "desfecho": "colesterol_checado",
+      "estrato": "renda alta",
+      "n_estado_ano": 114,
+      "n_estados": 38,
+      "efeito_pp": 0.3217,
+      "ee": 0.5458,
+      "ic95": [
+        -0.748,
+        1.3914
+      ],
+      "p": 0.5556,
+      "media_pre_tratados": 88.036,
+      "media_pre_controles": 88.058
+    }
+  ],
+  "tripla_diferenca": [
+    {
+      "desfecho": "diabetes",
+      "n_estado_ano_estrato": 682,
+      "efeito_pp": -0.4807,
+      "ee": 0.2837,
+      "ic95": [
+        -1.0366,
+        0.0753
+      ],
+      "p": 0.0902
+    },
+    {
+      "desfecho": "cobertura",
+      "n_estado_ano_estrato": 682,
+      "efeito_pp": 2.6766,
+      "ee": 1.4557,
+      "ic95": [
+        -0.1766,
+        5.5298
+      ],
+      "p": 0.066
+    },
+    {
+      "desfecho": "barreira_custo",
+      "n_estado_ano_estrato": 530,
+      "efeito_pp": -2.0682,
+      "ee": 1.0547,
+      "ic95": [
+        -4.1354,
+        -0.0009
+      ],
+      "p": 0.0499
+    },
+    {
+      "desfecho": "colesterol_checado",
+      "n_estado_ano_estrato": 228,
+      "efeito_pp": 0.7602,
+      "ee": 0.8958,
+      "ic95": [
+        -0.9955,
+        2.516
+      ],
+      "p": 0.3961
+    }
+  ],
+  "poder_do_desenho": {
+    "efeito_sobre_cobertura_pp": 3.1133,
+    "prevalencia_diagnosticada_baixa_renda_%": 13.48,
+    "prevalencia_verdadeira_implicada_%": 18.62,
+    "fracao_com_diabetes_oculto_%": 5.14,
+    "efeito_MAXIMO_esperado_sobre_diagnostico_pp": 0.16,
+    "erro_padrao_do_desenho_pp": 0.3231,
+    "diferenca_minima_detectavel_pp": 0.9047,
+    "razao_mde_sobre_efeito_esperado": 5.7,
+    "veredito": "o desenho NAO tem poder para detectar o efeito esperado — o nulo e inconclusivo, nao evidencia de ausencia"
+  },
+  "estudo_de_evento": {
+    "diabetes": {
+      "desfecho": "diabetes",
+      "coeficientes": [
+        {
+          "ano": 2011,
+          "efeito_pp": 0.4477,
+          "ee": 0.49,
+          "ic95": [
+            -0.5126,
+            1.408
+          ],
+          "referencia": false
+        },
+        {
+          "ano": 2012,
+          "efeito_pp": 0.2101,
+          "ee": 0.5797,
+          "ic95": [
+            -0.926,
+            1.3463
+          ],
+          "referencia": false
+        },
+        {
+          "ano": 2013,
+          "efeito_pp": 0.0,
+          "ee": 0.0,
+          "ic95": [
+            0.0,
+            0.0
+          ],
+          "referencia": true
+        },
+        {
+          "ano": 2014,
+          "efeito_pp": -0.1681,
+          "ee": 0.4906,
+          "ic95": [
+            -1.1297,
+            0.7935
+          ],
+          "referencia": false
+        },
+        {
+          "ano": 2015,
+          "efeito_pp": -0.4728,
+          "ee": 0.5695,
+          "ic95": [
+            -1.589,
+            0.6433
+          ],
+          "referencia": false
+        },
+        {
+          "ano": 2016,
+          "efeito_pp": 0.3716,
+          "ee": 0.393,
+          "ic95": [
+            -0.3987,
+            1.1418
+          ],
+          "referencia": false
+        },
+        {
+          "ano": 2017,
+          "efeito_pp": -0.4956,
+          "ee": 0.5488,
+          "ic95": [
+            -1.5713,
+            0.5801
+          ],
+          "referencia": false
+        },
+        {
+          "ano": 2018,
+          "efeito_pp": -0.0321,
+          "ee": 0.681,
+          "ic95": [
+            -1.3668,
+            1.3026
+          ],
+          "referencia": false
+        },
+        {
+          "ano": 2019,
+          "efeito_pp": -0.27,
+          "ee": 0.5998,
+          "ic95": [
+            -1.4455,
+            0.9056
+          ],
+          "referencia": false
+        }
+      ],
+      "teste_tendencias_paralelas": {
+        "anos_pre": [
+          2011,
+          2012
+        ],
+        "maior_efeito_pre_pp": 0.4477,
+        "algum_pre_significante": false
+      }
+    },
+    "cobertura": {
+      "desfecho": "cobertura",
+      "coeficientes": [
+        {
+          "ano": 2011,
+          "efeito_pp": 1.8981,
+          "ee": 1.0,
+          "ic95": [
+            -0.0619,
+            3.858
+          ],
+          "referencia": false
+        },
+        {
+          "ano": 2012,
+          "efeito_pp": 0.494,
+          "ee": 0.8373,
+          "ic95": [
+            -1.1471,
+            2.1352
+          ],
+          "referencia": false
+        },
+        {
+          "ano": 2013,
+          "efeito_pp": 0.0,
+          "ee": 0.0,
+          "ic95": [
+            0.0,
+            0.0
+          ],
+          "referencia": true
+        },
+        {
+          "ano": 2014,
+          "efeito_pp": 4.1629,
+          "ee": 1.537,
+          "ic95": [
+            1.1505,
+            7.1752
+          ],
+          "referencia": false
+        },
+        {
+          "ano": 2015,
+          "efeito_pp": 4.194,
+          "ee": 1.6981,
+          "ic95": [
+            0.8658,
+            7.5223
+          ],
+          "referencia": false
+        },
+        {
+          "ano": 2016,
+          "efeito_pp": 4.5373,
+          "ee": 1.8568,
+          "ic95": [
+            0.8979,
+            8.1766
+          ],
+          "referencia": false
+        },
+        {
+          "ano": 2017,
+          "efeito_pp": 3.6434,
+          "ee": 1.8353,
+          "ic95": [
+            0.0463,
+            7.2405
+          ],
+          "referencia": false
+        },
+        {
+          "ano": 2018,
+          "efeito_pp": 3.3881,
+          "ee": 1.762,
+          "ic95": [
+            -0.0654,
+            6.8416
+          ],
+          "referencia": false
+        },
+        {
+          "ano": 2019,
+          "efeito_pp": 3.5321,
+          "ee": 2.008,
+          "ic95": [
+            -0.4036,
+            7.4678
+          ],
+          "referencia": false
+        }
+      ],
+      "teste_tendencias_paralelas": {
+        "anos_pre": [
+          2011,
+          2012
+        ],
+        "maior_efeito_pre_pp": 1.8981,
+        "algum_pre_significante": false
+      }
+    },
+    "barreira_custo": {
+      "desfecho": "barreira_custo",
+      "coeficientes": [
+        {
+          "ano": 2011,
+          "efeito_pp": 0.0,
+          "ee": 0.0,
+          "ic95": [
+            0.0,
+            0.0
+          ],
+          "referencia": false
+        },
+        {
+          "ano": 2012,
+          "efeito_pp": 0.0,
+          "ee": 0.0,
+          "ic95": [
+            0.0,
+            0.0
+          ],
+          "referencia": false
+        },
+        {
+          "ano": 2013,
+          "efeito_pp": 0.0,
+          "ee": 0.0,
+          "ic95": [
+            0.0,
+            0.0
+          ],
+          "referencia": true
+        },
+        {
+          "ano": 2014,
+          "efeito_pp": -1.1372,
+          "ee": 1.0541,
+          "ic95": [
+            -3.2032,
+            0.9288
+          ],
+          "referencia": false
+        },
+        {
+          "ano": 2015,
+          "efeito_pp": -2.0446,
+          "ee": 1.1285,
+          "ic95": [
+            -4.2565,
+            0.1673
+          ],
+          "referencia": false
+        },
+        {
+          "ano": 2016,
+          "efeito_pp": -3.3503,
+          "ee": 1.3328,
+          "ic95": [
+            -5.9626,
+            -0.738
+          ],
+          "referencia": false
+        },
+        {
+          "ano": 2017,
+          "efeito_pp": -1.8055,
+          "ee": 1.4161,
+          "ic95": [
+            -4.581,
+            0.97
+          ],
+          "referencia": false
+        },
+        {
+          "ano": 2018,
+          "efeito_pp": -2.8392,
+          "ee": 1.3063,
+          "ic95": [
+            -5.3996,
+            -0.2789
+          ],
+          "referencia": false
+        },
+        {
+          "ano": 2019,
+          "efeito_pp": -2.2815,
+          "ee": 1.5179,
+          "ic95": [
+            -5.2565,
+            0.6936
+          ],
+          "referencia": false
+        }
+      ],
+      "teste_tendencias_paralelas": {
+        "anos_pre": [
+          2011,
+          2012
+        ],
+        "maior_efeito_pre_pp": 0.0,
+        "algum_pre_significante": false
+      }
+    },
+    "colesterol_checado": {
+      "desfecho": "colesterol_checado",
+      "coeficientes": [
+        {
+          "ano": 2011,
+          "efeito_pp": 0.9913,
+          "ee": 1.3777,
+          "ic95": [
+            -1.7089,
+            3.6915
+          ],
+          "referencia": false
+        },
+        {
+          "ano": 2012,
+          "efeito_pp": 0.0,
+          "ee": 0.0,
+          "ic95": [
+            0.0,
+            0.0
+          ],
+          "referencia": false
+        },
+        {
+          "ano": 2013,
+          "efeito_pp": 0.0,
+          "ee": 0.0,
+          "ic95": [
+            0.0,
+            0.0
+          ],
+          "referencia": true
+        },
+        {
+          "ano": 2014,
+          "efeito_pp": 0.0,
+          "ee": 0.0,
+          "ic95": [
+            0.0,
+            0.0
+          ],
+          "referencia": false
+        },
+        {
+          "ano": 2015,
+          "efeito_pp": 1.5776,
+          "ee": 1.1516,
+          "ic95": [
+            -0.6795,
+            3.8347
+          ],
+          "referencia": false
+        },
+        {
+          "ano": 2016,
+          "efeito_pp": 0.0,
+          "ee": 0.0,
+          "ic95": [
+            0.0,
+            0.0
+          ],
+          "referencia": false
+        },
+        {
+          "ano": 2017,
+          "efeito_pp": 0.0,
+          "ee": 0.0,
+          "ic95": [
+            0.0,
+            0.0
+          ],
+          "referencia": false
+        },
+        {
+          "ano": 2018,
+          "efeito_pp": 0.0,
+          "ee": 0.0,
+          "ic95": [
+            0.0,
+            0.0
+          ],
+          "referencia": false
+        },
+        {
+          "ano": 2019,
+          "efeito_pp": 0.0,
+          "ee": 0.0,
+          "ic95": [
+            0.0,
+            0.0
+          ],
+          "referencia": false
+        }
+      ],
+      "teste_tendencias_paralelas": {
+        "anos_pre": [
+          2011,
+          2012
+        ],
+        "maior_efeito_pre_pp": 0.9913,
+        "algum_pre_significante": false
+      }
+    }
+  }
+}

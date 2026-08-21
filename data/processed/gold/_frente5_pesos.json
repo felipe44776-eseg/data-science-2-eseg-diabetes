@@ -1,0 +1,121 @@
+{
+  "inferencia_complexa": [
+    {
+      "metodo": "1 · aleatoria simples (ignora peso e desenho)",
+      "prevalencia_%": 13.224,
+      "ee_%": 0.0515,
+      "ic95": "[13.12; 13.32]",
+      "n_efetivo": 432968
+    },
+    {
+      "metodo": "2 · ponderado + n efetivo de Kish (nossa aproximacao)",
+      "prevalencia_%": 10.671,
+      "ee_%": 0.0943,
+      "ic95": "[10.49; 10.86]",
+      "n_efetivo": 107254
+    },
+    {
+      "metodo": "3 · Taylor com _STSTR e _PSU (correto)",
+      "prevalencia_%": 10.671,
+      "ee_%": 0.0883,
+      "ic95": "[10.50; 10.84]",
+      "n_efetivo": 122372
+    }
+  ],
+  "raking": {
+    "margens": [
+      "idade_g",
+      "sexo",
+      "escolaridade_g",
+      "renda_g"
+    ],
+    "iteracoes": 300,
+    "desvio_final": 0.001241068777322163,
+    "limite_de_aparo": 8.0,
+    "peso_min": 0.1237,
+    "peso_mediana": 0.7054,
+    "peso_max": 7.9155,
+    "n_efetivo": 119263,
+    "deff_do_peso": 2.127,
+    "conferencia_margens": [
+      {
+        "margem": "idade_g",
+        "desvio_max_pp": 0.9389
+      },
+      {
+        "margem": "sexo",
+        "desvio_max_pp": 0.1999
+      },
+      {
+        "margem": "escolaridade_g",
+        "desvio_max_pp": 0.8564
+      },
+      {
+        "margem": "renda_g",
+        "desvio_max_pp": 0.658
+      }
+    ]
+  },
+  "correcao_de_vies": {
+    "referencia_populacional_%": 10.671,
+    "arquivo_sem_peso_%": 13.933,
+    "arquivo_com_peso_%": 11.72,
+    "vies_antes_pp": 3.262,
+    "vies_depois_pp": 1.049,
+    "vies_removido_%": 67.9
+  },
+  "variante_com_acesso": {
+    "margens": [
+      "idade_g",
+      "sexo",
+      "escolaridade_g",
+      "renda_g",
+      "exame_g"
+    ],
+    "prevalencia_%": 10.815,
+    "vies_pp": 0.144,
+    "vies_removido_%": 95.6,
+    "n_efetivo": 95789,
+    "deff": 2.65,
+    "razao_de_pesos": 64,
+    "aviso": "exige que os 3,7% do arquivo sem exame de colesterol representem 25,5% da populacao; dobra o efeito de desenho"
+  },
+  "curva_de_aparo": [
+    {
+      "aparo": 3.0,
+      "prevalencia_%": 12.445,
+      "vies_pp": 1.774,
+      "n_efetivo": 160258,
+      "deff": 1.58
+    },
+    {
+      "aparo": 5.0,
+      "prevalencia_%": 11.804,
+      "vies_pp": 1.133,
+      "n_efetivo": 128227,
+      "deff": 1.98
+    },
+    {
+      "aparo": 8.0,
+      "prevalencia_%": 11.72,
+      "vies_pp": 1.049,
+      "n_efetivo": 119263,
+      "deff": 2.13
+    },
+    {
+      "aparo": 15.0,
+      "prevalencia_%": 11.663,
+      "vies_pp": 0.992,
+      "n_efetivo": 111761,
+      "deff": 2.27
+    },
+    {
+      "aparo": "sem",
+      "prevalencia_%": 11.65,
+      "vies_pp": 0.979,
+      "n_efetivo": 109978,
+      "deff": 2.31
+    }
+  ],
+  "arquivo_de_pesos": "data\\processed\\gold\\pesos_arquivo_entregue.parquet"
+}

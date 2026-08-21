@@ -1,0 +1,204 @@
+{
+  "protocolo": {
+    "particao": "holdout 20% por grupo, chave = hash das 21 originais",
+    "modelo": "HistGradientBoosting + calibracao isotonica",
+    "alvo": "diabetes vs sem diabetes (classe pre-diabetes excluida)",
+    "n": 432968,
+    "n_holdout": 86654
+  },
+  "comparacao": {
+    "21_originais": {
+      "pr_auc": 0.4439,
+      "pr_auc_ganho": 3.34,
+      "roc_auc": 0.843,
+      "recall_esp90": 0.5051,
+      "recall_esp95": 0.3358,
+      "brier": 0.09112,
+      "log_loss": 0.29502,
+      "ece": 0.00226,
+      "prevalencia": 0.1328,
+      "n_variaveis": 21,
+      "segundos": 11.3
+    },
+    "60_risco": {
+      "pr_auc": 0.4733,
+      "pr_auc_ganho": 3.57,
+      "roc_auc": 0.8539,
+      "recall_esp90": 0.5333,
+      "recall_esp95": 0.3675,
+      "brier": 0.08852,
+      "log_loss": 0.28705,
+      "ece": 0.0032,
+      "prevalencia": 0.1328,
+      "n_variaveis": 60,
+      "segundos": 19.8
+    },
+    "69_com_deteccao": {
+      "pr_auc": 0.4874,
+      "pr_auc_ganho": 3.67,
+      "roc_auc": 0.8631,
+      "recall_esp90": 0.5495,
+      "recall_esp95": 0.3814,
+      "brier": 0.08692,
+      "log_loss": 0.28039,
+      "ece": 0.00311,
+      "prevalencia": 0.1328,
+      "n_variaveis": 69,
+      "segundos": 22.7
+    },
+    "ganho_pr_auc_%": 6.62,
+    "ganho_roc_auc_milesimos": 10.9,
+    "deteccao_acrescenta_%": 2.98
+  },
+  "ablacao_por_bloco": [
+    {
+      "bloco_removido": "comorbidades",
+      "n_removidas": 11,
+      "pr_auc": 0.4296,
+      "perda_pr_auc": 0.0437,
+      "perda_%": 9.23
+    },
+    {
+      "bloco_removido": "antropometria",
+      "n_removidas": 3,
+      "pr_auc": 0.4446,
+      "perda_pr_auc": 0.0287,
+      "perda_%": 6.06
+    },
+    {
+      "bloco_removido": "saude_percebida",
+      "n_removidas": 3,
+      "pr_auc": 0.4556,
+      "perda_pr_auc": 0.0177,
+      "perda_%": 3.74
+    },
+    {
+      "bloco_removido": "alcool",
+      "n_removidas": 5,
+      "pr_auc": 0.4651,
+      "perda_pr_auc": 0.0082,
+      "perda_%": 1.73
+    },
+    {
+      "bloco_removido": "dieta",
+      "n_removidas": 8,
+      "pr_auc": 0.4674,
+      "perda_pr_auc": 0.0059,
+      "perda_%": 1.25
+    },
+    {
+      "bloco_removido": "demografia",
+      "n_removidas": 11,
+      "pr_auc": 0.4683,
+      "perda_pr_auc": 0.005,
+      "perda_%": 1.06
+    },
+    {
+      "bloco_removido": "limitacao_funcional",
+      "n_removidas": 7,
+      "pr_auc": 0.4688,
+      "perda_pr_auc": 0.0045,
+      "perda_%": 0.95
+    },
+    {
+      "bloco_removido": "raca",
+      "n_removidas": 2,
+      "pr_auc": 0.4695,
+      "perda_pr_auc": 0.0038,
+      "perda_%": 0.8
+    },
+    {
+      "bloco_removido": "atividade_fisica",
+      "n_removidas": 6,
+      "pr_auc": 0.4719,
+      "perda_pr_auc": 0.0014,
+      "perda_%": 0.3
+    },
+    {
+      "bloco_removido": "outros",
+      "n_removidas": 1,
+      "pr_auc": 0.4727,
+      "perda_pr_auc": 0.0006,
+      "perda_%": 0.13
+    },
+    {
+      "bloco_removido": "tabaco",
+      "n_removidas": 3,
+      "pr_auc": 0.4731,
+      "perda_pr_auc": 0.0002,
+      "perda_%": 0.04
+    }
+  ],
+  "auditoria_raca": [
+    {
+      "grupo": "branco nao-hispanico",
+      "n": 66098,
+      "prevalencia_%": 12.25,
+      "recall_orig": 0.4934,
+      "taxa_selecao_orig": 0.1468,
+      "risco_medio_orig": 0.1294,
+      "calibracao_orig": 0.0069,
+      "recall_novo": 0.4889,
+      "taxa_selecao_novo": 0.1371,
+      "risco_medio_novo": 0.1222,
+      "calibracao_novo": -0.0004,
+      "ganho_recall": -0.0045
+    },
+    {
+      "grupo": "negro nao-hispanico",
+      "n": 6736,
+      "prevalencia_%": 21.3,
+      "recall_orig": 0.577,
+      "taxa_selecao_orig": 0.2451,
+      "risco_medio_orig": 0.1737,
+      "calibracao_orig": -0.0394,
+      "recall_novo": 0.6829,
+      "taxa_selecao_novo": 0.3036,
+      "risco_medio_novo": 0.2019,
+      "calibracao_novo": -0.0112,
+      "ganho_recall": 0.1059
+    },
+    {
+      "grupo": "outro nao-hispanico",
+      "n": 3827,
+      "prevalencia_%": 13.27,
+      "recall_orig": 0.4409,
+      "taxa_selecao_orig": 0.1131,
+      "risco_medio_orig": 0.1016,
+      "calibracao_orig": -0.0311,
+      "recall_novo": 0.5571,
+      "taxa_selecao_novo": 0.1552,
+      "risco_medio_novo": 0.1247,
+      "calibracao_novo": -0.008,
+      "ganho_recall": 0.1162
+    },
+    {
+      "grupo": "multirracial nao-hispanico",
+      "n": 1511,
+      "prevalencia_%": 14.82,
+      "recall_orig": 0.5446,
+      "taxa_selecao_orig": 0.1694,
+      "risco_medio_orig": 0.1335,
+      "calibracao_orig": -0.0148,
+      "recall_novo": 0.6786,
+      "taxa_selecao_novo": 0.221,
+      "risco_medio_novo": 0.156,
+      "calibracao_novo": 0.0077,
+      "ganho_recall": 0.134
+    },
+    {
+      "grupo": "hispanico",
+      "n": 7021,
+      "prevalencia_%": 14.88,
+      "recall_orig": 0.5273,
+      "taxa_selecao_orig": 0.1547,
+      "risco_medio_orig": 0.1245,
+      "calibracao_orig": -0.0243,
+      "recall_novo": 0.6354,
+      "taxa_selecao_novo": 0.1956,
+      "risco_medio_novo": 0.1437,
+      "calibracao_novo": -0.0052,
+      "ganho_recall": 0.1081
+    }
+  ]
+}

@@ -17,9 +17,12 @@ Com n = 253.680, **todo p-valor dá zero**. Ele não distingue nada nesta escala
 aparece nas tabelas. O que reportamos é **tamanho de efeito** (V de Cramér, OR, δ de Cliff)
 e **intervalo de confiança** — este último corrigido pelo efeito de desenho.
 
-**DEFF = 4,04** → n efetivo de Kish 107.736 de 435.424. Todo IC calculado como amostra
-aleatória simples é **2,01× mais estreito** que o correto. Nas tabelas ponderadas abaixo,
-a inferência já usa o n efetivo.
+**DEFF = 4,04** pela aproximação de Kish → n efetivo 107.736 de 435.424. Nas tabelas
+ponderadas abaixo, a inferência já usa o n efetivo.
+
+> ✅ **REFINADO — `docs/11` §A.** Com linearização de Taylor (estrato + PSU), o **DEFF real
+> é 2,94** e o multiplicador correto sobre o IC ingênuo é **1,71×**, não 2,01×. Kish
+> superestimava a incerteza em ~7%: os IC aqui são conservadores.
 
 ---
 
@@ -194,9 +197,14 @@ Prevalência de diabetes por faixa da OMS:
 | obesidade II (35–40) | 27,44 | 21,20 |
 | **obesidade III (≥40)** | **33,54** | **27,48** |
 
-Gradiente de **6,3×** entre eutrófico e obesidade III na população. Monotônico a partir do
-eutrófico — o baixo peso quebra a monotonicidade (curva em J), coerente com a literatura:
-inclui diabetes tipo 1 e perda de peso por doença.
+Gradiente de **6,3×** entre eutrófico e obesidade III na população.
+
+> ⚠️ **CORRIGIDO — não há curva em J. Ver `docs/13` §2.**
+> A versão anterior desta seção afirmava que o baixo peso quebrava a monotonicidade.
+> Na base A os valores eram 5,40% (baixo peso) vs 5,70% (eutrófico) — quase iguais;
+> na base ponderada já são **3,21% vs 4,36%**, sem J. E a função de forma do EBM,
+> após ajuste por 11 outras variáveis, mostra o baixo peso como **claramente o menor
+> risco** (−1,001 de contribuição ao logit). A J era artefato do arquivo entregue.
 
 ---
 

@@ -119,6 +119,50 @@ ETAPAS: list[Etapa] = [
         opcional=True,
         nota="microdados do MS; ver data/external/FONTES.md",
     ),
+    # --- expansoes (docs/10 a docs/14) ------------------------------------
+    Etapa(
+        "expandido", "Frente 1 — variaveis expandidas (69 curadas)",
+        ".\\tasks.ps1 expandido",
+        ("data/external/brfss2015/LLCP2015.XPT", "src/diabetes/features/expandido.py",
+         "src/diabetes/models/expandido.py"),
+        ("data/processed/gold/brfss_expandido.parquet",
+         "data/processed/gold/_features_expandidas.json",
+         "data/processed/gold/_frente1_expandido.json"),
+        nota="+6,6% PR-AUC; o ganho e inteiramente das minorias",
+    ),
+    Etapa(
+        "pesos", "Frente 5 — inferencia complexa e pesos publicaveis",
+        ".\\tasks.ps1 pesos",
+        ("data/processed/gold/brfss_expandido.parquet",
+         "data/processed/diabetes_silver.parquet", "src/diabetes/external/pesos.py"),
+        ("data/processed/gold/_frente5_pesos.json",
+         "data/processed/gold/pesos_arquivo_entregue.parquet"),
+        nota="raking remove 95,6% do vies com a margem de acesso",
+    ),
+    Etapa(
+        "pu", "Frente 2 — Positive-Unlabeled",
+        ".\\tasks.ps1 pu",
+        ("data/processed/gold/brfss_expandido.parquet", "src/diabetes/models/pu.py"),
+        ("data/processed/gold/_frente2_pu.json",),
+        nota="BBE estima c=0,7283 contra 0,7240 do NHANES",
+    ),
+    Etapa(
+        "glassbox", "Frente 3 — EBM e predicao conforme",
+        ".\\tasks.ps1 glassbox",
+        ("data/processed/gold/brfss_expandido.parquet",
+         "src/diabetes/models/glassbox.py"),
+        ("data/processed/gold/_frente3_glassbox.json",),
+        nota="EBM com 12 vars = 94,4% do boosting com 60",
+    ),
+    Etapa(
+        "medicaid", "Frente 4 — expansao do Medicaid (DiD)",
+        ".\\tasks.ps1 medicaid",
+        ("src/diabetes/external/medicaid.py",),
+        ("data/external/medicaid/_frente4_medicaid.json",
+         "data/external/medicaid/painel_brfss_estados.parquet"),
+        opcional=True,
+        nota="painel via data.cdc.gov; nao depende do XPT local",
+    ),
 ]
 
 

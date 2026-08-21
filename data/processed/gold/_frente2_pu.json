@@ -1,0 +1,164 @@
+{
+  "premissa": {
+    "c_nhanes": 0.724,
+    "fonte": "NCHS Data Brief 516 / National Diabetes Statistics Report",
+    "nota": "c = P(diagnosticado | tem diabetes) = 1 - 0,276"
+  },
+  "prevalencia_diagnosticada_%": 10.671,
+  "bbe": {
+    "c_estimado_bbe": 0.7283,
+    "curva": [
+      {
+        "topo_%": 2.0,
+        "fracao_rotulada": 0.7283
+      },
+      {
+        "topo_%": 4.0,
+        "fracao_rotulada": 0.656
+      },
+      {
+        "topo_%": 6.0,
+        "fracao_rotulada": 0.6105
+      },
+      {
+        "topo_%": 8.0,
+        "fracao_rotulada": 0.569
+      },
+      {
+        "topo_%": 10.0,
+        "fracao_rotulada": 0.5371
+      },
+      {
+        "topo_%": 12.0,
+        "fracao_rotulada": 0.5075
+      },
+      {
+        "topo_%": 14.0,
+        "fracao_rotulada": 0.4829
+      },
+      {
+        "topo_%": 16.0,
+        "fracao_rotulada": 0.4599
+      },
+      {
+        "topo_%": 18.0,
+        "fracao_rotulada": 0.4402
+      },
+      {
+        "topo_%": 20.0,
+        "fracao_rotulada": 0.4225
+      },
+      {
+        "topo_%": 22.0,
+        "fracao_rotulada": 0.4051
+      },
+      {
+        "topo_%": 24.0,
+        "fracao_rotulada": 0.389
+      }
+    ]
+  },
+  "sensibilidade_a_c": [
+    {
+      "c": 0.65,
+      "subdiagnostico_%": 35.0,
+      "prev_verdadeira_%": 15.846,
+      "prev_diagnosticada_%": 10.671,
+      "ocultos_pp": 5.175,
+      "ocultos_na_amostra": 58082
+    },
+    {
+      "c": 0.7,
+      "subdiagnostico_%": 30.0,
+      "prev_verdadeira_%": 14.768,
+      "prev_diagnosticada_%": 10.671,
+      "ocultos_pp": 4.097,
+      "ocultos_na_amostra": 54000
+    },
+    {
+      "c": 0.724,
+      "subdiagnostico_%": 27.6,
+      "prev_verdadeira_%": 14.291,
+      "prev_diagnosticada_%": 10.671,
+      "ocultos_pp": 3.62,
+      "ocultos_na_amostra": 52223
+    },
+    {
+      "c": 0.78,
+      "subdiagnostico_%": 22.0,
+      "prev_verdadeira_%": 13.278,
+      "prev_diagnosticada_%": 10.671,
+      "ocultos_pp": 2.607,
+      "ocultos_na_amostra": 48486
+    },
+    {
+      "c": 0.85,
+      "subdiagnostico_%": 15.0,
+      "prev_verdadeira_%": 12.188,
+      "prev_diagnosticada_%": 10.671,
+      "ocultos_pp": 1.517,
+      "ocultos_na_amostra": 44495
+    },
+    {
+      "c": 0.9,
+      "subdiagnostico_%": 10.0,
+      "prev_verdadeira_%": 11.512,
+      "prev_diagnosticada_%": 10.671,
+      "ocultos_pp": 0.841,
+      "ocultos_na_amostra": 42023
+    }
+  ],
+  "sar": {
+    "prevalencia_verdadeira_%": 14.471,
+    "variaveis_de_propensao": [
+      "HLTHPLN1",
+      "MEDCOST",
+      "CHECKUP1",
+      "PERSDOC2",
+      "FLUSHOT6",
+      "PNEUVAC3",
+      "HIVTST6"
+    ],
+    "propensao_min": 0.5,
+    "propensao_mediana": 0.7649,
+    "propensao_max": 0.8764
+  },
+  "perfil": {
+    "provaveis_ocultos": {
+      "n": 20000,
+      "idade_media": 62.3,
+      "imc_medio": 32.3,
+      "%_hipertensao": 74.7,
+      "%_fez_exame_colesterol": 57.1,
+      "%_com_plano": 84.0,
+      "%_sem_consulta_por_custo": 23.0,
+      "%_check_up_no_ano": 28.6,
+      "renda_mediana_faixa": 4.0,
+      "%_minoria": 34.1
+    },
+    "diagnosticados": {
+      "n": 57256,
+      "idade_media": 64.4,
+      "imc_medio": 31.7,
+      "%_hipertensao": 74.9,
+      "%_fez_exame_colesterol": 89.2,
+      "%_com_plano": 95.1,
+      "%_sem_consulta_por_custo": 11.1,
+      "%_check_up_no_ano": 88.1,
+      "renda_mediana_faixa": 5.0,
+      "%_minoria": 29.4
+    },
+    "demais_nao_rotulados": {
+      "n": 355712,
+      "idade_media": 53.4,
+      "imc_medio": 27.2,
+      "%_hipertensao": 32.4,
+      "%_fez_exame_colesterol": 63.0,
+      "%_com_plano": 92.3,
+      "%_sem_consulta_por_custo": 8.8,
+      "%_check_up_no_ano": 73.8,
+      "renda_mediana_faixa": 6.0,
+      "%_minoria": 22.2
+    }
+  }
+}
