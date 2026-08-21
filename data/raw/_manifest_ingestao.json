@@ -1,0 +1,38 @@
+{
+  "manifest": {
+    "fonte_pdf": "data\\raw\\Diabetes-2026.csv.pdf",
+    "sha256_pdf": "d25054c754de24b8ab74206834f29e6f7ff1ac9088a0ab9f2646b14c36cf8cfd",
+    "paginas": 4374,
+    "colunas": [
+      "Diabetes",
+      "Hipertensão",
+      "Colesterol_Alto",
+      "Exame_de_Colesterol",
+      "IMC",
+      "Fumante",
+      "AVC",
+      "Doença_ou_Ataque_Cardiaco",
+      "Atividade_Fisica",
+      "Frutas",
+      "Vegetais",
+      "Consumo_Excessivo_de_Alcool",
+      "Acesso_a_Serviços_de_Saude",
+      "Sem_Consulta_Medica_por_Custo",
+      "Saude_Geral",
+      "Saude_Mental",
+      "Saude_Fisica",
+      "Dificuldade_para_Caminhar",
+      "Sexo",
+      "Idade",
+      "Escolaridade",
+      "Renda"
+    ],
+    "n_colunas": 22,
+    "n_linhas": 253680,
+    "n_quarentena": 0,
+    "saida_csv": "data\\raw\\diabetes_2026_raw.csv",
+    "sha256_csv": "e2b5c90b37b68f8d8f6c854ab6876114afce0f4f2fa7dbae16f7383599c3ea57",
+    "segundos": 48.6
+  },
+  "quarentena": []
+}

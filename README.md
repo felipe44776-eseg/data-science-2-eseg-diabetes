@@ -1,0 +1,103 @@
+# Data Science 2 — Projeto 1 · Diabetes (BRFSS 2015)
+
+ESEG · Prof. Marino Catarino · Felipe Marins
+
+Análise de 253.680 respostas da pesquisa BRFSS 2015 (CDC) para **identificar fatores
+associados a diabetes** e **predizer ocorrências**, com validação contra fontes externas
+(BRFSS original, NHANES, Vigitel, PNS).
+
+---
+
+## Estado atual
+
+| Camada | Status |
+|---|---|
+| Ingestão — PDF → CSV bronze | ✅ **pronta e validada** (253.680 linhas, 0 em quarentena) |
+| Limpeza — CSV → Parquet silver | ✅ **pronta** (31 colunas, 7 regras rastreadas) |
+| Diagnóstico dos dados | ✅ `docs/01-diagnostico-dos-dados.md` |
+| Proposta de análise | ✅ `docs/02-proposta-de-analise.md` |
+| Fontes externas | ✅ `docs/03-fontes-externas.md` |
+| Arquitetura | ✅ `docs/04-arquitetura.md` |
+| Features / EDA / modelos / causal | ⏳ próximos passos |
+
+---
+
+## Comece por aqui
+
+1. **`docs/01-diagnostico-dos-dados.md`** — o que o dataset realmente é, e os quatro
+   problemas que definem o trabalho (vazamento por duplicata, teto de Bayes, viés de
+   verificação, truncamento MNAR).
+2. **`docs/02-proposta-de-analise.md`** — as três trilhas: explicar, predizer, decidir.
+3. **`docs/03-fontes-externas.md`** — as fontes públicas de comparação e o que cada uma resolve.
+4. **`docs/04-arquitetura.md`** — camadas de dado e código; por que local-first e não GCP.
+5. **`docs/adr/`** — decisões técnicas com justificativa.
+
+---
+
+## Setup
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+```
+
+## Reproduzir do zero
+
+O PDF fonte (109 MB) não está no git. Coloque-o em `data/raw/Diabetes-2026.csv.pdf` e:
+
+```powershell
+.\tasks.ps1 all
+```
+
+Reconstrói bronze → silver → gold → relatório. O manifesto em
+`data/raw/_manifest_ingestao.json` traz o SHA-256 esperado do CSV reconstruído —
+se bater, a extração está correta.
+
+Comandos individuais em `docs/04-arquitetura.md` §3.
+
+---
+
+## Achados de entrada (já apurados)
+
+| | |
+|---|---|
+| Linhas × colunas | 253.680 × 22 (→ 31 após derivadas) |
+| Nulos / valores fora do domínio | **0** |
+| Distribuição do alvo | 84,24% sem · **1,83% pré** · 13,93% diabetes |
+| Duplicatas exatas | **23.899 (9,4%)** → risco de vazamento treino/teste |
+| Grupos com rótulo contraditório | **1.834** → teto de Bayes mensurável |
+| Códigos 77/99 de renda | **0** → amostra truncada, viés MNAR invisível |
+| Registros com IMC > 60 | 805 (marcados, não removidos) |
+| Base em memória após downcast | 44 MB → **8,6 MB** |
+
+Detalhamento e implicações em `docs/01-diagnostico-dos-dados.md`.
+
+---
+
+## Estrutura
+
+```
+data/       bronze / interim / silver+gold / external   (conteúdo fora do git; manifestos versionados)
+docs/       diagnóstico, proposta, fontes, arquitetura, ADRs, enunciado
+src/        schema.py (contrato único) + ingest, clean, features, eda, models, eval, causal, external, viz
+notebooks/  vitrine — importam de src/, não contêm lógica
+reports/    figuras, tabelas, deck
+tests/      pytest — inclui teste de vazamento por duplicata
+```
+
+## Convenções
+
+- **`src/diabetes/schema.py` é a única fonte de verdade** para nome, tipo, domínio e
+  semântica de coluna. Nenhum nome de coluna literal fora dele.
+- Dado não é versionado; **manifesto com hash é**.
+- Notebook mostra resultado, não contém lógica.
+- Acurácia não é reportada (ADR 0005).
+
+---
+
+## Fonte dos dados
+
+Pesquisa **BRFSS 2015** do CDC, 253.680 respostas, 21 atributos + alvo `Diabetes`
+(0 sem diabetes · 1 pré-diabetes · 2 diabetes). Dicionário original em
+`docs/enunciado/Mapa-dos-dados.txt`; enunciado em `docs/enunciado/`.

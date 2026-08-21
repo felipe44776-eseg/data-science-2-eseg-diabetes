@@ -1,0 +1,22 @@
+{
+  "entrada_linhas": 253680,
+  "violacoes_dominio": {},
+  "linhas_quarentena": 0,
+  "duplicatas_exatas": 23899,
+  "linhas_alvo_conflitante": 6120,
+  "grupos_alvo_conflitante": 1834,
+  "imc_extremo": 805,
+  "saida_linhas": 253680,
+  "saida_colunas": 31,
+  "distribuicao_alvo": {
+    "0": 213703,
+    "1": 4631,
+    "2": 35346
+  },
+  "distribuicao_alvo_pct": {
+    "0": 84.241,
+    "1": 1.826,
+    "2": 13.933
+  },
+  "memoria_mb": 8.63
+}

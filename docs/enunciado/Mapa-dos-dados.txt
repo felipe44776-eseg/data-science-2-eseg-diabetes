@@ -1,0 +1,96 @@
+Diabetes
+0 = sem diabetes 1 = pré-diabetes 2 = diabetes
+
+Hipertensão
+0 = pressão arterial normal 1 = pressão alta
+
+
+Colesterol_Alto
+0 = colesterol normal 1 = colesterol alto
+
+
+Exame_de_Colesterol
+0 = sem exame de colesterol nos últimos 5 anos 1 = com exame de colesterol nos últimos 5 anos
+
+
+IMC
+Índice de Massa Corporal (IMC)
+
+
+Fumante
+Você já fumou pelo menos 100 cigarros em toda a sua vida? [Nota: 5 maços = 100 cigarros] 0 = não 1 = sim
+
+
+AVC
+(Já foi informado de que) teve um acidente vascular cerebral (AVC). 0 = não 1 = sim
+
+
+Doença_ou_Ataque_Cardiaco
+doença arterial coronariana (DAC) ou infarto agudo do miocárdio (IAM) 0 = não 1 = sim
+
+
+Atividade_Fisica
+atividade física nos últimos 30 dias - excluindo o trabalho 0 = não 1 = sim
+
+
+Frutas
+Consumo de frutas 1 ou mais vezes por dia 0 = não 1 = sim
+
+
+Vegetais
+Consumo de vegetais 1 ou mais vezes por dia 0 = não 1 = sim
+
+
+Consumo_Excessivo_de_Alcool
+Consumo excessivo de álcool (homens adultos que consomem mais de 14 doses por semana e mulheres adultas que consomem mais de 7 doses por semana) 0 = não 1 = sim
+
+
+Acesso_a_Serviços_de_Saude
+Possui algum tipo de cobertura de saúde, incluindo plano de saúde, planos pré-pagos (como Bradesco Saude, Amil), etc.? 0 = não 1 = sim
+
+
+Sem_Consulta_Medica_por_Custo
+Houve algum momento nos últimos 12 meses em que você precisou consultar um médico, mas não pôde devido ao custo? 0 = não 1 = sim
+
+
+Saude_Geral
+Você diria que, de modo geral, sua saúde é: escala de 1 a 5 1 = excelente 2 = muito boa 3 = boa 4 = regular 5 = ruim
+
+
+Saude_Mental
+Pensando agora na sua saúde mental — o que inclui estresse, depressão e problemas emocionais —, por quantos dias, nos últimos 30 dias, sua saúde mental não esteve boa? escala de 1 a 30 dias
+
+
+Saude_Fisica
+Pensando agora na sua saúde física — o que inclui doenças físicas e lesões —, por quantos dias, nos últimos 30 dias, sua saúde física não esteve boa? escala de 1 a 30 dias
+
+
+Dificuldade_para_Caminhar
+Você tem dificuldade séria para caminhar ou subir escadas? 0 = não 1 = sim
+
+
+Sexo
+0 = feminino 1 = masculino
+
+
+Idade
+Categoria de idade em 13 níveis: 1= 18 a 24 anos, 2= 25 a 29 anos, 3= 30 a 34 anos, 4= 35 a 39 anos, 5= 40 a 44 anos, 6= 45 a 49 anos, 7= 50 a 54 anos, 8= 55 a 59 anos, 9= 60 a 64 anos, 10= 65 a 69 anos, 11= 70 a 74 anos, 12= 75 a 79 anos, 13= 80 anos ou mais.
+
+
+Escolaridade
+Nível de escolaridade - escala de 1 a 6: 1 = Nunca frequentou a escola ou apenas jardim de infância, 2 = Séries 1 a 8 (Ensino Fundamental), 3 = Séries 9 a 11 (Ensino Médio incompleto), 4 = Série 12 (Ensino Médio completo), 5 = Ensino superior: 1 a 3 anos (Ensino superior incompleto ou curso técnico), 6 = Ensino superior: 4 anos ou mais (Ensino superior completo)
+
+
+Renda
+Escala de renda:
+Código - Faixa de Renda Anual (USD) - Descrição da Categoria 
+1 - Menos de $10,000 - Renda muito baixa
+2 - $10,000 a $14,999 - Renda baixa
+3 - $15,000 a $19,999 - Renda baixa
+4 - $20,000 a $24,999 - Renda média-baixa
+5 - $25,000 a $34,999 - Renda média-baixa
+6 - $35,000 a $49,999 - Renda média
+7 - $50,000 a $74,999 - Renda média-alta
+8 - $75,000 ou mais   - Renda alta
+77 - Não tem certeza
+99 - Recusou-se a responder

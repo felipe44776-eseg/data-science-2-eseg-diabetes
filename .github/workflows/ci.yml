@@ -1,0 +1,30 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  qualidade:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: instalar
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas pyarrow numpy scikit-learn pymupdf pytest ruff
+
+      - name: lint
+        run: ruff check src tests
+
+      # Cobre contrato de schema, regras de limpeza, idempotencia e --
+      # o mais importante -- a ausencia de vazamento por duplicata (ADR 0002).
+      # Roda sem o dado real: os testes usam frame sintetico gerado do proprio schema.
+      - name: testes
+        run: pytest -q
