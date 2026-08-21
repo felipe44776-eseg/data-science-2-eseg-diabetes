@@ -174,6 +174,15 @@ ETAPAS: list[Etapa] = [
          "data/processed/gold/_trilhaC_equidade.json"),
         nota="escore de 5 perguntas bate o FINDRISC em +37,7 milesimos",
     ),
+    Etapa(
+        "produto", "Produto — calculadora de risco autocontida",
+        ".\\tasks.ps1 produto",
+        ("data/processed/gold/brfss_expandido.parquet",
+         "src/diabetes/produto/exportar.py", "src/diabetes/produto/pagina.py"),
+        ("reports/produto/modelo.json", "reports/produto/index.html",
+         "reports/produto/_casos_paridade.json"),
+        nota="EBM exportado como tabela; paridade Python<->JS verificada",
+    ),
 ]
 
 

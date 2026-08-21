@@ -24,6 +24,9 @@ data/external/**/*
 *.pdf
 !docs/enunciado/*.pdf
 
+# o produto e entregavel: vai para o git
+!reports/produto/**
+
 # log de execucao: e local da maquina, nao artefato do projeto
 reports/execucao.jsonl
 

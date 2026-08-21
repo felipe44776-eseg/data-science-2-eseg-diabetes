@@ -16,7 +16,7 @@ param(
     [Parameter(Position = 0)]
     [ValidateSet('status', 'log', 'ingest', 'clean', 'folds', 'external', 'eda',
                  'explicativo', 'figuras', 'modelos', 'vigitel',
-                 'expandido', 'pesos', 'pu', 'glassbox', 'medicaid', 'trilhac',
+                 'expandido', 'pesos', 'pu', 'glassbox', 'medicaid', 'trilhac', 'produto',
                  'test', 'all', 'help')]
     [string]$Task = 'help'
 )
@@ -173,6 +173,16 @@ function Invoke-TrilhaC {
     }
 }
 
+function Invoke-Produto {
+    Invoke-Etapa 'produto' 'Produto: calculadora de risco autocontida' {
+        python -m diabetes.produto.exportar
+        python -m diabetes.produto.pagina
+        if (Get-Command node -ErrorAction SilentlyContinue) {
+            node tests/paridade_js.mjs
+        }
+    }
+}
+
 function Invoke-Test {
     Invoke-Etapa 'test' 'Lint e testes' {
         python -m ruff check src tests
@@ -200,6 +210,7 @@ switch ($Task) {
     'glassbox'    { Invoke-Glassbox }
     'medicaid'    { Invoke-Medicaid }
     'trilhac'     { Invoke-TrilhaC }
+    'produto'     { Invoke-Produto }
     'test'        { Invoke-Test }
     'all' {
         Invoke-Ingest; Invoke-Clean; Invoke-Folds
@@ -212,7 +223,7 @@ switch ($Task) {
         }
         Invoke-Modelos; Invoke-Figuras
         if (Test-Path (Join-Path $PSScriptRoot $XPT)) {
-            Invoke-Expandido; Invoke-Pesos; Invoke-Pu; Invoke-Glassbox; Invoke-TrilhaC
+            Invoke-Expandido; Invoke-Pesos; Invoke-Pu; Invoke-Glassbox; Invoke-TrilhaC; Invoke-Produto
         }
         Invoke-Medicaid
         python -m diabetes.pipeline.estado
