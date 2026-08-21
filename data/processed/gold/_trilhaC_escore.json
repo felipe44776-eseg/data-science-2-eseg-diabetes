@@ -1,0 +1,272 @@
+{
+  "escores": {
+    "A_completo": {
+      "variaveis": [
+        "idade",
+        "imc",
+        "saude",
+        "hipertensao",
+        "colesterol",
+        "sexo"
+      ],
+      "tabela": {
+        "unidade_logit": 0.13951410683074392,
+        "pontos": {
+          "idade": {
+            "<35": 0,
+            "35-44": 7,
+            "45-54": 10,
+            "55-64": 13,
+            "65+": 16
+          },
+          "imc": {
+            "<25": 0,
+            "25-29": 2,
+            "30-34": 5,
+            "35+": 8
+          },
+          "saude": {
+            "excelente/muito boa": 0,
+            "boa": 6,
+            "regular/ruim": 11
+          },
+          "hipertensao": {
+            "nao": 0,
+            "sim": 6
+          },
+          "colesterol": {
+            "nao": 0,
+            "sim": 5
+          },
+          "sexo": {
+            "feminino": 0,
+            "masculino": 1
+          }
+        }
+      },
+      "calibracao": {
+        "cortes": [
+          -Infinity,
+          10.0,
+          16.0,
+          20.0,
+          24.0,
+          27.0,
+          32.0,
+          36.0,
+          Infinity
+        ],
+        "faixas": [
+          {
+            "faixa": 0,
+            "pontos_min": 0,
+            "pontos_max": 10,
+            "risco_%": 0.7,
+            "n_treino": 34928
+          },
+          {
+            "faixa": 1,
+            "pontos_min": 11,
+            "pontos_max": 16,
+            "risco_%": 2.74,
+            "n_treino": 42499
+          },
+          {
+            "faixa": 2,
+            "pontos_min": 17,
+            "pontos_max": 20,
+            "risco_%": 5.28,
+            "n_treino": 28364
+          },
+          {
+            "faixa": 3,
+            "pontos_min": 21,
+            "pontos_max": 24,
+            "risco_%": 8.96,
+            "n_treino": 40363
+          },
+          {
+            "faixa": 4,
+            "pontos_min": 25,
+            "pontos_max": 27,
+            "risco_%": 14.21,
+            "n_treino": 25549
+          },
+          {
+            "faixa": 5,
+            "pontos_min": 28,
+            "pontos_max": 32,
+            "risco_%": 21.78,
+            "n_treino": 38821
+          },
+          {
+            "faixa": 6,
+            "pontos_min": 33,
+            "pontos_max": 36,
+            "risco_%": 31.91,
+            "n_treino": 30660
+          },
+          {
+            "faixa": 7,
+            "pontos_min": 37,
+            "pontos_max": 47,
+            "risco_%": 48.5,
+            "n_treino": 31163
+          }
+        ]
+      },
+      "metricas": {
+        "roc_auc": 0.8082,
+        "pr_auc": 0.3671,
+        "pontos_min": 0,
+        "pontos_max": 47,
+        "n_variaveis": 6,
+        "n_avaliacao": 62294
+      }
+    },
+    "B_sem_proxy_acesso": {
+      "variaveis": [
+        "idade",
+        "imc",
+        "saude",
+        "hipertensao",
+        "sexo"
+      ],
+      "tabela": {
+        "unidade_logit": 0.13970210194330687,
+        "pontos": {
+          "idade": {
+            "<35": 0,
+            "35-44": 8,
+            "45-54": 12,
+            "55-64": 15,
+            "65+": 17
+          },
+          "imc": {
+            "<25": 0,
+            "25-29": 3,
+            "30-34": 5,
+            "35+": 9
+          },
+          "saude": {
+            "excelente/muito boa": 0,
+            "boa": 6,
+            "regular/ruim": 11
+          },
+          "hipertensao": {
+            "nao": 0,
+            "sim": 7
+          },
+          "sexo": {
+            "feminino": 0,
+            "masculino": 1
+          }
+        }
+      },
+      "calibracao": {
+        "cortes": [
+          -Infinity,
+          9.0,
+          15.0,
+          18.0,
+          23.0,
+          27.0,
+          30.0,
+          35.0,
+          Infinity
+        ],
+        "faixas": [
+          {
+            "faixa": 0,
+            "pontos_min": 0,
+            "pontos_max": 9,
+            "risco_%": 0.54,
+            "n_treino": 42155
+          },
+          {
+            "faixa": 1,
+            "pontos_min": 10,
+            "pontos_max": 15,
+            "risco_%": 1.76,
+            "n_treino": 41223
+          },
+          {
+            "faixa": 2,
+            "pontos_min": 16,
+            "pontos_max": 18,
+            "risco_%": 3.42,
+            "n_treino": 35556
+          },
+          {
+            "faixa": 3,
+            "pontos_min": 19,
+            "pontos_max": 23,
+            "risco_%": 6.54,
+            "n_treino": 46785
+          },
+          {
+            "faixa": 4,
+            "pontos_min": 24,
+            "pontos_max": 27,
+            "risco_%": 12.94,
+            "n_treino": 43264
+          },
+          {
+            "faixa": 5,
+            "pontos_min": 28,
+            "pontos_max": 30,
+            "risco_%": 18.51,
+            "n_treino": 30366
+          },
+          {
+            "faixa": 6,
+            "pontos_min": 31,
+            "pontos_max": 35,
+            "risco_%": 28.56,
+            "n_treino": 41807
+          },
+          {
+            "faixa": 7,
+            "pontos_min": 36,
+            "pontos_max": 45,
+            "risco_%": 45.49,
+            "n_treino": 35131
+          }
+        ]
+      },
+      "metricas": {
+        "roc_auc": 0.804,
+        "pr_auc": 0.3595,
+        "pontos_min": 0,
+        "pontos_max": 45,
+        "n_variaveis": 5,
+        "n_avaliacao": 62294
+      }
+    }
+  },
+  "findrisc": {
+    "roc_auc": 0.7663,
+    "pr_auc": 0.3195,
+    "n_avaliacao": 62294,
+    "itens_disponiveis": 5,
+    "itens_originais": 8,
+    "ausentes": [
+      "circunferencia abdominal",
+      "historico familiar",
+      "glicemia elevada previa"
+    ]
+  },
+  "comparacao": {
+    "custo_de_remover_o_proxy_de_acesso": {
+      "roc_auc_A": 0.8082,
+      "roc_auc_B": 0.804,
+      "perda_roc_milesimos": 4.2,
+      "perda_pr_auc_%": 2.07
+    },
+    "vs_findrisc": {
+      "escore_B_roc": 0.804,
+      "findrisc_roc": 0.7663,
+      "ganho_milesimos": 37.7
+    }
+  }
+}

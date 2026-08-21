@@ -16,7 +16,7 @@ param(
     [Parameter(Position = 0)]
     [ValidateSet('status', 'log', 'ingest', 'clean', 'folds', 'external', 'eda',
                  'explicativo', 'figuras', 'modelos', 'vigitel',
-                 'expandido', 'pesos', 'pu', 'glassbox', 'medicaid',
+                 'expandido', 'pesos', 'pu', 'glassbox', 'medicaid', 'trilhac',
                  'test', 'all', 'help')]
     [string]$Task = 'help'
 )
@@ -165,6 +165,14 @@ function Invoke-Medicaid {
     }
 }
 
+function Invoke-TrilhaC {
+    Invoke-Etapa 'trilhac' 'Trilha C: escore de pontos, curva de decisao e equidade' {
+        python -m diabetes.eval.escore
+        python -m diabetes.eval.decisao
+        python -m diabetes.eval.equidade
+    }
+}
+
 function Invoke-Test {
     Invoke-Etapa 'test' 'Lint e testes' {
         python -m ruff check src tests
@@ -191,6 +199,7 @@ switch ($Task) {
     'pu'          { Invoke-Pu }
     'glassbox'    { Invoke-Glassbox }
     'medicaid'    { Invoke-Medicaid }
+    'trilhac'     { Invoke-TrilhaC }
     'test'        { Invoke-Test }
     'all' {
         Invoke-Ingest; Invoke-Clean; Invoke-Folds
@@ -203,7 +212,7 @@ switch ($Task) {
         }
         Invoke-Modelos; Invoke-Figuras
         if (Test-Path (Join-Path $PSScriptRoot $XPT)) {
-            Invoke-Expandido; Invoke-Pesos; Invoke-Pu; Invoke-Glassbox
+            Invoke-Expandido; Invoke-Pesos; Invoke-Pu; Invoke-Glassbox; Invoke-TrilhaC
         }
         Invoke-Medicaid
         python -m diabetes.pipeline.estado

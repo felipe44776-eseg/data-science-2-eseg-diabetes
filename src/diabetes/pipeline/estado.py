@@ -163,6 +163,17 @@ ETAPAS: list[Etapa] = [
         opcional=True,
         nota="painel via data.cdc.gov; nao depende do XPT local",
     ),
+    Etapa(
+        "trilhac", "Trilha C — escore, decisao e equidade",
+        ".\\tasks.ps1 trilhac",
+        ("data/processed/gold/brfss_expandido.parquet",
+         "src/diabetes/eval/escore.py", "src/diabetes/eval/decisao.py",
+         "src/diabetes/eval/equidade.py"),
+        ("data/processed/gold/_trilhaC_escore.json",
+         "data/processed/gold/_trilhaC_decisao.json",
+         "data/processed/gold/_trilhaC_equidade.json"),
+        nota="escore de 5 perguntas bate o FINDRISC em +37,7 milesimos",
+    ),
 ]
 
 

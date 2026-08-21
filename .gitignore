@@ -16,6 +16,7 @@ data/external/**/*
 !data/**/_escada_*.json
 !data/**/_comparacao_*.json
 !data/**/_frente*.json
+!data/**/_trilhaC_*.json
 !data/**/_features_*.json
 !data/**/*.md
 

@@ -1,0 +1,474 @@
+{
+  "limiar_global": 0.2893,
+  "especificidade_alvo": 0.9,
+  "premissa_pu": {
+    "c": 0.724,
+    "fonte": "NHANES via docs/12"
+  },
+  "observado": {
+    "raca": {
+      "por_grupo": [
+        {
+          "grupo": "branco nao-hispanico",
+          "n": 66098,
+          "prevalencia_%": 9.96,
+          "taxa_selecao_%": 10.57,
+          "recall_tpr": 0.4815,
+          "fpr": 0.0641,
+          "precisao_ppv": 0.4536,
+          "risco_medio_previsto": 0.0963,
+          "calibracao_desvio_pp": -0.32
+        },
+        {
+          "grupo": "hispanico",
+          "n": 7021,
+          "prevalencia_%": 10.74,
+          "taxa_selecao_%": 13.67,
+          "recall_tpr": 0.6002,
+          "fpr": 0.0809,
+          "precisao_ppv": 0.4714,
+          "risco_medio_previsto": 0.1076,
+          "calibracao_desvio_pp": 0.02
+        },
+        {
+          "grupo": "multirracial nao-hispanico",
+          "n": 1511,
+          "prevalencia_%": 8.89,
+          "taxa_selecao_%": 16.0,
+          "recall_tpr": 0.6111,
+          "fpr": 0.1159,
+          "precisao_ppv": 0.3398,
+          "risco_medio_previsto": 0.1123,
+          "calibracao_desvio_pp": 2.34
+        },
+        {
+          "grupo": "negro nao-hispanico",
+          "n": 6736,
+          "prevalencia_%": 14.24,
+          "taxa_selecao_%": 19.26,
+          "recall_tpr": 0.6592,
+          "fpr": 0.1151,
+          "precisao_ppv": 0.4876,
+          "risco_medio_previsto": 0.1389,
+          "calibracao_desvio_pp": -0.35
+        },
+        {
+          "grupo": "outro nao-hispanico",
+          "n": 3827,
+          "prevalencia_%": 9.15,
+          "taxa_selecao_%": 7.86,
+          "recall_tpr": 0.4078,
+          "fpr": 0.0455,
+          "precisao_ppv": 0.4744,
+          "risco_medio_previsto": 0.077,
+          "calibracao_desvio_pp": -1.45
+        }
+      ],
+      "disparidade": {
+        "amplitude_paridade_demografica_pp": 11.4,
+        "amplitude_igualdade_oportunidade": 0.2514,
+        "razao_igualdade_oportunidade": 0.6186,
+        "amplitude_fpr": 0.0704,
+        "amplitude_calibracao_pp": 3.79
+      }
+    },
+    "sexo": {
+      "por_grupo": [
+        {
+          "grupo": "feminino",
+          "n": 50067,
+          "prevalencia_%": 10.18,
+          "taxa_selecao_%": 11.76,
+          "recall_tpr": 0.5204,
+          "fpr": 0.0719,
+          "precisao_ppv": 0.4509,
+          "risco_medio_previsto": 0.1007,
+          "calibracao_desvio_pp": -0.12
+        },
+        {
+          "grupo": "masculino",
+          "n": 36587,
+          "prevalencia_%": 10.89,
+          "taxa_selecao_%": 12.27,
+          "recall_tpr": 0.5292,
+          "fpr": 0.073,
+          "precisao_ppv": 0.4697,
+          "risco_medio_previsto": 0.1042,
+          "calibracao_desvio_pp": -0.47
+        }
+      ],
+      "disparidade": {
+        "amplitude_paridade_demografica_pp": 0.51,
+        "amplitude_igualdade_oportunidade": 0.0088,
+        "razao_igualdade_oportunidade": 0.9834,
+        "amplitude_fpr": 0.0011,
+        "amplitude_calibracao_pp": 0.35
+      }
+    },
+    "renda": {
+      "por_grupo": [
+        {
+          "grupo": "10-15k",
+          "n": 3743,
+          "prevalencia_%": 19.26,
+          "taxa_selecao_%": 25.14,
+          "recall_tpr": 0.6503,
+          "fpr": 0.1563,
+          "precisao_ppv": 0.4981,
+          "risco_medio_previsto": 0.1775,
+          "calibracao_desvio_pp": -1.51
+        },
+        {
+          "grupo": "15-20k",
+          "n": 5180,
+          "prevalencia_%": 15.71,
+          "taxa_selecao_%": 20.35,
+          "recall_tpr": 0.6272,
+          "fpr": 0.1246,
+          "precisao_ppv": 0.4841,
+          "risco_medio_previsto": 0.1475,
+          "calibracao_desvio_pp": -0.96
+        },
+        {
+          "grupo": "20-25k",
+          "n": 6445,
+          "prevalencia_%": 13.9,
+          "taxa_selecao_%": 17.86,
+          "recall_tpr": 0.5781,
+          "fpr": 0.1142,
+          "precisao_ppv": 0.4498,
+          "risco_medio_previsto": 0.1319,
+          "calibracao_desvio_pp": -0.71
+        },
+        {
+          "grupo": "25-35k",
+          "n": 7534,
+          "prevalencia_%": 11.3,
+          "taxa_selecao_%": 15.16,
+          "recall_tpr": 0.5803,
+          "fpr": 0.097,
+          "precisao_ppv": 0.4325,
+          "risco_medio_previsto": 0.1212,
+          "calibracao_desvio_pp": 0.82
+        },
+        {
+          "grupo": "35-50k",
+          "n": 10173,
+          "prevalencia_%": 10.14,
+          "taxa_selecao_%": 11.83,
+          "recall_tpr": 0.5044,
+          "fpr": 0.0747,
+          "precisao_ppv": 0.4325,
+          "risco_medio_previsto": 0.1017,
+          "calibracao_desvio_pp": 0.02
+        },
+        {
+          "grupo": "<10k",
+          "n": 3653,
+          "prevalencia_%": 15.55,
+          "taxa_selecao_%": 20.53,
+          "recall_tpr": 0.6318,
+          "fpr": 0.1268,
+          "precisao_ppv": 0.4783,
+          "risco_medio_previsto": 0.1476,
+          "calibracao_desvio_pp": -0.79
+        },
+        {
+          "grupo": ">=75k",
+          "n": 22879,
+          "prevalencia_%": 6.55,
+          "taxa_selecao_%": 5.22,
+          "recall_tpr": 0.3753,
+          "fpr": 0.0295,
+          "precisao_ppv": 0.471,
+          "risco_medio_previsto": 0.0625,
+          "calibracao_desvio_pp": -0.29
+        }
+      ],
+      "disparidade": {
+        "amplitude_paridade_demografica_pp": 19.92,
+        "amplitude_igualdade_oportunidade": 0.275,
+        "razao_igualdade_oportunidade": 0.5771,
+        "amplitude_fpr": 0.1268,
+        "amplitude_calibracao_pp": 2.33
+      }
+    },
+    "idade": {
+      "por_grupo": [
+        {
+          "grupo": "18-44",
+          "n": 24590,
+          "prevalencia_%": 2.93,
+          "taxa_selecao_%": 1.56,
+          "recall_tpr": 0.2489,
+          "fpr": 0.0086,
+          "precisao_ppv": 0.4665,
+          "risco_medio_previsto": 0.0304,
+          "calibracao_desvio_pp": 0.11
+        },
+        {
+          "grupo": "45-64",
+          "n": 34270,
+          "prevalencia_%": 14.57,
+          "taxa_selecao_%": 17.08,
+          "recall_tpr": 0.5406,
+          "fpr": 0.1077,
+          "precisao_ppv": 0.4611,
+          "risco_medio_previsto": 0.1426,
+          "calibracao_desvio_pp": -0.31
+        },
+        {
+          "grupo": "65+",
+          "n": 27794,
+          "prevalencia_%": 23.5,
+          "taxa_selecao_%": 30.7,
+          "recall_tpr": 0.599,
+          "fpr": 0.2173,
+          "precisao_ppv": 0.4586,
+          "risco_medio_previsto": 0.222,
+          "calibracao_desvio_pp": -1.31
+        }
+      ],
+      "disparidade": {
+        "amplitude_paridade_demografica_pp": 29.14,
+        "amplitude_igualdade_oportunidade": 0.3501,
+        "razao_igualdade_oportunidade": 0.4155,
+        "amplitude_fpr": 0.2087,
+        "amplitude_calibracao_pp": 1.42
+      }
+    }
+  },
+  "corrigido_pu": {
+    "raca": {
+      "por_grupo": [
+        {
+          "grupo": "branco nao-hispanico",
+          "n": 123964,
+          "prevalencia_%": 13.57,
+          "taxa_selecao_%": 10.57,
+          "recall_tpr": 0.4769,
+          "fpr": 0.0474,
+          "precisao_ppv": 0.6124,
+          "risco_medio_previsto": 0.0963,
+          "calibracao_desvio_pp": -3.94
+        },
+        {
+          "grupo": "hispanico",
+          "n": 12985,
+          "prevalencia_%": 14.88,
+          "taxa_selecao_%": 13.67,
+          "recall_tpr": 0.5962,
+          "fpr": 0.0564,
+          "precisao_ppv": 0.649,
+          "risco_medio_previsto": 0.1076,
+          "calibracao_desvio_pp": -4.12
+        },
+        {
+          "grupo": "multirracial nao-hispanico",
+          "n": 2795,
+          "prevalencia_%": 13.76,
+          "taxa_selecao_%": 16.0,
+          "recall_tpr": 0.6355,
+          "fpr": 0.0841,
+          "precisao_ppv": 0.5468,
+          "risco_medio_previsto": 0.1123,
+          "calibracao_desvio_pp": -2.53
+        },
+        {
+          "grupo": "negro nao-hispanico",
+          "n": 12025,
+          "prevalencia_%": 19.29,
+          "taxa_selecao_%": 19.26,
+          "recall_tpr": 0.6456,
+          "fpr": 0.0843,
+          "precisao_ppv": 0.6467,
+          "risco_medio_previsto": 0.1389,
+          "calibracao_desvio_pp": -5.4
+        },
+        {
+          "grupo": "outro nao-hispanico",
+          "n": 7142,
+          "prevalencia_%": 11.86,
+          "taxa_selecao_%": 7.86,
+          "recall_tpr": 0.4182,
+          "fpr": 0.0329,
+          "precisao_ppv": 0.6306,
+          "risco_medio_previsto": 0.077,
+          "calibracao_desvio_pp": -4.16
+        }
+      ],
+      "disparidade": {
+        "amplitude_paridade_demografica_pp": 11.4,
+        "amplitude_igualdade_oportunidade": 0.2274,
+        "razao_igualdade_oportunidade": 0.6478,
+        "amplitude_fpr": 0.0514,
+        "amplitude_calibracao_pp": 2.87
+      }
+    },
+    "sexo": {
+      "por_grupo": [
+        {
+          "grupo": "feminino",
+          "n": 93590,
+          "prevalencia_%": 14.01,
+          "taxa_selecao_%": 11.76,
+          "recall_tpr": 0.5183,
+          "fpr": 0.0523,
+          "precisao_ppv": 0.6175,
+          "risco_medio_previsto": 0.1007,
+          "calibracao_desvio_pp": -3.94
+        },
+        {
+          "grupo": "masculino",
+          "n": 68046,
+          "prevalencia_%": 14.76,
+          "taxa_selecao_%": 12.27,
+          "recall_tpr": 0.5245,
+          "fpr": 0.0531,
+          "precisao_ppv": 0.6311,
+          "risco_medio_previsto": 0.1042,
+          "calibracao_desvio_pp": -4.34
+        }
+      ],
+      "disparidade": {
+        "amplitude_paridade_demografica_pp": 0.51,
+        "amplitude_igualdade_oportunidade": 0.0062,
+        "razao_igualdade_oportunidade": 0.9882,
+        "amplitude_fpr": 0.0008,
+        "amplitude_calibracao_pp": 0.4
+      }
+    },
+    "renda": {
+      "por_grupo": [
+        {
+          "grupo": "10-15k",
+          "n": 6576,
+          "prevalencia_%": 25.71,
+          "taxa_selecao_%": 25.14,
+          "recall_tpr": 0.6525,
+          "fpr": 0.1126,
+          "precisao_ppv": 0.6672,
+          "risco_medio_previsto": 0.1775,
+          "calibracao_desvio_pp": -7.96
+        },
+        {
+          "grupo": "15-20k",
+          "n": 9321,
+          "prevalencia_%": 21.25,
+          "taxa_selecao_%": 20.35,
+          "recall_tpr": 0.6287,
+          "fpr": 0.0888,
+          "precisao_ppv": 0.6566,
+          "risco_medio_previsto": 0.1475,
+          "calibracao_desvio_pp": -6.5
+        },
+        {
+          "grupo": "20-25k",
+          "n": 11785,
+          "prevalencia_%": 18.92,
+          "taxa_selecao_%": 17.86,
+          "recall_tpr": 0.5868,
+          "fpr": 0.0834,
+          "precisao_ppv": 0.6217,
+          "risco_medio_previsto": 0.1319,
+          "calibracao_desvio_pp": -5.73
+        },
+        {
+          "grupo": "25-35k",
+          "n": 13889,
+          "prevalencia_%": 16.01,
+          "taxa_selecao_%": 15.16,
+          "recall_tpr": 0.5733,
+          "fpr": 0.0712,
+          "precisao_ppv": 0.6054,
+          "risco_medio_previsto": 0.1212,
+          "calibracao_desvio_pp": -3.89
+        },
+        {
+          "grupo": "35-50k",
+          "n": 18970,
+          "prevalencia_%": 13.94,
+          "taxa_selecao_%": 11.83,
+          "recall_tpr": 0.5013,
+          "fpr": 0.0562,
+          "precisao_ppv": 0.5909,
+          "risco_medio_previsto": 0.1017,
+          "calibracao_desvio_pp": -3.78
+        },
+        {
+          "grupo": "<10k",
+          "n": 6508,
+          "prevalencia_%": 21.01,
+          "taxa_selecao_%": 20.53,
+          "recall_tpr": 0.6317,
+          "fpr": 0.0919,
+          "precisao_ppv": 0.6465,
+          "risco_medio_previsto": 0.1476,
+          "calibracao_desvio_pp": -6.26
+        },
+        {
+          "grupo": ">=75k",
+          "n": 43958,
+          "prevalencia_%": 8.84,
+          "taxa_selecao_%": 5.22,
+          "recall_tpr": 0.359,
+          "fpr": 0.0224,
+          "precisao_ppv": 0.6081,
+          "risco_medio_previsto": 0.0625,
+          "calibracao_desvio_pp": -2.58
+        }
+      ],
+      "disparidade": {
+        "amplitude_paridade_demografica_pp": 19.92,
+        "amplitude_igualdade_oportunidade": 0.2935,
+        "razao_igualdade_oportunidade": 0.5502,
+        "amplitude_fpr": 0.0902,
+        "amplitude_calibracao_pp": 5.38
+      }
+    },
+    "idade": {
+      "por_grupo": [
+        {
+          "grupo": "18-44",
+          "n": 48274,
+          "prevalencia_%": 4.07,
+          "taxa_selecao_%": 1.56,
+          "recall_tpr": 0.2321,
+          "fpr": 0.0064,
+          "precisao_ppv": 0.6045,
+          "risco_medio_previsto": 0.0304,
+          "calibracao_desvio_pp": -1.03
+        },
+        {
+          "grupo": "45-64",
+          "n": 63706,
+          "prevalencia_%": 19.92,
+          "taxa_selecao_%": 17.08,
+          "recall_tpr": 0.537,
+          "fpr": 0.0797,
+          "precisao_ppv": 0.6261,
+          "risco_medio_previsto": 0.1426,
+          "calibracao_desvio_pp": -5.66
+        },
+        {
+          "grupo": "65+",
+          "n": 49656,
+          "prevalencia_%": 31.85,
+          "taxa_selecao_%": 30.7,
+          "recall_tpr": 0.6024,
+          "fpr": 0.1689,
+          "precisao_ppv": 0.6251,
+          "risco_medio_previsto": 0.222,
+          "calibracao_desvio_pp": -9.66
+        }
+      ],
+      "disparidade": {
+        "amplitude_paridade_demografica_pp": 29.14,
+        "amplitude_igualdade_oportunidade": 0.3703,
+        "razao_igualdade_oportunidade": 0.3853,
+        "amplitude_fpr": 0.1625,
+        "amplitude_calibracao_pp": 8.63
+      }
+    }
+  }
+}
