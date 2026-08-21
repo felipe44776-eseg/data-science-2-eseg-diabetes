@@ -220,6 +220,31 @@ ETAPAS: list[Etapa] = [
         ("data/processed/gold/_prediabetes.json",),
         nota="mesmo risco alto, 13,5 pp menos diagnostico se nao testado",
     ),
+    Etapa(
+        "naosup", "Analise nao supervisionada — MCA, fenotipos, regras",
+        ".\\tasks.ps1 naosup",
+        ("data/processed/gold/brfss_expandido.parquet",
+         "src/diabetes/eda/naosupervisionada.py"),
+        ("data/processed/gold/_naosupervisionada.json",),
+        nota="5 fenotipos com gradiente de 17x; Isolation Forest x PU refutado",
+    ),
+    Etapa(
+        "causal", "Camada causal — DAG, refutacao e E-value",
+        ".\\tasks.ps1 causal",
+        ("data/processed/gold/brfss_expandido.parquet",
+         "src/diabetes/causal/dag.py"),
+        ("data/processed/gold/_causal.json",),
+        nota="OR 0,746 sob o DAG; E-value 2,02 — fragil a confundimento",
+    ),
+    Etapa(
+        "temporal", "Validacao temporal 2015 -> 2023",
+        ".\\tasks.ps1 temporal",
+        ("data/external/brfss2015/LLCP2015.XPT",
+         "data/external/brfss2023/LLCP2023.XPT",
+         "src/diabetes/external/temporal.py"),
+        ("data/processed/gold/_validacao_temporal.json",),
+        nota="perde so 11,8 milesimos em 8 anos; sem concept drift",
+    ),
 ]
 
 

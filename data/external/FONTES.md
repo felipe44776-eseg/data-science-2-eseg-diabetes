@@ -144,6 +144,38 @@ Reproduzir: `.	asks.ps1 vigitel`
 
 ---
 
+## BRFSS 2023 (CDC) — `brfss2023/LLCP2023.XPT`
+
+| | |
+|---|---|
+| **Baixado em** | 2026-08-21 |
+| **Tamanho** | 1.205.554.400 bytes |
+| **SHA-256** | `3d3bf8ef5195bde227828ddc4c90745b76e8b304f8f5b9a043b6d99895fd1615` |
+| **Conteúdo** | 421.745 registros × 350 colunas |
+| **Origem canônica** | https://www.cdc.gov/brfss/annual_data/annual_2023.html |
+| **Baixado de** | mesmo espelho da UMT, pasta `2023 Annual Survey Data/Data Files/LLCP2023.XPT ` |
+| **Uso** | validação temporal (`docs/22`) |
+
+### O BRFSS renomeia variáveis entre anos
+
+Não é detalhe: 43 de 47 variáveis mudaram de nome ou sufixo entre 2015 e 2023.
+
+| 2015 | 2023 | | 2015 | 2023 |
+|---|---|---|---|---|
+| `DIABETE3` | `DIABETE4` | | `INCOME2` | `INCOME3` |
+| `_RFHYPE5` | `_RFHYPE6` | | `SEX` | `SEXVAR` |
+| `TOLDHI2` | `TOLDHI3` | | `_RFDRHV5` | `_RFDRHV8` |
+| `CHCKIDNY` | `CHCKDNY2` | | `ADDEPEV2` | `ADDEPEV3` |
+
+O mapeamento completo está em `EQUIVALENCIAS`, em
+`src/diabetes/external/temporal.py`, e o módulo **falha** se não encontrar
+equivalente — em vez de treinar com a coluna virando `NaN`.
+
+Sem equivalente em 2023: `USEEQUIP`, `QLACTLM2`, `_FRTLT1`, `_VEGLT1`
+(o módulo de frutas e vegetais foi descontinuado).
+
+---
+
 ## Pendentes (ver `docs/03-fontes-externas.md`)
 
 | # | Fonte | Uso |

@@ -16,7 +16,7 @@ param(
     [Parameter(Position = 0)]
     [ValidateSet('status', 'log', 'ingest', 'clean', 'folds', 'external', 'eda',
                  'explicativo', 'figuras', 'modelos', 'vigitel',
-                 'expandido', 'pesos', 'pu', 'glassbox', 'medicaid', 'trilhac', 'produto', 'notebooks', 'deck', 'escorebr', 'prediabetes',
+                 'expandido', 'pesos', 'pu', 'glassbox', 'medicaid', 'trilhac', 'produto', 'notebooks', 'deck', 'escorebr', 'prediabetes', 'naosup', 'causal', 'temporal',
                  'test', 'all', 'help')]
     [string]$Task = 'help'
 )
@@ -206,6 +206,24 @@ function Invoke-Prediabetes {
     }
 }
 
+function Invoke-NaoSup {
+    Invoke-Etapa 'naosup' 'Analise nao supervisionada' {
+        python -m diabetes.eda.naosupervisionada
+    }
+}
+
+function Invoke-Causal {
+    Invoke-Etapa 'causal' 'Camada causal: DAG, refutacao e E-value' {
+        python -m diabetes.causal.dag
+    }
+}
+
+function Invoke-Temporal {
+    Invoke-Etapa 'temporal' 'Validacao temporal 2015 -> 2023' {
+        python -m diabetes.external.temporal
+    }
+}
+
 function Invoke-Test {
     Invoke-Etapa 'test' 'Lint e testes' {
         python -m ruff check src tests
@@ -238,6 +256,9 @@ switch ($Task) {
     'deck'        { Invoke-Deck }
     'escorebr'    { Invoke-EscoreBr }
     'prediabetes' { Invoke-Prediabetes }
+    'naosup'      { Invoke-NaoSup }
+    'causal'      { Invoke-Causal }
+    'temporal'    { Invoke-Temporal }
     'test'        { Invoke-Test }
     'all' {
         Invoke-Ingest; Invoke-Clean; Invoke-Folds

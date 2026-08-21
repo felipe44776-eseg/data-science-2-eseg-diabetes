@@ -231,14 +231,17 @@ def main() -> None:
     ap.add_argument("--saida", type=Path, default=SAIDA)
     args = ap.parse_args()
 
+    # A etapa SEMPRE reextrai. Cachear a saida faz `status` marcar a etapa como
+    # obsoleta para sempre depois de qualquer edicao no modulo — o artefato fica
+    # mais velho que o codigo que o declara. Ler o .xls custa ~14 s; um detector
+    # de obsolescencia que mente custa mais.
     xls = VIGITEL / "Vigitel-2015-peso-rake.xls"
-    if not args.vigitel.exists():
-        if not xls.exists():
-            raise SystemExit(f"microdados do Vigitel ausentes: {xls}. "
-                             "URL e hash em data/external/FONTES.md")
-        print(f"  extraindo o parquet de trabalho de {xls.name}…")
-        n = extrair_parquet(xls, args.vigitel)
-        print(f"    {n:,} linhas gravadas em {args.vigitel}")
+    if not xls.exists():
+        raise SystemExit(f"microdados do Vigitel ausentes: {xls}. "
+                         "URL e hash em data/external/FONTES.md")
+    print(f"  extraindo o parquet de trabalho de {xls.name}…")
+    n = extrair_parquet(xls, args.vigitel)
+    print(f"    {n:,} linhas gravadas em {args.vigitel}")
     fonte = args.vigitel
     registrar("vigitel", "inicio", fonte=str(fonte))
 

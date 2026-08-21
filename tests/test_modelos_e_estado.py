@@ -116,6 +116,7 @@ def test_toda_etapa_declara_entrada_e_saida():
 FORNECIDOS = {
     "data/raw/Diabetes-2026.csv.pdf",           # entregue pelo professor
     "data/external/brfss2015/LLCP2015.XPT",     # baixado (ver data/external/FONTES.md)
+    "data/external/brfss2023/LLCP2023.XPT",     # idem — validacao temporal
 }
 
 

@@ -10,6 +10,8 @@ fatores associados a diabetes e predizer ocorrências — com validação contra
 
 ## 🎯 Comece por aqui
 
+**Se você tem 10 minutos e quer o todo:** [`docs/23-sintese-final.md`](docs/23-sintese-final.md).
+
 **Se você vai apresentar:** abra `reports/deck/apresentacao.html` — 19 slides,
 navegação por `←` `→`, e `Ctrl+P` exporta em PDF (paisagem, sem margens).
 
@@ -85,6 +87,12 @@ Verificado no build e na suíte de testes. Detalhe em [`docs/17`](docs/17-produt
 | Como isso vira decisão e orçamento? | [`docs/16`](docs/16-trilhaC-escore-decisao-equidade.md) escore, custo e equidade |
 | Como o produto funciona? | [`docs/17`](docs/17-produto-calculadora.md) |
 | O que cada variável significa? | [`docs/dicionario-dados.md`](docs/dicionario-dados.md) |
+| Vale para o Brasil, na prática? | [`docs/18`](docs/18-escore-recalibrado-brasil.md) escore recalibrado no Vigitel |
+| O que é a classe pré-diabetes? | [`docs/19`](docs/19-prediabetes-como-problema-proprio.md) |
+| Que grupos existem nos dados? | [`docs/20`](docs/20-analise-nao-supervisionada.md) MCA e fenótipos |
+| Isso é causal? | [`docs/21`](docs/21-camada-causal.md) DAG, refutação e E-value |
+| O modelo ainda funciona hoje? | [`docs/22`](docs/22-validacao-temporal.md) 2015 → 2023 |
+| **Tudo, resumido** | **[`docs/23`](docs/23-sintese-final.md) síntese final** |
 | Por que decidimos X? | [`docs/adr/`](docs/adr/) — 5 decisões registradas |
 
 ---
@@ -131,13 +139,17 @@ em paralelo sem conflito:
 
 | frente | arquivos | pré-requisito | estado |
 |---|---|---|---|
-| **Revisar o roteiro do deck** | `src/diabetes/produto/deck.py` | — | ✅ 19 slides prontos |
+| **Revisar o roteiro do deck** | `src/diabetes/produto/deck.py` | — | ✅ 19 slides |
 | **Revisar os notebooks** | `src/diabetes/produto/notebooks.py` | — | ✅ 6 executados |
-| **Análise causal (DAG, E-value)** | `src/diabetes/causal/` | `docs/07` §5 | ⏳ não iniciado |
-| **Não supervisionada (MCA, fenótipos)** | `src/diabetes/eda/` | base silver | ⏳ não iniciado |
-| **Pré-diabetes como problema próprio** | `src/diabetes/models/` | `docs/07` §3.3 | ⏳ não iniciado |
-| **Validação temporal 2015→2023** | `src/diabetes/external/` | baixar BRFSS 2023 | ⏳ não iniciado |
-| **Recalibração do escore para o Brasil** | `src/diabetes/eval/` | Vigitel já baixado | ⏳ não iniciado |
+| **Análise causal (DAG, E-value)** | `src/diabetes/causal/dag.py` | — | ✅ [`docs/21`](docs/21-camada-causal.md) |
+| **Não supervisionada (MCA, fenótipos)** | `src/diabetes/eda/naosupervisionada.py` | — | ✅ [`docs/20`](docs/20-analise-nao-supervisionada.md) |
+| **Pré-diabetes como problema próprio** | `src/diabetes/models/prediabetes.py` | — | ✅ [`docs/19`](docs/19-prediabetes-como-problema-proprio.md) |
+| **Validação temporal 2015→2023** | `src/diabetes/external/temporal.py` | — | ✅ [`docs/22`](docs/22-validacao-temporal.md) |
+| **Escore recalibrado para o Brasil** | `src/diabetes/eval/escore_brasil.py` | — | ✅ [`docs/18`](docs/18-escore-recalibrado-brasil.md) |
+| — | | | |
+| **Recalibrar o produto para 2023** | `src/diabetes/produto/` | `docs/22` §6 | ⏳ o próximo passo mais barato |
+| **NHANES individual com HbA1c** | `src/diabetes/external/` | baixar | ⏳ valida o PU caso a caso |
+| **Custo-efetividade (Markov)** | `src/diabetes/eval/` | `docs/16` pronto | ⏳ converte casos em QALY |
 
 **Como não pisar no pé do outro:**
 
@@ -198,12 +210,12 @@ tests/           97 testes, incl. paridade Python↔JavaScript
 
 | | |
 |---|---|
-| Pipeline | **18/18 etapas coerentes** (`.\tasks.ps1 status`) |
+| Pipeline | **23/23 etapas coerentes** (`.\tasks.ps1 status`) |
 | Testes | **100**, incluindo teste de vazamento e paridade Py↔JS |
 | Lint | `ruff` limpo |
 | CI | GitHub Actions verde a cada push |
-| Documentos | 17 + 5 ADRs · 6 notebooks · 19 slides |
-| Bases externas | BRFSS 2015 · Vigitel 2015/2023 · NHANES (prior) · CDC Open Data · painel Medicaid |
+| Documentos | **23** + 5 ADRs · 6 notebooks · 19 slides |
+| Bases externas | BRFSS **2015 e 2023** · Vigitel 2015/2023 · NHANES (prior) · CDC Open Data · painel Medicaid |
 
 ---
 
