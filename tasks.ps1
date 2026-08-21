@@ -16,7 +16,7 @@ param(
     [Parameter(Position = 0)]
     [ValidateSet('status', 'log', 'ingest', 'clean', 'folds', 'external', 'eda',
                  'explicativo', 'figuras', 'modelos', 'vigitel',
-                 'expandido', 'pesos', 'pu', 'glassbox', 'medicaid', 'trilhac', 'produto', 'notebooks', 'deck',
+                 'expandido', 'pesos', 'pu', 'glassbox', 'medicaid', 'trilhac', 'produto', 'notebooks', 'deck', 'escorebr', 'prediabetes',
                  'test', 'all', 'help')]
     [string]$Task = 'help'
 )
@@ -194,6 +194,18 @@ function Invoke-Deck {
     Invoke-Etapa 'deck' 'Deck da apresentacao' { python -m diabetes.produto.deck }
 }
 
+function Invoke-EscoreBr {
+    Invoke-Etapa 'escorebr' 'Escore recalibrado para o Brasil' {
+        python -m diabetes.eval.escore_brasil
+    }
+}
+
+function Invoke-Prediabetes {
+    Invoke-Etapa 'prediabetes' 'Pre-diabetes como problema proprio' {
+        python -m diabetes.models.prediabetes
+    }
+}
+
 function Invoke-Test {
     Invoke-Etapa 'test' 'Lint e testes' {
         python -m ruff check src tests
@@ -224,6 +236,8 @@ switch ($Task) {
     'produto'     { Invoke-Produto }
     'notebooks'   { Invoke-Notebooks }
     'deck'        { Invoke-Deck }
+    'escorebr'    { Invoke-EscoreBr }
+    'prediabetes' { Invoke-Prediabetes }
     'test'        { Invoke-Test }
     'all' {
         Invoke-Ingest; Invoke-Clean; Invoke-Folds

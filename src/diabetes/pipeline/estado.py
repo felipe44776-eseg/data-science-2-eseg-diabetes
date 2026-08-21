@@ -202,6 +202,23 @@ ETAPAS: list[Etapa] = [
         ("reports/deck/apresentacao.html",),
         nota="1280x720, autocontido, Ctrl+P exporta em PDF",
     ),
+    Etapa(
+        "escorebr", "Escore recalibrado para o Brasil",
+        ".\\tasks.ps1 escorebr",
+        ("data/external/vigitel/vigitel2015_bruto.parquet",
+         "data/processed/gold/brfss_expandido.parquet",
+         "src/diabetes/eval/escore_brasil.py"),
+        ("data/processed/gold/_escore_brasil.json",),
+        nota="escore dos EUA superestima o risco em 54% no Brasil",
+    ),
+    Etapa(
+        "prediabetes", "Pre-diabetes como problema proprio",
+        ".\\tasks.ps1 prediabetes",
+        ("data/external/brfss2015/LLCP2015.XPT",
+         "src/diabetes/models/prediabetes.py"),
+        ("data/processed/gold/_prediabetes.json",),
+        nota="mesmo risco alto, 13,5 pp menos diagnostico se nao testado",
+    ),
 ]
 
 
