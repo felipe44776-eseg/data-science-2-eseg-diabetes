@@ -51,7 +51,10 @@ NAO_COMPARAVEL = {
     "avc": "ausente no Vigitel 2015",
     "doenca_cardiaca": "ausente no Vigitel 2015",
     "vegetais": "Vigitel mede feijao e hortalicas com pergunta de forma diferente",
-    "saude_geral": "ausente no Vigitel 2015",
+    "saude_geral": ("EXISTE no Vigitel (q74) — mas a escala difere: o BRFSS separa "
+                    "'excelente' de 'muito boa' e o Vigitel nao. Fora do modelo comum "
+                    "de OR por isso; usada no escore brasileiro com mapeamento "
+                    "declarado em docs/18 §1"),
     "saude_mental_dias": "ausente no Vigitel 2015",
     "saude_fisica_dias": "ausente no Vigitel 2015",
     "dificuldade_caminhar": "ausente no Vigitel 2015",
@@ -83,6 +86,28 @@ def escolaridade_3(brfss_educa: pd.Series) -> pd.Series:
 
 
 # --------------------------------------------------------------------------
+
+#: colunas extraidas do .xls para o parquet. Inclui mais do que a comparacao
+#: binacional usa, porque `escore_brasil` consome o mesmo arquivo — extrair duas
+#: vezes um .xls de 58 MB seria desperdicio.
+COLUNAS_VIGITEL = [
+    "ano", "cidade", "pesorake", "q6", "q7", "q9", "q11", "q9_i", "q11_i",
+    "q15", "q27", "q37", "q38", "q42", "q44", "q60", "q64",
+    "q74",          # estado de saude autoavaliado — usado no escore brasileiro
+    "q75", "q76", "q88", "fesc", "fxesc", "q8_anos", "r138", "excpeso_i",
+]
+
+
+def extrair_parquet(xls: Path, destino: Path) -> int:
+    """Le o .xls (58 MB, formato OLE2) uma vez e grava o parquet de trabalho."""
+    df = pd.read_excel(xls, usecols=lambda c: c in COLUNAS_VIGITEL)
+    faltando = set(COLUNAS_VIGITEL) - set(df.columns)
+    if faltando:
+        print(f"    aviso: colunas ausentes no Vigitel 2015: {sorted(faltando)}")
+    destino.parent.mkdir(parents=True, exist_ok=True)
+    df.to_parquet(destino, index=False)
+    return len(df)
+
 
 def carregar_vigitel(caminho: Path) -> pd.DataFrame:
     """Harmoniza o Vigitel 2015 para o esquema do projeto."""
@@ -206,10 +231,15 @@ def main() -> None:
     ap.add_argument("--saida", type=Path, default=SAIDA)
     args = ap.parse_args()
 
-    fonte = args.vigitel if args.vigitel.exists() else VIGITEL / "Vigitel-2015-peso-rake.xls"
-    if not fonte.exists():
-        raise SystemExit(f"microdados do Vigitel ausentes: {fonte}. "
-                         "URL e hash em data/external/FONTES.md")
+    xls = VIGITEL / "Vigitel-2015-peso-rake.xls"
+    if not args.vigitel.exists():
+        if not xls.exists():
+            raise SystemExit(f"microdados do Vigitel ausentes: {xls}. "
+                             "URL e hash em data/external/FONTES.md")
+        print(f"  extraindo o parquet de trabalho de {xls.name}…")
+        n = extrair_parquet(xls, args.vigitel)
+        print(f"    {n:,} linhas gravadas em {args.vigitel}")
+    fonte = args.vigitel
     registrar("vigitel", "inicio", fonte=str(fonte))
 
     print("  carregando Vigitel 2015…")

@@ -115,8 +115,9 @@ ETAPAS: list[Etapa] = [
         "vigitel", "Vigitel — comparacao binacional",
         ".\\tasks.ps1 vigitel",
         ("src/diabetes/external/vigitel.py",),
-        ("data/external/vigitel/_comparacao_binacional.json",),
-        opcional=True,
+        ("data/external/vigitel/_comparacao_binacional.json",
+         "data/external/vigitel/vigitel2015_bruto.parquet"),
+        
         nota="microdados do MS; ver data/external/FONTES.md",
     ),
     # --- expansoes (docs/10 a docs/14) ------------------------------------

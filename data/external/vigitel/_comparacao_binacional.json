@@ -19,7 +19,7 @@
     "avc": "ausente no Vigitel 2015",
     "doenca_cardiaca": "ausente no Vigitel 2015",
     "vegetais": "Vigitel mede feijao e hortalicas com pergunta de forma diferente",
-    "saude_geral": "ausente no Vigitel 2015",
+    "saude_geral": "EXISTE no Vigitel (q74) — mas a escala difere: o BRFSS separa 'excelente' de 'muito boa' e o Vigitel nao. Fora do modelo comum de OR por isso; usada no escore brasileiro com mapeamento declarado em docs/18 §1",
     "saude_mental_dias": "ausente no Vigitel 2015",
     "saude_fisica_dias": "ausente no Vigitel 2015",
     "dificuldade_caminhar": "ausente no Vigitel 2015",
