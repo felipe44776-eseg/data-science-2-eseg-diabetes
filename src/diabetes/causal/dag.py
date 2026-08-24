@@ -55,6 +55,7 @@ import numpy as np
 import pandas as pd
 import statsmodels.api as sm
 
+from diabetes.eda.associacao import n_efetivo_kish
 from diabetes.pipeline.estado import registrar
 
 ENTRADA = Path("data/processed/gold/brfss_expandido.parquet")
@@ -109,7 +110,10 @@ def efeito(df: pd.DataFrame, ajustes: list[str], rotulo: str) -> dict:
     t, y, w, X = _preparar(df, ajustes)
     M = sm.add_constant(pd.concat(
         [pd.Series(t, index=X.index, name="atividade"), X], axis=1))
-    ww = w * (len(w) / w.sum())
+    # invariante 11: reescalar para media 1 faria o statsmodels ler `len(w)`
+    # observacoes independentes e devolver IC estreito demais. `explicativo.py`
+    # ja usava Kish; a camada causal era a unica do projeto que nao usava.
+    ww = w * (n_efetivo_kish(w) / w.sum())
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
         r = sm.GLM(y, M, family=sm.families.Binomial(), freq_weights=ww).fit()
@@ -164,15 +168,17 @@ def refutar(df: pd.DataFrame, ajustes: list[str], or_obs: float) -> list[dict]:
         Fechada sobre nada: recebe tudo por parametro justamente para que os tres
         testes de refutacao troquem uma peca de cada vez (tratamento embaralhado,
         covariavel de ruido, subamostra) sem tocar no resto da especificacao. O peso
-        entra reescalado para media 1 — `freq_weights` cru leria `_LLCPWT` como
-        contagem e produziria erro-padrao de uma amostra de 250 milhoes.
+        entra reescalado para o n efetivo de Kish — `freq_weights` cru leria
+        `_LLCPWT` como contagem e produziria erro-padrao de uma amostra de 250
+        milhoes; reescalar para media 1 (o que se fazia aqui) corrige isso mas
+        ainda supoe amostragem aleatoria simples, violando o invariante 11.
         """
         M = sm.add_constant(pd.concat(
             [pd.Series(tt, index=XX.index, name="atividade"), XX], axis=1))
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             r = sm.GLM(yy, M, family=sm.families.Binomial(),
-                       freq_weights=ww * (len(ww) / ww.sum())).fit()
+                       freq_weights=ww * (n_efetivo_kish(ww) / ww.sum())).fit()
         return float(np.exp(r.params["atividade"]))
 
     # 1 · placebo: embaralha o tratamento. O efeito TEM de sumir.
@@ -261,7 +267,7 @@ def main() -> None:
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             r = sm.GLM(d[DESFECHO].astype(int), M, family=sm.families.Binomial(),
-                       freq_weights=ww * (len(ww) / ww.sum())).fit()
+                       freq_weights=ww * (n_efetivo_kish(ww) / ww.sum())).fit()
         o = float(np.exp(r.params["x"]))
         e = e_value(o)["e_value_estimativa"]
         escala.append({"fator": nome, "or": round(o, 3), "e_value": e})

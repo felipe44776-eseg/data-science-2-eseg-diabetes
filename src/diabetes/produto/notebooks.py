@@ -440,15 +440,23 @@ são robustos e **transferem**.
     md("## Quanta doença está escondida"),
     cod("""
 pu = ler("_frente2_pu.json")
-print(f"c estimado só com os dados (BBE) : {pu['bbe']['c_estimado_bbe']}")
-print(f"c do NHANES (fonte externa)      : {pu['premissa']['c_nhanes']}")
-print(f"diferença                        : {abs(pu['bbe']['c_estimado_bbe']-pu['premissa']['c_nhanes']):.4f}")
+bbe = pu["bbe"]
+print("c identificavel so com os dados?", bbe["identificado"])
+print("fracao rotulada no topo, por resolucao:", bbe["sensibilidade"])
+print("espalhamento", bbe["espalhamento_na_grade"], "> limite", bbe["limite_de_plato"])
+print()
+print(f"c usado (premissa exogena, NHANES): {pu['premissa']['c_nhanes']}")
 display(pd.DataFrame(pu["sensibilidade_a_c"]))
 """),
     md("""
-Duas fontes completamente independentes — um inquérito telefônico de 2015 e um
-exame de sangue de 2021-2023 — concordam na **terceira casa decimal** sobre quanto
-do diabetes fica sem diagnóstico.
+**O estimador se recusa a estimar, e isso e um resultado.** A fracao rotulada no
+topo depende da resolucao do grid (0,62 a 0,74), logo **nao existe regiao pura de
+positivos** no espaco de 60 perguntas — nenhum perfil construivel a partir delas
+isola um subgrupo em que todos tenham diabetes. E o teto de informacao do
+questionario, medido por uma segunda via.
+
+`c` fica como premissa exogena do NHANES (0,724), sempre com a faixa de
+sensibilidade acima. Ver a retratacao em `docs/12` Passo 1.
 
 E a ironia que fecha o notebook 02:
 

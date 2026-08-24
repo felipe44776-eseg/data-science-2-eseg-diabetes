@@ -240,6 +240,29 @@ def main() -> None:
             "n_variaveis": len(variaveis),
             "n_avaliacao": int(ok.sum()),
         }
+
+        # SEGUNDA MASCARA — so as variaveis que ESTE escore usa.
+        #
+        # `comum` existe para comparar A, B e FINDRISC nas mesmas linhas, e para isso
+        # esta certa. Mas ela exige colesterol nao-nulo (VARS_A), entao o numero que
+        # sai dela e medido dentro do filtro de acesso que o projeto combate — e nao
+        # serve como valor do escore B na populacao. Publicar `roc_auc` como absoluto
+        # subestimava B em 14,4 milesimos e distorcia a comparacao com Vigitel e com
+        # o BRFSS 2023, nenhum dos dois filtrado por acesso.
+        proprio = te.copy()
+        for v in variaveis:
+            proprio &= faixas[v].notna().to_numpy()
+        proprio &= risco.notna().to_numpy()
+        m["roc_auc_amostra_propria"] = round(
+            float(roc_auc_score(y[proprio], risco[proprio])), 4)
+        m["pr_auc_amostra_propria"] = round(
+            float(average_precision_score(y[proprio], risco[proprio])), 4)
+        m["n_amostra_propria"] = int(proprio.sum())
+        m["nota_amostras"] = (
+            "roc_auc = amostra COMUM (comparavel entre A, B e FINDRISC, mas filtrada "
+            "por acesso porque VARS_A exige colesterol); roc_auc_amostra_propria = "
+            "todo o holdout respondivel por este escore — e este que vale como "
+            "desempenho na populacao.")
         resultados[nome] = {"variaveis": variaveis, "tabela": tab,
                             "calibracao": cal, "metricas": m}
         print(f"\n  === ESCORE {nome} ({len(variaveis)} perguntas, "

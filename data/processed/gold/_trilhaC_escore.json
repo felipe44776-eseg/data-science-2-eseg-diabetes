@@ -10,14 +10,14 @@
         "sexo"
       ],
       "tabela": {
-        "unidade_logit": 0.13951410683074417,
+        "unidade_logit": 0.14332431564286593,
         "pontos": {
           "idade": {
             "<35": 0,
             "35-44": 7,
             "45-54": 10,
             "55-64": 13,
-            "65+": 16
+            "65+": 15
           },
           "imc": {
             "<25": 0,
@@ -48,12 +48,12 @@
         "cortes": [
           -Infinity,
           10.0,
-          16.0,
+          15.0,
           20.0,
-          24.0,
+          23.0,
           27.0,
-          32.0,
-          36.0,
+          31.0,
+          35.0,
           Infinity
         ],
         "faixas": [
@@ -61,67 +61,71 @@
             "faixa": 0,
             "pontos_min": 0,
             "pontos_max": 10,
-            "risco_%": 0.7,
-            "n_treino": 34928
+            "risco_%": 0.66,
+            "n_treino": 34819
           },
           {
             "faixa": 1,
             "pontos_min": 11,
-            "pontos_max": 16,
-            "risco_%": 2.74,
-            "n_treino": 42499
+            "pontos_max": 15,
+            "risco_%": 2.17,
+            "n_treino": 35045
           },
           {
             "faixa": 2,
-            "pontos_min": 17,
+            "pontos_min": 16,
             "pontos_max": 20,
-            "risco_%": 5.28,
-            "n_treino": 28364
+            "risco_%": 4.97,
+            "n_treino": 39351
           },
           {
             "faixa": 3,
             "pontos_min": 21,
-            "pontos_max": 24,
-            "risco_%": 8.96,
-            "n_treino": 40363
+            "pontos_max": 23,
+            "risco_%": 8.89,
+            "n_treino": 30162
           },
           {
             "faixa": 4,
-            "pontos_min": 25,
+            "pontos_min": 24,
             "pontos_max": 27,
-            "risco_%": 14.21,
-            "n_treino": 25549
+            "risco_%": 13.28,
+            "n_treino": 37444
           },
           {
             "faixa": 5,
             "pontos_min": 28,
-            "pontos_max": 32,
-            "risco_%": 21.78,
-            "n_treino": 38821
+            "pontos_max": 31,
+            "risco_%": 21.35,
+            "n_treino": 29810
           },
           {
             "faixa": 6,
-            "pontos_min": 33,
-            "pontos_max": 36,
-            "risco_%": 31.91,
-            "n_treino": 30660
+            "pontos_min": 32,
+            "pontos_max": 35,
+            "risco_%": 31.1,
+            "n_treino": 32362
           },
           {
             "faixa": 7,
-            "pontos_min": 37,
-            "pontos_max": 47,
-            "risco_%": 48.5,
-            "n_treino": 31163
+            "pontos_min": 36,
+            "pontos_max": 46,
+            "risco_%": 47.82,
+            "n_treino": 33416
           }
         ]
       },
       "metricas": {
-        "roc_auc": 0.8082,
-        "pr_auc": 0.3671,
+        "roc_auc": 0.8093,
+        "pr_auc": 0.368,
         "pontos_min": 0,
-        "pontos_max": 47,
+        "pontos_max": 46,
         "n_variaveis": 6,
-        "n_avaliacao": 62294
+        "n_avaliacao": 62179,
+        "roc_auc_amostra_propria": 0.8076,
+        "pr_auc_amostra_propria": 0.3661,
+        "n_amostra_propria": 68133,
+        "nota_amostras": "roc_auc = amostra COMUM (comparavel entre A, B e FINDRISC, mas filtrada por acesso porque VARS_A exige colesterol); roc_auc_amostra_propria = todo o holdout respondivel por este escore — e este que vale como desempenho na populacao."
       }
     },
     "B_sem_proxy_acesso": {
@@ -133,7 +137,7 @@
         "sexo"
       ],
       "tabela": {
-        "unidade_logit": 0.13970210194330768,
+        "unidade_logit": 0.1399976052716497,
         "pontos": {
           "idade": {
             "<35": 0,
@@ -144,7 +148,7 @@
           },
           "imc": {
             "<25": 0,
-            "25-29": 3,
+            "25-29": 2,
             "30-34": 5,
             "35+": 9
           },
@@ -170,7 +174,7 @@
           15.0,
           18.0,
           23.0,
-          27.0,
+          26.0,
           30.0,
           35.0,
           Infinity
@@ -181,73 +185,77 @@
             "pontos_min": 0,
             "pontos_max": 9,
             "risco_%": 0.54,
-            "n_treino": 42155
+            "n_treino": 44125
           },
           {
             "faixa": 1,
             "pontos_min": 10,
             "pontos_max": 15,
-            "risco_%": 1.76,
-            "n_treino": 41223
+            "risco_%": 1.86,
+            "n_treino": 43897
           },
           {
             "faixa": 2,
             "pontos_min": 16,
             "pontos_max": 18,
-            "risco_%": 3.42,
-            "n_treino": 35556
+            "risco_%": 3.77,
+            "n_treino": 36163
           },
           {
             "faixa": 3,
             "pontos_min": 19,
             "pontos_max": 23,
-            "risco_%": 6.54,
-            "n_treino": 46785
+            "risco_%": 6.88,
+            "n_treino": 43584
           },
           {
             "faixa": 4,
             "pontos_min": 24,
-            "pontos_max": 27,
-            "risco_%": 12.94,
-            "n_treino": 43264
+            "pontos_max": 26,
+            "risco_%": 12.29,
+            "n_treino": 36726
           },
           {
             "faixa": 5,
-            "pontos_min": 28,
+            "pontos_min": 27,
             "pontos_max": 30,
-            "risco_%": 18.51,
-            "n_treino": 30366
+            "risco_%": 18.09,
+            "n_treino": 37844
           },
           {
             "faixa": 6,
             "pontos_min": 31,
             "pontos_max": 35,
-            "risco_%": 28.56,
-            "n_treino": 41807
+            "risco_%": 29.54,
+            "n_treino": 40201
           },
           {
             "faixa": 7,
             "pontos_min": 36,
             "pontos_max": 45,
-            "risco_%": 45.49,
-            "n_treino": 35131
+            "risco_%": 46.14,
+            "n_treino": 33741
           }
         ]
       },
       "metricas": {
-        "roc_auc": 0.804,
-        "pr_auc": 0.3595,
+        "roc_auc": 0.8036,
+        "pr_auc": 0.3587,
         "pontos_min": 0,
         "pontos_max": 45,
         "n_variaveis": 5,
-        "n_avaliacao": 62294
+        "n_avaliacao": 62179,
+        "roc_auc_amostra_propria": 0.817,
+        "pr_auc_amostra_propria": 0.3502,
+        "n_amostra_propria": 79135,
+        "nota_amostras": "roc_auc = amostra COMUM (comparavel entre A, B e FINDRISC, mas filtrada por acesso porque VARS_A exige colesterol); roc_auc_amostra_propria = todo o holdout respondivel por este escore — e este que vale como desempenho na populacao."
       }
     }
   },
   "findrisc": {
-    "roc_auc": 0.7663,
-    "pr_auc": 0.3195,
-    "n_avaliacao": 62294,
+    "roc_auc": 0.7667,
+    "pr_auc": 0.3211,
+    "n_avaliacao": 62179,
     "itens_disponiveis": 5,
     "itens_originais": 8,
     "ausentes": [
@@ -258,15 +266,15 @@
   },
   "comparacao": {
     "custo_de_remover_o_proxy_de_acesso": {
-      "roc_auc_A": 0.8082,
-      "roc_auc_B": 0.804,
-      "perda_roc_milesimos": 4.2,
-      "perda_pr_auc_%": 2.07
+      "roc_auc_A": 0.8093,
+      "roc_auc_B": 0.8036,
+      "perda_roc_milesimos": 5.7,
+      "perda_pr_auc_%": 2.53
     },
     "vs_findrisc": {
-      "escore_B_roc": 0.804,
-      "findrisc_roc": 0.7663,
-      "ganho_milesimos": 37.7
+      "escore_B_roc": 0.8036,
+      "findrisc_roc": 0.7667,
+      "ganho_milesimos": 36.9
     }
   }
 }

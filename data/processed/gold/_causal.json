@@ -1,0 +1,122 @@
+{
+  "pergunta": "atividade fisica reduz o risco de diabetes?",
+  "dag": "digraph {\n  idade -> atividade;  idade -> diabetes;\n  sexo -> atividade;   sexo -> diabetes;\n  raca -> atividade;   raca -> diabetes;\n  renda -> atividade;  renda -> diabetes;\n  escolaridade -> atividade; escolaridade -> diabetes;\n  emprego -> atividade; emprego -> diabetes;\n\n  atividade -> imc;    imc -> diabetes;                 // mediador\n  atividade -> hipertensao; hipertensao -> diabetes;    // mediador\n  atividade -> diabetes;                                // efeito direto\n\n  diabetes -> saude_geral;                              // consequencia\n  diabetes -> dificuldade_caminhar;\n  diabetes -> dias_ruins;\n  atividade -> saude_geral;                             // -> COLISOR\n}",
+  "papeis": {
+    "confundidor": [
+      "_AGE80",
+      "SEX",
+      "_RACEGR3",
+      "INCOME2",
+      "EDUCA",
+      "EMPLOY1"
+    ],
+    "mediador": [
+      "_BMI5",
+      "_RFHYPE5",
+      "TOLDHI2"
+    ],
+    "consequencia": [
+      "GENHLTH",
+      "DIFFWALK",
+      "PHYSHLTH",
+      "QLACTLM2"
+    ],
+    "proxy_de_deteccao": [
+      "CHOLCHK",
+      "HLTHPLN1",
+      "CHECKUP1"
+    ]
+  },
+  "efeitos_por_conjunto": [
+    {
+      "conjunto": "sem ajuste (associacao bruta)",
+      "n": 395611,
+      "n_ajustes": 0,
+      "or": 0.5099,
+      "ic95": [
+        0.489,
+        0.5317
+      ]
+    },
+    {
+      "conjunto": "BACKDOOR — so confundidores",
+      "n": 326137,
+      "n_ajustes": 6,
+      "or": 0.6738,
+      "ic95": [
+        0.641,
+        0.7083
+      ]
+    },
+    {
+      "conjunto": "+ mediadores (efeito DIRETO, nao total)",
+      "n": 271456,
+      "n_ajustes": 9,
+      "or": 0.8142,
+      "ic95": [
+        0.7717,
+        0.859
+      ]
+    },
+    {
+      "conjunto": "+ consequencias (COLISOR — invalido)",
+      "n": 265396,
+      "n_ajustes": 13,
+      "or": 0.9769,
+      "ic95": [
+        0.9228,
+        1.0342
+      ]
+    }
+  ],
+  "estimativa_causal_efeito_total": {
+    "conjunto": "BACKDOOR — so confundidores",
+    "n": 326137,
+    "n_ajustes": 6,
+    "or": 0.6738,
+    "ic95": [
+      0.641,
+      0.7083
+    ]
+  },
+  "refutacao": [
+    {
+      "teste": "placebo (tratamento embaralhado)",
+      "or_esperado": 1.0,
+      "or_obtido": 1.0001,
+      "passou": true,
+      "leitura": "se o efeito sobrevive ao placebo, o modelo esta capturando ruido"
+    },
+    {
+      "teste": "confundidor aleatorio acrescentado",
+      "or_esperado": 0.6738,
+      "or_obtido": 0.6738,
+      "passou": true,
+      "leitura": "sensibilidade a covariavel irrelevante indica especificacao instavel"
+    },
+    {
+      "teste": "subconjunto aleatorio (50%)",
+      "or_esperado": 0.6738,
+      "or_obtido": 0.6917,
+      "passou": true,
+      "leitura": "instabilidade em subamostra indica dependencia de poucas observacoes"
+    }
+  ],
+  "e_value": {
+    "e_value_estimativa": 2.332,
+    "e_value_ic": 2.174
+  },
+  "escala_de_referencia": [
+    {
+      "fator": "hipertensao",
+      "or": 3.884,
+      "e_value": 7.231
+    },
+    {
+      "fator": "IMC",
+      "or": 1.548,
+      "e_value": 2.468
+    }
+  ],
+  "ressalva": "dados transversais: o resultado e 'efeito sob as suposicoes do DAG', nunca 'causa'. O E-value e o unico numero que nao depende do DAG estar certo."
+}

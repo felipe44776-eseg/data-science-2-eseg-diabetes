@@ -169,6 +169,7 @@ def test_notebooks_versionados_tem_saida():
 # --- publicacao (site + GitHub Pages) ---------------------------------------
 
 SITE = Path("reports/site/index.html")
+ESCORE = Path("data/processed/gold/_trilhaC_escore.json")
 WORKFLOW_PAGES = Path(".github/workflows/pages.yml")
 
 
@@ -223,5 +224,48 @@ def test_site_liga_para_os_tres_entregaveis():
     for destino in ('href="calculadora/"', 'href="deck/"', 'href="figuras/"'):
         assert destino in html, destino
     assert "não é orientação clínica" in html, "falta o aviso de escopo"
-    # numero digitado a mao envelhece sem aviso; tudo vem de artefato
-    assert "0,804" in html and "0,7663" in html
+
+
+@pytest.mark.skipif(not SITE.exists() or not ESCORE.exists(),
+                    reason="site ou trilha C nao executados")
+def test_site_publica_os_numeros_do_artefato():
+    """Numero na pagina tem de vir do JSON, nao da memoria de quem escreveu.
+
+    A versao anterior deste teste fixava "0,804" e "0,7663" — ou seja, cometia
+    exatamente o erro que deveria impedir, e quebrou assim que a auditoria mudou os
+    numeros. Agora ele le o artefato e confere que a pagina o reflete.
+    """
+    html = SITE.read_text(encoding="utf-8")
+    esc = json.loads(ESCORE.read_text(encoding="utf-8"))
+    b = esc["escores"]["B_sem_proxy_acesso"]["metricas"]
+    vs = esc["comparacao"]["vs_findrisc"]
+
+    def ptbr(x: float, casas: int) -> str:
+        return f"{x:.{casas}f}".replace(".", ",")
+
+    # o valor de manchete e o da amostra propria, nao o da amostra comum
+    assert ptbr(b["roc_auc_amostra_propria"], 3) in html
+    assert ptbr(vs["findrisc_roc"], 4) in html
+    assert ptbr(vs["ganho_milesimos"], 1) in html
+    # e a ressalva de que o FINDRISC comparado nao e o completo
+    assert f"{esc['findrisc']['itens_disponiveis']} dos" in html
+    assert str(esc["findrisc"]["itens_originais"]) in html
+
+
+def test_escore_de_papel_recusa_formulario_em_branco():
+    """Sem guarda, o escore de papel MENTE para quem nao preencheu nada.
+
+    Em JS, `null < 35` e verdadeiro (null vira 0), `null/100` da 0 e `null == 2` da
+    false — entao um formulario vazio somava 0 pontos e a pagina exibia a faixa de
+    MENOR risco como se fosse resposta. O Python nunca teve o problema porque
+    `eval/escore.py` exige `notna()`; a pagina e o que o usuario ve.
+
+    Achado da auditoria adversarial, camada trilhac/produto.
+    """
+    assert "if (l._AGE80   == null) faltando.push" in JS
+    for var in ("_BMI5", "GENHLTH", "_RFHYPE5", "SEX"):
+        assert f"l.{var}" in JS and "faltando.push" in JS, var
+    assert "if (faltando.length) return {pontos: null, faixa: null, faltando};" in JS
+    # o render tem de tratar o caso, nao so a funcao
+    assert 'const completo = e.faixa != null;' in JS
+    assert '$("#pontos").textContent = completo ? e.pontos : "—";' in JS

@@ -1,0 +1,223 @@
+{
+  "premissa": {
+    "motivo": "docs/09 §2.3 — o IMC pesa 16% menos no Brasil",
+    "n_vigitel_completo": 53135,
+    "n_avaliacao": 15925,
+    "mapeamento_saude": {
+      "excelente/muito boa": "BRFSS 1-2 · Vigitel 1",
+      "boa": "BRFSS 3 · Vigitel 2",
+      "regular/ruim": "BRFSS 4-5 · Vigitel 3-5"
+    }
+  },
+  "escore_eua_aplicado_cru": {
+    "roc_auc": 0.8032,
+    "pr_auc": 0.242,
+    "calibracao": {
+      "observado_%": 6.495,
+      "previsto_%": 9.82,
+      "razao_previsto_observado": 1.512,
+      "erro_absoluto_pp": 3.325,
+      "inclinacao_calibracao": 0.964,
+      "intercepto_calibracao": -0.581
+    },
+    "tabela_pontos": {
+      "idade": {
+        "<35": 0,
+        "35-44": 8,
+        "45-54": 12,
+        "55-64": 15,
+        "65+": 17
+      },
+      "imc": {
+        "<25": 0,
+        "25-29": 2,
+        "30-34": 5,
+        "35+": 9
+      },
+      "saude": {
+        "excelente/muito boa": 0,
+        "boa": 6,
+        "regular/ruim": 11
+      },
+      "hipertensao": {
+        "nao": 0,
+        "sim": 7
+      },
+      "sexo": {
+        "feminino": 0,
+        "masculino": 1
+      }
+    }
+  },
+  "escore_recalibrado_br": {
+    "roc_auc": 0.8046,
+    "pr_auc": 0.2453,
+    "calibracao": {
+      "observado_%": 6.495,
+      "previsto_%": 7.352,
+      "razao_previsto_observado": 1.132,
+      "erro_absoluto_pp": 0.856,
+      "inclinacao_calibracao": 0.989,
+      "intercepto_calibracao": -0.172
+    },
+    "tabela_pontos": {
+      "idade": {
+        "<35": 0,
+        "35-44": 5,
+        "45-54": 7,
+        "55-64": 9,
+        "65+": 10
+      },
+      "imc": {
+        "<25": 0,
+        "25-29": 2,
+        "30-34": 2,
+        "35+": 2
+      },
+      "saude": {
+        "excelente/muito boa": 0,
+        "boa": 2,
+        "regular/ruim": 5
+      },
+      "hipertensao": {
+        "nao": 0,
+        "sim": 4
+      },
+      "sexo": {
+        "feminino": 0,
+        "masculino": 1
+      }
+    },
+    "faixas_de_risco": [
+      {
+        "faixa": 0,
+        "pontos_min": 0,
+        "pontos_max": 4,
+        "risco_%": 0.55,
+        "n_treino": 4818
+      },
+      {
+        "faixa": 1,
+        "pontos_min": 5,
+        "pontos_max": 7,
+        "risco_%": 0.7,
+        "n_treino": 4722
+      },
+      {
+        "faixa": 2,
+        "pontos_min": 8,
+        "pontos_max": 10,
+        "risco_%": 2.5,
+        "n_treino": 5417
+      },
+      {
+        "faixa": 3,
+        "pontos_min": 11,
+        "pontos_max": 12,
+        "risco_%": 6.5,
+        "n_treino": 4926
+      },
+      {
+        "faixa": 4,
+        "pontos_min": 13,
+        "pontos_max": 14,
+        "risco_%": 9.93,
+        "n_treino": 4143
+      },
+      {
+        "faixa": 5,
+        "pontos_min": 15,
+        "pontos_max": 16,
+        "risco_%": 14.15,
+        "n_treino": 4187
+      },
+      {
+        "faixa": 6,
+        "pontos_min": 17,
+        "pontos_max": 19,
+        "risco_%": 21.72,
+        "n_treino": 5707
+      },
+      {
+        "faixa": 7,
+        "pontos_min": 20,
+        "pontos_max": 22,
+        "risco_%": 35.87,
+        "n_treino": 3290
+      }
+    ]
+  },
+  "comparacao": {
+    "ganho_roc_auc_milesimos": 1.4,
+    "erro_de_calibracao_antes_pp": 3.325,
+    "erro_de_calibracao_depois_pp": 0.856,
+    "razao_previsto_observado_antes": 1.512,
+    "razao_previsto_observado_depois": 1.132
+  },
+  "por_faixa": [
+    {
+      "faixa": 1,
+      "pontos": "0–9",
+      "risco_EUA_%": 0.54,
+      "risco_BR_observado_%": 0.52,
+      "razao": 1.05,
+      "n": 2564
+    },
+    {
+      "faixa": 2,
+      "pontos": "10–15",
+      "risco_EUA_%": 1.86,
+      "risco_BR_observado_%": 0.71,
+      "razao": 2.63,
+      "n": 2200
+    },
+    {
+      "faixa": 3,
+      "pontos": "16–18",
+      "risco_EUA_%": 3.77,
+      "risco_BR_observado_%": 2.89,
+      "razao": 1.3,
+      "n": 1372
+    },
+    {
+      "faixa": 4,
+      "pontos": "19–23",
+      "risco_EUA_%": 6.88,
+      "risco_BR_observado_%": 3.43,
+      "razao": 2.01,
+      "n": 2614
+    },
+    {
+      "faixa": 5,
+      "pontos": "24–26",
+      "risco_EUA_%": 12.29,
+      "risco_BR_observado_%": 8.86,
+      "razao": 1.39,
+      "n": 1626
+    },
+    {
+      "faixa": 6,
+      "pontos": "27–30",
+      "risco_EUA_%": 18.09,
+      "risco_BR_observado_%": 12.11,
+      "razao": 1.49,
+      "n": 1948
+    },
+    {
+      "faixa": 7,
+      "pontos": "31–35",
+      "risco_EUA_%": 29.54,
+      "risco_BR_observado_%": 21.56,
+      "razao": 1.37,
+      "n": 2109
+    },
+    {
+      "faixa": 8,
+      "pontos": "36–45",
+      "risco_EUA_%": 46.14,
+      "risco_BR_observado_%": 29.31,
+      "razao": 1.57,
+      "n": 1492
+    }
+  ]
+}

@@ -96,7 +96,7 @@ tr.destaque td{background:color-mix(in srgb,var(--s1) 10%,transparent);font-weig
           <div style="margin-top:20px">
             <span class="tag ok">0 em quarentena</span>
             <span class="tag ok">0 fora do domínio</span>
-            <span class="tag">39,7s</span>
+            <span class="tag">66,5s</span>
           </div>
         </div>
       </div></div></section><section data-n="3/26" class="slide "><div class="olho">diagnóstico</div><div class="corpo">
@@ -216,9 +216,14 @@ tr.destaque td{background:color-mix(in srgb,var(--s1) 10%,transparent);font-weig
           <p>Segundo o NHANES, <b>27,6% dos diabéticos nos EUA não sabem</b>.
           Formalmente isto é <b>Positive-Unlabeled learning</b>, não classificação
           supervisionada.</p>
-          <p style="margin-top:20px">Estimamos a frequência de rotulagem <b>só com
-          os dados</b> e comparamos com a fonte externa:</p>
-          <table><thead><tr><th>estimativa de c</th><th class="n">valor</th></tr></thead><tbody><tr><td>só com o BRFSS (BBE)</td><td class="n">0,7283</td></tr><tr><td>NHANES (exame de sangue)</td><td class="n">0,7240</td></tr></tbody></table>
+          <p style="margin-top:20px">Tentamos estimar a frequência de rotulagem
+          <b>só com os dados</b> (BBE). O estimador <b>se recusa</b>: o valor depende
+          da resolução do grid, logo não há região pura de positivos.</p>
+          <table><thead><tr><th>fração rotulada no topo</th><th class="n">valor</th></tr></thead><tbody><tr><td>quantis=25</td><td class="n">0,6218</td></tr><tr><td>quantis=50</td><td class="n">0,6861</td></tr><tr><td>quantis=100</td><td class="n">0,7402</td></tr></tbody></table>
+          <p style="margin-top:14px;font-size:16px"><b>c fica como premissa exógena</b>
+          do NHANES (0,724), sempre com faixa de
+          sensibilidade. A não identificação é resultado: mede o teto de informação
+          do questionário.</p>
         </div>
         <div class="cartao">
           <h3>Prevalência verdadeira</h3>
@@ -231,14 +236,14 @@ tr.destaque td{background:color-mix(in srgb,var(--s1) 10%,transparent);font-weig
         </div>
       </div></div></section><section data-n="13/26" class="slide "><div class="olho">predição</div><div class="corpo">
       <h2>O teto não é o algoritmo. É a informação.</h2>
-      <table><thead><tr><th>modelo</th><th class="n">variáveis</th><th class="n">PR-AUC</th></tr></thead><tbody><tr><td>prevalência constante</td><td class="n">—</td><td class="n">0,1428</td></tr><tr><td>regra clínica</td><td class="n">3</td><td class="n">0,3350</td></tr><tr><td>logística</td><td class="n">18</td><td class="n">0,4139</td></tr><tr><td>gradient boosting calibrado</td><td class="n">18</td><td class="n">0,4504</td></tr><tr class="destaque"><td>boosting + 39 variáveis recuperadas</td><td class="n">60</td><td class="n">0,4733</td></tr></tbody></table>
+      <table><thead><tr><th>modelo</th><th class="n">variáveis</th><th class="n">PR-AUC</th></tr></thead><tbody><tr><td>prevalência constante</td><td class="n">—</td><td class="n">0,1428</td></tr><tr><td>regra clínica</td><td class="n">3</td><td class="n">0,3350</td></tr><tr><td>logística</td><td class="n">18</td><td class="n">0,4139</td></tr><tr><td>gradient boosting calibrado</td><td class="n">18</td><td class="n">0,4504</td></tr><tr class="destaque"><td>boosting + 39 variáveis recuperadas</td><td class="n">60</td><td class="n">0,4725</td></tr></tbody></table>
       <p style="margin-top:22px">A escada inteira de modelos rendeu <b>+0,036</b> de
       PR-AUC. <b>Recuperar variáveis descartadas rendeu +0,029</b> — quase o mesmo,
       sem tocar no algoritmo.</p>
       <p>E o ruído de rótulo limita a acurácia a <b>99,3%</b>: o teto de Bayes
       <b>não</b> é a restrição.</p></div></section><section data-n="14/26" class="slide "><div class="olho">equidade</div><div class="corpo">
       <h2>O ganho médio escondia uma redistribuição</h2>
-      <div class="barra-lista"><div class="bl"><div class="rot">branco não-hispânico</div><div class="tr"><i style="width:3.4%;background:var(--alerta)"></i></div><div class="v">-0,45 pp</div></div><div class="bl"><div class="rot">negro não-hispânico</div><div class="tr"><i style="width:79.0%;background:var(--s3)"></i></div><div class="v">10,59 pp</div></div><div class="bl"><div class="rot">hispânico</div><div class="tr"><i style="width:80.7%;background:var(--s3)"></i></div><div class="v">10,81 pp</div></div><div class="bl"><div class="rot">multirracial</div><div class="tr"><i style="width:100.0%;background:var(--s3)"></i></div><div class="v">13,40 pp</div></div></div>
+      <div class="barra-lista"><div class="bl"><div class="rot">branco não-hispânico</div><div class="tr"><i style="width:6.5%;background:var(--alerta)"></i></div><div class="v">-0,90 pp</div></div><div class="bl"><div class="rot">negro não-hispânico</div><div class="tr"><i style="width:77.9%;background:var(--s3)"></i></div><div class="v">10,78 pp</div></div><div class="bl"><div class="rot">hispânico</div><div class="tr"><i style="width:94.2%;background:var(--s3)"></i></div><div class="v">13,03 pp</div></div><div class="bl"><div class="rot">multirracial</div><div class="tr"><i style="width:100.0%;background:var(--s3)"></i></div><div class="v">13,83 pp</div></div></div>
       <p style="margin-top:24px">Ganho de <i>recall</i> ao recuperar as variáveis.
       O ganho médio de 6,6% é <b>inteiramente das minorias</b>.</p>
       <div class="citacao" style="margin-top:18px">
@@ -254,13 +259,20 @@ tr.destaque td{background:color-mix(in srgb,var(--s1) 10%,transparent);font-weig
           respondidas por alguém que nunca viu um médico.</p>
         </div>
         <div>
-          <table><thead><tr><th>pontos</th><th class="n">risco</th></tr></thead><tbody><tr><td>0–9</td><td class="n">0,54%</td></tr><tr><td>10–15</td><td class="n">1,76%</td></tr><tr><td>16–18</td><td class="n">3,42%</td></tr><tr><td>19–23</td><td class="n">6,54%</td></tr><tr><td>24–27</td><td class="n">12,94%</td></tr><tr><td>28–30</td><td class="n">18,51%</td></tr><tr><td>31–35</td><td class="n">28,56%</td></tr><tr class="destaque"><td>36–45</td><td class="n">45,49%</td></tr></tbody></table>
+          <table><thead><tr><th>pontos</th><th class="n">risco</th></tr></thead><tbody><tr><td>0–9</td><td class="n">0,54%</td></tr><tr><td>10–15</td><td class="n">1,86%</td></tr><tr><td>16–18</td><td class="n">3,77%</td></tr><tr><td>19–23</td><td class="n">6,88%</td></tr><tr><td>24–26</td><td class="n">12,29%</td></tr><tr><td>27–30</td><td class="n">18,09%</td></tr><tr><td>31–35</td><td class="n">29,54%</td></tr><tr class="destaque"><td>36–45</td><td class="n">46,14%</td></tr></tbody></table>
         </div>
       </div>
-      <p style="margin-top:20px">ROC-AUC <b>0,804</b> contra <b>0,766</b> do
-      <b>FINDRISC</b> — o padrão internacional desde 2003, na mesma amostra.</p></div></section><section data-n="16/26" class="slide "><div class="olho">decisão</div><div class="corpo">
+      <p style="margin-top:20px">ROC-AUC
+      <b>0,804</b> contra
+      <b>0,767</b> do <b>FINDRISC</b>, na mesma amostra.</p>
+      <p style="margin-top:8px;font-size:16px;color:var(--tinta2)">O BRFSS só
+      reproduz <b>5 dos
+      8</b> itens do FINDRISC — faltam cintura,
+      histórico familiar e glicemia prévia. A leitura correta é <i>com o mesmo
+      número de perguntas, o nosso discrimina melhor</i>, não que supere o
+      instrumento completo.</p></div></section><section data-n="16/26" class="slide "><div class="olho">decisão</div><div class="corpo">
       <h2>Do modelo ao orçamento</h2>
-      <table><thead><tr><th>testar</th><th class="n">casos encontrados</th><th class="n">NNS</th><th class="n">custo por caso</th></tr></thead><tbody><tr><td>5%</td><td class="n">21,0%</td><td class="n">2,23</td><td class="n">R$ 71</td></tr><tr class="destaque"><td>10%</td><td class="n">40,2%</td><td class="n">2,33</td><td class="n">R$ 75</td></tr><tr><td>15%</td><td class="n">54,4%</td><td class="n">2,59</td><td class="n">R$ 83</td></tr><tr><td>20%</td><td class="n">65,4%</td><td class="n">2,87</td><td class="n">R$ 92</td></tr><tr><td>25%</td><td class="n">73,6%</td><td class="n">3,19</td><td class="n">R$ 102</td></tr><tr><td>30%</td><td class="n">79,2%</td><td class="n">3,55</td><td class="n">R$ 114</td></tr></tbody></table>
+      <table><thead><tr><th>testar</th><th class="n">casos encontrados</th><th class="n">NNS</th><th class="n">custo por caso</th></tr></thead><tbody><tr><td>5%</td><td class="n">20,9%</td><td class="n">2,24</td><td class="n">R$ 72</td></tr><tr class="destaque"><td>10%</td><td class="n">38,8%</td><td class="n">2,42</td><td class="n">R$ 77</td></tr><tr><td>15%</td><td class="n">52,1%</td><td class="n">2,70</td><td class="n">R$ 86</td></tr><tr><td>20%</td><td class="n">63,1%</td><td class="n">2,97</td><td class="n">R$ 95</td></tr><tr><td>25%</td><td class="n">72,8%</td><td class="n">3,22</td><td class="n">R$ 103</td></tr><tr><td>30%</td><td class="n">78,8%</td><td class="n">3,57</td><td class="n">R$ 114</td></tr></tbody></table>
       <p style="margin-top:22px">Testando <b>10% da população</b> encontramos
       <b>40% dos casos</b> a <b>R$ 75</b> por caso (HbA1c na faixa da tabela SUS).</p>
       <p>As duas faixas superiores do escore concentram <b>60,5% dos casos</b> a
@@ -293,13 +305,13 @@ tr.destaque td{background:color-mix(in srgb,var(--s1) 10%,transparent);font-weig
         <div>
           <p>Aplicamos o escore de 5 perguntas em <b>15.925</b>
           entrevistas do Vigitel, sem tocar em nada.</p>
-          <table><thead><tr><th></th><th class="n">ROC-AUC</th><th class="n">previsto/observado</th></tr></thead><tbody><tr><td>escore dos EUA, cru</td><td class="n">0,8020</td><td class="n">1,536</td></tr><tr class="destaque"><td>recalibrado no Vigitel</td><td class="n">0,8046</td><td class="n">1,132</td></tr></tbody></table>
+          <table><thead><tr><th></th><th class="n">ROC-AUC</th><th class="n">previsto/observado</th></tr></thead><tbody><tr><td>escore dos EUA, cru</td><td class="n">0,8032</td><td class="n">1,512</td></tr><tr class="destaque"><td>recalibrado no Vigitel</td><td class="n">0,8046</td><td class="n">1,132</td></tr></tbody></table>
           <p style="margin-top:14px">A ordenação de risco atravessa o equador
           intacta. O <b>nível</b> não: cru, o escore
           <span class="queda">superestima o risco em 54%</span>.</p>
         </div>
         <div>
-          <div class="numerao">3,48
+          <div class="numerao">3,33
             <small> p.p.</small></div>
           <p class="legenda">erro de calibração antes</p>
           <div class="numerao" style="margin-top:18px;color:var(--s3)">
@@ -317,11 +329,11 @@ tr.destaque td{background:color-mix(in srgb,var(--s1) 10%,transparent);font-weig
       <div class="duas" style="margin-top:24px">
         <div class="cartao"><h3>Foi testado</h3>
           <div class="numerao">53,4<small>%</small></div>
-          <p>têm diagnóstico · n = 39.524</p></div>
+          <p>têm diagnóstico · n = 39.541</p></div>
         <div class="cartao"><h3>Não foi testado</h3>
           <div class="numerao" style="color:var(--alerta)">
             39,9<small>%</small></div>
-          <p>têm diagnóstico · n = 4.544</p></div>
+          <p>têm diagnóstico · n = 4.534</p></div>
       </div>
       <div class="citacao" style="margin-top:28px">
         <b>13,5 pontos</b> de diferença
@@ -330,30 +342,30 @@ tr.destaque td{background:color-mix(in srgb,var(--s1) 10%,transparent);font-weig
       </div>
       <p style="margin-top:20px;font-size:16px;color:var(--tinta2)">E uma previsão
       nossa caiu aqui: dissemos que pré-diabetes seria “largamente artefato de
-      detecção”. Medido, o risco prediz <b>0,771</b>
+      detecção”. Medido, o risco prediz <b>0,770</b>
       contra <b>0,644</b> do acesso —
       o exagero era nosso.</p></div></section><section data-n="20/26" class="slide "><div class="olho">sem rótulo</div><div class="corpo">
       <h2>Cinco fenótipos que os dados formam sozinhos</h2>
       <p class="sub">MCA (não PCA — os dados são categóricos) + k-means, com o alvo
       <b>escondido</b> do algoritmo. Depois medimos a prevalência em cada grupo.</p>
-      <div class="barra-lista"><div class="bl"><div class="rot">fenótipo 4 · 9,2% da amostra</div><div class="tr"><i style="width:100.0%;background:#d03b3b"></i></div><div class="v">40,12%</div></div><div class="bl"><div class="rot">fenótipo 3 · 12,7% da amostra</div><div class="tr"><i style="width:64.2%;background:#eb6834"></i></div><div class="v">25,76%</div></div><div class="bl"><div class="rot">fenótipo 1 · 24,3% da amostra</div><div class="tr"><i style="width:53.2%;background:#eb6834"></i></div><div class="v">21,34%</div></div><div class="bl"><div class="rot">fenótipo 0 · 25,3% da amostra</div><div class="tr"><i style="width:24.2%;background:#2a78d6"></i></div><div class="v">9,71%</div></div><div class="bl"><div class="rot">fenótipo 2 · 28,5% da amostra</div><div class="tr"><i style="width:5.9%;background:#2a78d6"></i></div><div class="v">2,36%</div></div></div>
+      <div class="barra-lista"><div class="bl"><div class="rot">fenótipo 2 · 13,3% da amostra</div><div class="tr"><i style="width:100.0%;background:#d03b3b"></i></div><div class="v">35,81%</div></div><div class="bl"><div class="rot">fenótipo 0 · 17,6% da amostra</div><div class="tr"><i style="width:60.6%;background:#eb6834"></i></div><div class="v">21,69%</div></div><div class="bl"><div class="rot">fenótipo 4 · 20,1% da amostra</div><div class="tr"><i style="width:56.0%;background:#eb6834"></i></div><div class="v">20,07%</div></div><div class="bl"><div class="rot">fenótipo 3 · 26,9% da amostra</div><div class="tr"><i style="width:16.7%;background:#2a78d6"></i></div><div class="v">5,97%</div></div><div class="bl"><div class="rot">fenótipo 1 · 22,1% da amostra</div><div class="tr"><i style="width:7.5%;background:#2a78d6"></i></div><div class="v">2,67%</div></div></div>
       <div class="duas" style="margin-top:22px">
         <div><p><b>Gradiente de 17×</b> entre o fenótipo mais leve e o mais grave,
         sem que o algoritmo jamais tenha visto quem tem diabetes.</p></div>
-        <div><p>O eixo 1 da MCA (16,2% da inércia)
+        <div><p>O eixo 1 da MCA (15,8% da inércia)
         <b>não é diabetes</b> — é <b>morbidade acumulada</b>. E o FP-Growth
         reconstruiu a síndrome metabólica sozinho: colesterol + hipertensão +
-        IMC 30+ + saúde ruim, <b>lift 3,83</b>.</p></div>
+        IMC 30+ + saúde ruim, <b>lift 3,94</b>.</p></div>
       </div></div></section><section data-n="21/26" class="slide "><div class="olho">isso é causal?</div><div class="corpo">
       <h2>A mesma pergunta, quatro respostas</h2>
       <p class="sub">“Atividade física reduz o risco de diabetes?” — o número
       depende inteiramente do que se ajusta. O DAG é o que diz qual é a pergunta.</p>
-      <table><thead><tr><th>conjunto de ajuste</th><th class="n">OR</th><th class="n">leitura</th></tr></thead><tbody><tr><td>sem ajuste</td><td class="n">0,5099</td><td class="n">confundido por idade e renda</td></tr><tr class="destaque"><td>backdoor — só confundidores</td><td class="n">0,7459</td><td class="n">efeito TOTAL, sob o DAG</td></tr><tr><td>+ mediadores</td><td class="n">0,8642</td><td class="n">efeito direto — não é o total</td></tr><tr><td>+ consequências</td><td class="n">0,9826</td><td class="n">INVÁLIDO — viés de colisor</td></tr></tbody></table>
+      <table><thead><tr><th>conjunto de ajuste</th><th class="n">OR</th><th class="n">leitura</th></tr></thead><tbody><tr><td>sem ajuste</td><td class="n">0,5099</td><td class="n">confundido por idade e renda</td></tr><tr class="destaque"><td>backdoor — só confundidores</td><td class="n">0,6738</td><td class="n">efeito TOTAL, sob o DAG</td></tr><tr><td>+ mediadores</td><td class="n">0,8142</td><td class="n">efeito direto — não é o total</td></tr><tr><td>+ consequências</td><td class="n">0,9769</td><td class="n">INVÁLIDO — viés de colisor</td></tr></tbody></table>
       <div class="duas" style="margin-top:20px">
         <div><p>As três refutações <b>passam</b> — placebo, confundidor aleatório
         e subamostra. <span class="tag ok">especificação estável</span></p></div>
-        <div><p>Mas o <b>E-value é 2,02</b> —
-        contra 7,80 da hipertensão.
+        <div><p>Mas o <b>E-value é 2,33</b> —
+        contra 7,23 da hipertensão.
         Um confundidor não medido plausível — <b>capacidade funcional prévia</b> —
         derrubaria o efeito.</p></div>
       </div>
@@ -365,11 +377,11 @@ tr.destaque td{background:color-mix(in srgb,var(--s1) 10%,transparent);font-weig
       <p class="sub">Todo holdout do projeto é aleatório <i>dentro</i> de 2015.
       Isso testa gente nova, não um <b>mundo</b> novo. Baixamos 2023 —
       421.745 respostas, oito anos e uma pandemia depois.</p>
-      <table><thead><tr><th></th><th class="n">ROC-AUC</th><th class="n">ECE</th><th class="n">prevalência</th></tr></thead><tbody><tr><td>holdout 2015 (interno)</td><td class="n">0,8494</td><td class="n">0,0031</td><td class="n">13,47%</td></tr><tr class="destaque"><td>BRFSS 2023 (externo)</td><td class="n">0,8376</td><td class="n">0,0067</td><td class="n">14,18%</td></tr><tr><td>treinado em 2023</td><td class="n">0,8396</td><td class="n">0,0030</td><td class="n">14,27%</td></tr></tbody></table>
+      <table><thead><tr><th></th><th class="n">ROC-AUC</th><th class="n">ECE</th><th class="n">prevalência</th></tr></thead><tbody><tr><td>holdout 2015 (interno)</td><td class="n">0,8495</td><td class="n">0,0037</td><td class="n">13,47%</td></tr><tr class="destaque"><td>BRFSS 2023 (externo)</td><td class="n">0,8376</td><td class="n">0,0070</td><td class="n">14,18%</td></tr><tr><td>treinado em 2023</td><td class="n">0,8396</td><td class="n">0,0022</td><td class="n">14,27%</td></tr></tbody></table>
       <div class="tres" style="margin-top:22px">
         <div class="cartao"><h3>Perda em 8 anos</h3>
           <div class="numerao" style="font-size:44px">
-            11,8<small> milésimos</small></div>
+            11,9<small> milésimos</small></div>
           <p>de ROC-AUC</p></div>
         <div class="cartao"><h3>Para o modelo nativo</h3>
           <div class="numerao" style="font-size:44px;color:var(--s3)">
@@ -386,7 +398,7 @@ tr.destaque td{background:color-mix(in srgb,var(--s1) 10%,transparent);font-weig
       <b>4,33</b>
       por mês — <b>+32%</b>.</p></div></section><section data-n="23/26" class="slide "><div class="olho">o padrão</div><div class="corpo">
       <h2>Quatro transposições, uma assinatura só</h2>
-      <table><thead><tr><th>quando o mundo muda…</th><th class="n">discriminação</th><th class="n">calibração</th></tr></thead><tbody><tr><td>arquivo entregue → população</td><td class="n">robusta</td><td class="n">erro de +3,26 p.p.</td></tr><tr><td>EUA → Brasil</td><td class="n">0,804 → 0,802</td><td class="n">superestima 54%</td></tr><tr><td>2015 → 2023</td><td class="n">−11,8 milésimos</td><td class="n">ECE 4× pior</td></tr><tr><td>class_weight → calibrado</td><td class="n">idêntica</td><td class="n">ECE 67× pior</td></tr></tbody></table>
+      <table><thead><tr><th>quando o mundo muda…</th><th class="n">discriminação</th><th class="n">calibração</th></tr></thead><tbody><tr><td>arquivo entregue → população</td><td class="n">robusta</td><td class="n">erro de +3,26 p.p.</td></tr><tr><td>EUA → Brasil</td><td class="n">0,804 → 0,803</td><td class="n">superestima 54%</td></tr><tr><td>2015 → 2023</td><td class="n">−11,9 milésimos</td><td class="n">ECE 4× pior</td></tr><tr><td>class_weight → calibrado</td><td class="n">idêntica</td><td class="n">ECE 67× pior</td></tr></tbody></table>
       <div class="citacao" style="margin-top:30px">
         <b>AUC é a métrica que quase todo mundo reporta — e a que menos se quebra.</b><br>
         O que quebra é a calibração, e quase ninguém a mede.
@@ -455,7 +467,8 @@ tr.destaque td{background:color-mix(in srgb,var(--s1) 10%,transparent);font-weig
           prevalência em um terço e é uma amostra de quem tem acesso ao sistema
           de saúde.</p>
           <p style="margin-top:16px"><b>Publicamos os pesos</b> que corrigem
-          95,6% desse viés — utilizáveis por qualquer pessoa que use o mesmo CSV.</p>
+          93,4% desse viés —
+          utilizáveis por qualquer pessoa que use o mesmo CSV.</p>
         </div>
         <div>
           <h3>Sobre o valor</h3>

@@ -1,0 +1,442 @@
+{
+  "n_amostra_mca": 60000,
+  "mca": {
+    "inercia_%": [
+      15.83,
+      7.07,
+      5.85,
+      5.64,
+      5.27,
+      5.03
+    ],
+    "eixos": {
+      "eixo_1": {
+        "negativo": [
+          {
+            "categoria": "idade__18-44",
+            "coord": -0.686
+          },
+          {
+            "categoria": "saude__boa+",
+            "coord": -0.555
+          },
+          {
+            "categoria": "hipertensao__nao",
+            "coord": -0.464
+          },
+          {
+            "categoria": "renda__alta",
+            "coord": -0.436
+          },
+          {
+            "categoria": "artrite__nao",
+            "coord": -0.417
+          },
+          {
+            "categoria": "colesterol__nao",
+            "coord": -0.357
+          }
+        ],
+        "positivo": [
+          {
+            "categoria": "avc__sim",
+            "coord": 1.59
+          },
+          {
+            "categoria": "dpoc__sim",
+            "coord": 1.578
+          },
+          {
+            "categoria": "dific_caminhar__sim",
+            "coord": 1.483
+          },
+          {
+            "categoria": "doenca_renal__sim",
+            "coord": 1.482
+          },
+          {
+            "categoria": "cardiopatia__sim",
+            "coord": 1.416
+          },
+          {
+            "categoria": "saude__ruim",
+            "coord": 1.352
+          }
+        ]
+      },
+      "eixo_2": {
+        "negativo": [
+          {
+            "categoria": "cardiopatia__sim",
+            "coord": -0.761
+          },
+          {
+            "categoria": "idade__65+",
+            "coord": -0.537
+          },
+          {
+            "categoria": "sexo__masculino",
+            "coord": -0.506
+          },
+          {
+            "categoria": "colesterol__sim",
+            "coord": -0.449
+          },
+          {
+            "categoria": "hipertensao__sim",
+            "coord": -0.445
+          },
+          {
+            "categoria": "imc__25-29",
+            "coord": -0.436
+          }
+        ],
+        "positivo": [
+          {
+            "categoria": "asma__sim",
+            "coord": 0.953
+          },
+          {
+            "categoria": "depressao__sim",
+            "coord": 0.784
+          },
+          {
+            "categoria": "idade__18-44",
+            "coord": 0.752
+          },
+          {
+            "categoria": "dpoc__sim",
+            "coord": 0.703
+          },
+          {
+            "categoria": "renda__baixa",
+            "coord": 0.529
+          },
+          {
+            "categoria": "saude__ruim",
+            "coord": 0.511
+          }
+        ]
+      }
+    }
+  },
+  "fenotipos": [
+    {
+      "cluster": 2,
+      "n": 7972,
+      "%_da_amostra": 13.3,
+      "prevalencia_diabetes_%": 35.81,
+      "perfil_modal": {
+        "hipertensao": "sim (74%)",
+        "colesterol": "sim (65%)",
+        "cardiopatia": "nao (64%)",
+        "avc": "nao (80%)",
+        "doenca_renal": "nao (82%)",
+        "artrite": "sim (75%)",
+        "dpoc": "nao (60%)",
+        "asma": "nao (68%)",
+        "depressao": "nao (52%)",
+        "dific_caminhar": "sim (77%)",
+        "fumou": "sim (67%)",
+        "ativ_fisica": "nao (55%)",
+        "sexo": "feminino (63%)",
+        "idade": "65+ (50%)",
+        "imc": "30+ (46%)",
+        "saude": "ruim (81%)",
+        "renda": "baixa (65%)"
+      }
+    },
+    {
+      "cluster": 0,
+      "n": 10565,
+      "%_da_amostra": 17.6,
+      "prevalencia_diabetes_%": 21.69,
+      "perfil_modal": {
+        "hipertensao": "sim (66%)",
+        "colesterol": "sim (57%)",
+        "cardiopatia": "nao (97%)",
+        "avc": "nao (99%)",
+        "doenca_renal": "nao (98%)",
+        "artrite": "sim (52%)",
+        "dpoc": "nao (96%)",
+        "asma": "nao (85%)",
+        "depressao": "nao (65%)",
+        "dific_caminhar": "nao (77%)",
+        "fumou": "nao (59%)",
+        "ativ_fisica": "sim (59%)",
+        "sexo": "feminino (58%)",
+        "idade": "45-64 (73%)",
+        "imc": "30+ (72%)",
+        "saude": "regular (63%)",
+        "renda": "alta (44%)"
+      }
+    },
+    {
+      "cluster": 4,
+      "n": 12044,
+      "%_da_amostra": 20.1,
+      "prevalencia_diabetes_%": 20.07,
+      "perfil_modal": {
+        "hipertensao": "sim (66%)",
+        "colesterol": "sim (59%)",
+        "cardiopatia": "nao (82%)",
+        "avc": "nao (94%)",
+        "doenca_renal": "nao (97%)",
+        "artrite": "sim (51%)",
+        "dpoc": "nao (92%)",
+        "asma": "nao (93%)",
+        "depressao": "nao (92%)",
+        "dific_caminhar": "nao (90%)",
+        "fumou": "sim (59%)",
+        "ativ_fisica": "sim (80%)",
+        "sexo": "feminino (54%)",
+        "idade": "65+ (90%)",
+        "imc": "25-29 (46%)",
+        "saude": "boa+ (48%)",
+        "renda": "media (48%)"
+      }
+    },
+    {
+      "cluster": 3,
+      "n": 16165,
+      "%_da_amostra": 26.9,
+      "prevalencia_diabetes_%": 5.97,
+      "perfil_modal": {
+        "hipertensao": "nao (76%)",
+        "colesterol": "nao (63%)",
+        "cardiopatia": "nao (98%)",
+        "avc": "nao (99%)",
+        "doenca_renal": "nao (99%)",
+        "artrite": "nao (80%)",
+        "dpoc": "nao (99%)",
+        "asma": "nao (92%)",
+        "depressao": "nao (89%)",
+        "dific_caminhar": "nao (99%)",
+        "fumou": "nao (65%)",
+        "ativ_fisica": "sim (94%)",
+        "sexo": "feminino (54%)",
+        "idade": "45-64 (82%)",
+        "imc": "25-29 (48%)",
+        "saude": "boa+ (87%)",
+        "renda": "alta (87%)"
+      }
+    },
+    {
+      "cluster": 1,
+      "n": 13254,
+      "%_da_amostra": 22.1,
+      "prevalencia_diabetes_%": 2.67,
+      "perfil_modal": {
+        "hipertensao": "nao (92%)",
+        "colesterol": "nao (91%)",
+        "cardiopatia": "nao (100%)",
+        "avc": "nao (100%)",
+        "doenca_renal": "nao (99%)",
+        "artrite": "nao (95%)",
+        "dpoc": "nao (98%)",
+        "asma": "nao (87%)",
+        "depressao": "nao (86%)",
+        "dific_caminhar": "nao (98%)",
+        "fumou": "nao (67%)",
+        "ativ_fisica": "sim (80%)",
+        "sexo": "feminino (54%)",
+        "idade": "18-44 (85%)",
+        "imc": "<25 (43%)",
+        "saude": "boa+ (69%)",
+        "renda": "alta (55%)"
+      }
+    }
+  ],
+  "regras_de_associacao": [
+    {
+      "condicoes": [
+        "colesterol=sim",
+        "hipertensao=sim",
+        "imc=30+",
+        "saude=ruim"
+      ],
+      "n_condicoes": 4,
+      "suporte_%": 2.23,
+      "confianca_%": 56.04,
+      "lift": 3.94
+    },
+    {
+      "condicoes": [
+        "colesterol=sim",
+        "dific_caminhar=sim",
+        "hipertensao=sim",
+        "imc=30+"
+      ],
+      "n_condicoes": 4,
+      "suporte_%": 2.15,
+      "confianca_%": 52.01,
+      "lift": 3.65
+    },
+    {
+      "condicoes": [
+        "colesterol=sim",
+        "imc=30+",
+        "saude=ruim"
+      ],
+      "n_condicoes": 3,
+      "suporte_%": 2.54,
+      "confianca_%": 51.94,
+      "lift": 3.65
+    },
+    {
+      "condicoes": [
+        "hipertensao=sim",
+        "imc=30+",
+        "saude=ruim"
+      ],
+      "n_condicoes": 3,
+      "suporte_%": 2.92,
+      "confianca_%": 50.53,
+      "lift": 3.55
+    },
+    {
+      "condicoes": [
+        "artrite=sim",
+        "hipertensao=sim",
+        "imc=30+",
+        "saude=ruim"
+      ],
+      "n_condicoes": 4,
+      "suporte_%": 2.03,
+      "confianca_%": 50.5,
+      "lift": 3.55
+    },
+    {
+      "condicoes": [
+        "colesterol=sim",
+        "dific_caminhar=sim",
+        "imc=30+"
+      ],
+      "n_condicoes": 3,
+      "suporte_%": 2.46,
+      "confianca_%": 48.67,
+      "lift": 3.42
+    },
+    {
+      "condicoes": [
+        "colesterol=sim",
+        "dific_caminhar=sim",
+        "hipertensao=sim",
+        "saude=ruim"
+      ],
+      "n_condicoes": 4,
+      "suporte_%": 2.3,
+      "confianca_%": 48.25,
+      "lift": 3.39
+    },
+    {
+      "condicoes": [
+        "dific_caminhar=sim",
+        "imc=30+",
+        "saude=ruim"
+      ],
+      "n_condicoes": 3,
+      "suporte_%": 2.22,
+      "confianca_%": 47.08,
+      "lift": 3.31
+    },
+    {
+      "condicoes": [
+        "artrite=sim",
+        "colesterol=sim",
+        "hipertensao=sim",
+        "saude=ruim"
+      ],
+      "n_condicoes": 4,
+      "suporte_%": 2.52,
+      "confianca_%": 46.74,
+      "lift": 3.28
+    },
+    {
+      "condicoes": [
+        "artrite=sim",
+        "dific_caminhar=sim",
+        "hipertensao=sim",
+        "imc=30+"
+      ],
+      "n_condicoes": 4,
+      "suporte_%": 2.23,
+      "confianca_%": 46.69,
+      "lift": 3.28
+    },
+    {
+      "condicoes": [
+        "colesterol=sim",
+        "hipertensao=sim",
+        "saude=ruim"
+      ],
+      "n_condicoes": 3,
+      "suporte_%": 3.67,
+      "confianca_%": 46.43,
+      "lift": 3.26
+    },
+    {
+      "condicoes": [
+        "dific_caminhar=sim",
+        "hipertensao=sim",
+        "imc=30+"
+      ],
+      "n_condicoes": 3,
+      "suporte_%": 2.82,
+      "confianca_%": 46.34,
+      "lift": 3.25
+    },
+    {
+      "condicoes": [
+        "artrite=sim",
+        "imc=30+",
+        "saude=ruim"
+      ],
+      "n_condicoes": 3,
+      "suporte_%": 2.36,
+      "confianca_%": 45.71,
+      "lift": 3.21
+    },
+    {
+      "condicoes": [
+        "colesterol=sim",
+        "imc=30+",
+        "renda=baixa"
+      ],
+      "n_condicoes": 3,
+      "suporte_%": 2.13,
+      "confianca_%": 45.47,
+      "lift": 3.19
+    },
+    {
+      "condicoes": [
+        "artrite=sim",
+        "colesterol=sim",
+        "dific_caminhar=sim",
+        "saude=ruim"
+      ],
+      "n_condicoes": 4,
+      "suporte_%": 2.08,
+      "confianca_%": 45.33,
+      "lift": 3.18
+    }
+  ],
+  "atipicos": {
+    "n_atipicos": 21649,
+    "n_pu_alto": 21654,
+    "n_intersecao_nao_rotulados": 712,
+    "esperado_por_acaso": 940,
+    "lift_da_intersecao": 0.76,
+    "prevalencia_entre_atipicos_%": 18.25,
+    "prevalencia_geral_%": 13.22
+  },
+  "perfil_intersecao": {
+    "n": 712,
+    "idade_media": 64.8,
+    "imc_medio": 36.7,
+    "%_hipertensao": 96.5,
+    "%_doenca_renal": 36.7,
+    "%_fez_exame": 84.3,
+    "%_minoria": 62.5
+  }
+}

@@ -25,10 +25,10 @@ Tudo o mais é consequência disso, e cada consequência foi medida.
 | 3 | **O arquivo é uma amostra de quem tem acesso**: 96,3% fizeram exame de colesterol contra 77,9% da população | +18,3 p.p. | `docs/05` §6.3 |
 | 4 | **Pré-diabetes não é o mesmo continuum** — nove variáveis divergem, duas invertem de direção | ROC 0,669 para separar | `docs/07` · `docs/19` |
 | 5 | **Brasil × EUA: seis de oito fatores convergem.** Hipertensão coincide na 3ª decimal | 3,136 vs 3,146 | `docs/09` |
-| 6 | **Duas fontes independentes concordam sobre o subdiagnóstico** — dados do BRFSS e exame de sangue do NHANES | 0,7283 vs 0,7240 | `docs/12` |
+| 6 | **Nenhum perfil de questionário isola um grupo em que todos têm diabetes** — o teto de informação, medido por uma segunda via | `c` não identificável | `docs/12` |
 | 7 | **O ganho de variáveis novas é inteiramente das minorias** | −0,45 pp vs +10,6 a +13,4 pp | `docs/10` |
 | 8 | **Mesmo risco fisiológico, 13,5 pontos menos diagnóstico** para quem não foi testado | 53,4% vs 39,9% | `docs/19` |
-| 9 | **Cinco perguntas batem o FINDRISC**, padrão internacional desde 2003 | +37,7 milésimos | `docs/16` |
+| 9 | **Cinco perguntas batem o FINDRISC** (5 dos 8 itens dele) | +36,9 milésimos | `docs/16` |
 | 10 | **O modelo de 2015 perde 11,8 milésimos em oito anos** e fica a 2 milésimos de um treinado em 2023 | sem concept drift | `docs/22` |
 
 ---
@@ -53,7 +53,7 @@ intercepto. Nunca foi preciso retreinar.
 
 ---
 
-## Nove previsões nossas que os dados não confirmaram
+## Doze previsões nossas que os dados não confirmaram
 
 Cada uma estava escrita em documento anterior e foi **corrigida na fonte**.
 
@@ -68,6 +68,14 @@ Cada uma estava escrita em documento anterior e foi **corrigida na fonte**.
 | 7 | Pré-diabetes é "largamente artefato de detecção" | Risco prediz melhor que acesso (0,771 vs 0,644) | `docs/19` |
 | 8 | Isolation Forest acharia os casos ocultos | **Lift 0,81** — as listas se evitam | `docs/20` §4 |
 | 9 | Saúde autoavaliada não existe no Vigitel | Existe (`q74`) — quase custou a variável mais forte do escore brasileiro | `docs/18` |
+| 10 | O BBE **valida** a premissa de `c` do NHANES | Não valida: o estimador não identifica `c`, e a concordância era artefato de hiperparâmetro | `docs/12` |
+| 11 | O IPF do raking **converge**; o resíduo vem do aparo | Não convergia — 17% da amostra sem alvo. E o aparo é aplicado depois do laço, logo nunca poderia explicar | `docs/11` |
+| 12 | O resíduo de viés era **inteiramente** acesso | 32,9% dele era um bug de codificação de renda | `docs/11` |
+
+> As três últimas vieram de uma **auditoria adversarial** (20 agentes, 7 camadas,
+> cada achado submetido a um cético). Ela confirmou 8 achados e derrubou 4 — e o
+> mais importante é que 100 verificações independentes **passaram**, incluindo a
+> reconstrução do PDF, a partição sem vazamento e a paridade Python↔JavaScript.
 
 **E três hipóteses testadas e rejeitadas com medição**, em vez de assumidas:
 imputação e mediação como explicação do IMC brasileiro (`docs/18` §6), e células
@@ -83,7 +91,7 @@ conjuntas ausentes como explicação do resíduo de raking (`docs/11` §B).
 | **Apresentação** — 19 slides, exporta em PDF | `reports/deck/apresentacao.html` |
 | **Escore de papel** — 5 perguntas, aplicável sem computador | `docs/16` |
 | **Escore brasileiro** — recalibrado no Vigitel | `docs/18` |
-| **Pesos publicáveis** — corrigem 95,6% do viés do CSV do Kaggle | `docs/11` |
+| **Pesos publicáveis** — corrigem 93,4% do viés do CSV do Kaggle | `docs/11` |
 | **6 notebooks** executados, com saídas | `notebooks/` |
 | **25 documentos + 5 ADRs** | `docs/` |
 | **Pipeline de 24 etapas** com detector de obsolescência | `.\tasks.ps1 status` |

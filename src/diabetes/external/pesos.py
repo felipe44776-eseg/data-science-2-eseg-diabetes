@@ -44,7 +44,8 @@ MARGENS = ["idade_g", "sexo", "raca_g", "escolaridade_g", "renda_g"]
 
 #: margem de ACESSO. Fica separada porque o trade-off e severo: fecha mais vies,
 #: mas exige que os 3,7% do arquivo que nao fizeram exame de colesterol
-#: representem 25,5% da populacao. Ver `docs/11` §4.
+#: representem 22,3% da populacao. Ver `docs/11` §4. (Era 25,5% quando a
+#: margem-alvo usava `CHOLCHK` bruta — construto diferente, ver `margens_alvo`.)
 MARGEM_ACESSO = "exame_g"
 
 LIMITE_PESO = 8.0   # aparo de peso extremo, em multiplos da media
@@ -133,9 +134,18 @@ def _categorizar(df: pd.DataFrame, fonte: str) -> pd.DataFrame:
                                    labels=[1, 2, 3, 4])
     out["renda_g"] = pd.cut(renda.astype(float), [0, 3, 5, 6, 7, 8],
                             labels=[1, 2, 3, 4, 5])
-    # margem de acesso: exame de colesterol nos ultimos 5 anos
+    # margem de acesso: exame de colesterol nos ultimos 5 anos.
+    #
+    # Tem de ser `_CHOLCHK`, nao `CHOLCHK`. Sao construtos diferentes: a derivada
+    # `_CHOLCHK == 1` e "exame nos ultimos 5 anos" e existe para TODO respondente;
+    # a bruta `CHOLCHK == 1` e "no ultimo ano" e so e perguntada a quem respondeu
+    # `BLOODCHO == 1`. Calibrar uma contra a outra deixava de fora do alvo
+    # justamente os 49.206 que nunca fizeram exame — a populacao que a analise
+    # existe para representar. Alem disso a margem saia 74,5%, contra os 77,9%
+    # que `docs/05` publica para a mesma quantidade: contradicao interna.
     if fonte == "brfss":
-        out["exame_g"] = (df["CHOLCHK"] == 1).astype(float).where(df["CHOLCHK"].notna())
+        cholchk = df["_CHOLCHK__orig"] if "_CHOLCHK__orig" in df else df["_CHOLCHK"]
+        out["exame_g"] = (cholchk == 1).astype(float).where(cholchk.notna())
     else:
         out["exame_g"] = df["exame_colesterol"].astype(float)
     return out
@@ -166,7 +176,19 @@ def raking(cats: pd.DataFrame, alvo: dict[str, pd.Series], variaveis: list[str],
             valido = ~np.isnan(c)
             atual = pd.Series(w[valido]).groupby(c[valido]).sum()
             atual = atual / atual.sum()
-            mapa = (alvo[v] / atual).reindex(atual.index).fillna(1.0).to_dict()
+            razao = (alvo[v] / atual).reindex(atual.index)
+            if razao.isna().any():
+                # `fillna(1.0)` aqui deixava a categoria sem alvo com fator fixo 1,0
+                # nas 300 iteracoes: o IPF nao converge e o diagnostico publicado
+                # culpa o algoritmo errado. Foi assim que a perda de `INCOME2 == 7`
+                # (17% da amostra) passou despercebida. Falhar alto e o conserto.
+                orfas = sorted(razao.index[razao.isna()].tolist())
+                raise ValueError(
+                    f"raking: a variavel {v!r} tem categoria presente na amostra e "
+                    f"ausente na margem-alvo: {orfas}. O alvo e inalcancavel por "
+                    f"construcao e o IPF nao pode convergir. Quase sempre significa "
+                    f"que uma categoria valida virou NaN antes daqui.")
+            mapa = razao.to_dict()
             w[valido] *= np.array([mapa.get(x, 1.0) for x in c[valido]])
         w *= len(w) / w.sum()                 # normaliza para media 1
         # desvio medido DEPOIS do passe completo, senao o criterio de parada
@@ -301,7 +323,7 @@ def main() -> None:
             "deff": round(len(w_ac) / ne_ac, 2),
             "razao_de_pesos": round(float(w_ac.max() / w_ac.min())),
             "aviso": ("exige que os 3,7% do arquivo sem exame de colesterol representem "
-                      "25,5% da populacao; dobra o efeito de desenho"),
+                      "22,3% da populacao; dobra o efeito de desenho"),
         },
         "curva_de_aparo": curva,
         "arquivo_de_pesos": str(args.pesos),

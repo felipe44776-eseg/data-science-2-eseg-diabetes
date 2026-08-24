@@ -99,28 +99,86 @@ def ajustar_ps(df: pd.DataFrame, cols: list[str], te: np.ndarray) -> np.ndarray:
 # estimacao de c pelos proprios dados
 # --------------------------------------------------------------------------
 
-def estimar_c_bbe(p_s: np.ndarray, s: np.ndarray, quantis: int = 50) -> dict:
-    """Best Bin Estimation (Garg et al. 2021), versao pratica.
+#: resolucoes usadas para testar se o estimador tem plato. Nao sao ajustaveis de
+#: proposito: o ponto do teste e que o resultado NAO pode depender da resolucao.
+GRADE_QUANTIS = (25, 50, 100)
 
-    Ideia: numa regiao do espaco onde *todos* tem a doenca, a fracao rotulada
-    tende a c. Percorremos os quantis do escore de cima para baixo e olhamos a
-    fracao com s=1 no topo — o supremo dessa fracao estima c.
+#: espalhamento maximo tolerado entre as resolucoes de `GRADE_QUANTIS` para que a
+#: estimativa seja considerada identificada. 0,02 e uma ordem de grandeza abaixo
+#: da diferenca que separaria as leituras substantivas de `c`.
+TOLERANCIA_PLATO = 0.02
 
-    Se o valor estimado for muito menor que o do NHANES, a leitura correta nao e
-    "o NHANES esta errado": e que **nao existe regiao pura** de positivos no
-    espaco de 60 variaveis de questionario. Isso mede o teto de informacao de
-    novo, agora por outro caminho.
-    """
-    ordem = np.argsort(-p_s)
-    s_ord = s[ordem]
+
+def _fracao_no_topo(p_s: np.ndarray, s: np.ndarray, quantis: int) -> list[dict]:
+    """Fracao rotulada acumulada, do topo do escore para baixo, em `quantis` bins."""
+    s_ord = s[np.argsort(-p_s)]
     n = len(s_ord)
-    fracoes = []
-    for q in range(1, quantis + 1):
-        k = int(n * q / quantis)
-        fracoes.append({"topo_%": round(q / quantis * 100, 1),
-                        "fracao_rotulada": round(float(s_ord[:k].mean()), 4)})
-    topo = max(f["fracao_rotulada"] for f in fracoes)
-    return {"c_estimado_bbe": round(topo, 4), "curva": fracoes[:12]}
+    return [{"topo_%": round(q / quantis * 100, 2),
+             "fracao_rotulada": round(float(s_ord[:int(n * q / quantis)].mean()), 4)}
+            for q in range(1, quantis + 1)]
+
+
+def estimar_c_bbe(p_s: np.ndarray, s: np.ndarray, quantis: int = 50) -> dict:
+    """Best Bin Estimation (Garg et al. 2021) — com o teste de identificacao que faltava.
+
+    Ideia: numa regiao do espaco onde *todos* tem a doenca, a fracao rotulada tende
+    a c. Percorre-se o escore de cima para baixo e olha-se a fracao com s=1 no topo.
+
+    O QUE ESTAVA ERRADO
+    -------------------
+    A versao anterior devolvia `max` sobre essa curva. Como a curva e monotonicamente
+    decrescente nestes dados, o `max` e **sempre o primeiro bin** — ou seja, a fracao
+    rotulada no topo `100/quantis` %. Isso faz a "estimativa" ser uma funcao crescente
+    e ilimitada de `quantis`, um parametro que nao estava declarado em documento
+    nenhum: q=5 da 0,42 · q=50 da 0,7283 · q=1000 da 0,891. A coincidencia com o
+    NHANES (0,724) na terceira casa decimal era artefato do default 50, nao validacao.
+
+    O QUE FAZ AGORA
+    ---------------
+    So devolve estimativa se houver **plato**: o mesmo estimador em tres resolucoes
+    (`GRADE_QUANTIS`) tem de concordar dentro de `TOLERANCIA_PLATO`. Sem plato nao ha
+    regiao pura de positivos, `c` nao e identificavel por este caminho e o retorno traz
+    `c_estimado_bbe = None` com o motivo e a curva de sensibilidade — que e o resultado
+    honesto, e ainda diz algo: mede o teto de informacao do questionario por outra via.
+
+    Devolve tambem `sensibilidade`, para que qualquer pessoa reproduza o argumento.
+    """
+    por_resolucao = {q: _fracao_no_topo(p_s, s, q)[0]["fracao_rotulada"]
+                     for q in GRADE_QUANTIS}
+    espalhamento = max(por_resolucao.values()) - min(por_resolucao.values())
+
+    # Penalidade de amostra finita — o que faltava na versao anterior (Garg et al.
+    # tem uma; esta e a versao minima). O bin do topo em q=100 tem n/100 linhas, e
+    # so o ruido amostral ja produz espalhamento. Comparar contra tolerancia fixa
+    # reprovaria plato verdadeiro em amostra pequena, o erro oposto ao original.
+    piso_ruido = max(
+        2.0 * float(np.sqrt(max(f * (1 - f), 1e-12) / max(len(s) // q, 1)))
+        for q, f in por_resolucao.items())
+    limite = max(TOLERANCIA_PLATO, piso_ruido)
+    tem_plato = espalhamento <= limite
+
+    curva = _fracao_no_topo(p_s, s, quantis)
+    saida = {
+        "c_estimado_bbe": round(curva[0]["fracao_rotulada"], 4) if tem_plato else None,
+        "identificado": tem_plato,
+        "quantis": quantis,
+        "sensibilidade": {f"q={q}": v for q, v in por_resolucao.items()},
+        "espalhamento_na_grade": round(espalhamento, 4),
+        "limite_de_plato": round(limite, 4),
+        "piso_de_ruido_amostral": round(piso_ruido, 4),
+        "tolerancia_plato": TOLERANCIA_PLATO,
+        "curva": curva[:12],
+    }
+    if not tem_plato:
+        saida["motivo"] = (
+            f"sem plato: a estimativa varia {espalhamento:.4f} entre "
+            f"quantis={GRADE_QUANTIS}, acima do limite {limite:.4f} (o maior entre "
+            f"a tolerancia {TOLERANCIA_PLATO} e o ruido amostral "
+            f"{piso_ruido:.4f}). A curva de "
+            f"fracao rotulada e monotonicamente decrescente, entao o estimador so "
+            f"devolve a fracao no topo 100/quantis% — nao ha regiao pura de "
+            f"positivos no espaco de questionario e c nao e identificavel aqui.")
+    return saida
 
 
 # --------------------------------------------------------------------------
@@ -241,12 +299,20 @@ def main() -> None:
     prev_s = float(np.average(s, weights=w_pop))
     print(f"    prevalencia de DIAGNOSTICO (ponderada): {prev_s*100:.3f}%")
 
-    print("\n  estimando c pelos proprios dados (BBE)…")
-    bbe = estimar_c_bbe(p_s, s)
-    print(f"    c estimado pelos dados : {bbe['c_estimado_bbe']:.4f}")
-    print(f"    c do NHANES            : {C_NHANES:.4f}")
-    print("    (BBE << NHANES significa que nao ha regiao pura de positivos no "
-          "espaco de questionario — nao que o NHANES esteja errado)")
+    # o BBE roda so no holdout: `ajustar_ps` devolve predicao in-sample para 80%
+    # das linhas (e diz isso no proprio comentario), e estimar c sobre elas mede o
+    # ajuste do classificador, nao a estrutura de rotulagem.
+    print("\n  estimando c pelos proprios dados (BBE, so no holdout)…")
+    bbe = estimar_c_bbe(p_s[te], s[te])
+    if bbe["identificado"]:
+        print(f"    c estimado pelos dados : {bbe['c_estimado_bbe']:.4f}")
+    else:
+        print("    c NAO IDENTIFICAVEL por este caminho")
+        print(f"    {bbe['motivo']}")
+    print(f"    sensibilidade a resolucao: {bbe['sensibilidade']}")
+    print(f"    c do NHANES (premissa exogena, `C_NHANES`): {C_NHANES:.4f}")
+    print("    Nada a jusante depende do BBE: prevalencia verdadeira, SAR e perfil "
+          "dos ocultos saem de C_NHANES, com a faixa de sensibilidade abaixo.")
 
     print("\n  sensibilidade a c — prevalencia VERDADEIRA implicada:")
     sens = []

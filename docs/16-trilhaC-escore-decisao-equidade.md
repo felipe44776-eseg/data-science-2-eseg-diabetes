@@ -75,7 +75,7 @@ produto.
 | escore | perguntas | ROC-AUC | PR-AUC |
 |---|---|---|---|
 | **A · completo** (inclui "tem colesterol alto?") | 6 | 0,8082 | 0,3671 |
-| **B · sem proxy de acesso** | **5** | **0,8040** | 0,3595 |
+| **B · sem proxy de acesso** | **5** | **0,8036** | 0,3591 |
 | | | **−4,2 milésimos** | **−2,07%** |
 
 *Ambos avaliados na **mesma amostra** de 62.294 pessoas do holdout. Na primeira
@@ -101,12 +101,25 @@ um médico** — o que é o requisito, não um detalhe.
 
 | instrumento | ROC-AUC | PR-AUC |
 |---|---|---|
-| **Nosso escore (5 perguntas)** | **0,8040** | **0,3595** |
-| FINDRISC aproximado (5 de 8 itens) | 0,7663 | 0,3195 |
-| | **+37,7 milésimos** | **+12,5%** |
+| **Nosso escore (5 perguntas)** | **0,8036** | **0,3591** |
+| FINDRISC aproximado (5 de 8 itens) | 0,7667 | 0,3199 |
+| | **+36,9 milésimos** | **+12,3%** |
+
+> **Duas amostras, dois números — e o artefato publica os dois.** A tabela acima é
+> a **amostra comum** (62.179 linhas), a única em que A, B e FINDRISC são
+> comparáveis. Mas ela exige colesterol não nulo, por causa de `VARS_A`, e portanto
+> está **filtrada por acesso**. Como valor do escore B *na população* ela
+> subestima: em todo o holdout que B consegue responder (**79.135 linhas**), o
+> ROC-AUC é **0,8170** — 13,4 milésimos acima.
+>
+> A auditoria encontrou este número sendo usado como absoluto em `docs/18`, no
+> site e no deck. Agora `_trilhaC_escore.json` grava os dois campos
+> (`roc_auc` e `roc_auc_amostra_propria`) com a nota do que cada um significa, e as
+> superfícies públicas usam o segundo. É o mesmo erro de 2015 — comparar em
+> amostras diferentes — só que na direção contrária.
 
 **O escore de 5 perguntas bate o FINDRISC** — o instrumento de referência
-internacional desde 2003 — por 37,7 milésimos de ROC-AUC, na mesma amostra.
+internacional desde 2003 — por 36,9 milésimos de ROC-AUC, na mesma amostra.
 
 **Ressalva honesta:** o FINDRISC original tem 8 itens e o BRFSS 2015 só permite
 5 — faltam circunferência abdominal, histórico familiar e glicemia elevada
@@ -245,7 +258,7 @@ desigual é **apropriada** quando a prevalência é desigual — selecionar negr
 |---|---|---|
 | 1 | Escore de **5 perguntas**, 0–45 pontos, risco de 0,54% a 45,49% | O entregável aplicável em papel |
 | 2 | Remover o proxy de acesso custa **2,07%** de PR-AUC | Barato — e o escore passa a alcançar quem nunca viu médico |
-| 3 | **Bate o FINDRISC** em +37,7 milésimos com o mesmo nº de itens | Instrumento competitivo com o padrão internacional |
+| 3 | **Bate o FINDRISC** em +36,9 milésimos com o mesmo nº de itens | Instrumento competitivo com o padrão internacional |
 | 4 | Supera "rastrear todos/ninguém" entre limiar 2% e 45% | Usar o escore é melhor que não usar, em toda faixa plausível |
 | 5 | Duas faixas superiores: **60,5% dos casos a R$ 69–109** | Programa viável |
 | 6 | Faixa inferior: R$ 3.593 por caso, **52× mais** | Rastrear por escore é o que torna viável |

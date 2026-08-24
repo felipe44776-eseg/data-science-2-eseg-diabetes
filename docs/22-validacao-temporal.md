@@ -47,13 +47,13 @@ comparação é limpa.
 
 ## 2. O resultado
 
-| | ROC-AUC | PR-AUC | ECE | prevalência |
-|---|---|---|---|---|
-| holdout **2015** (interno) | **0,8494** | 0,4664 | 0,0031 | 13,47% |
-| **BRFSS 2023** (externo) | **0,8376** | 0,4577 | 0,0067 | 14,18% |
-| modelo **treinado em 2023** | 0,8396 | 0,4643 | 0,0030 | 14,18% |
+| | ROC-AUC | ECE | prevalência |
+|---|---|---|---|
+| holdout **2015** (interno) | **0,8495** | 0,0038 | 13,47% |
+| **BRFSS 2023** (externo) | **0,8376** | 0,0070 | 14,18% |
+| modelo **treinado em 2023** | 0,8396 | 0,0022 | 14,27% |
 
-> ### O modelo de 2015 perde 11,8 milésimos em oito anos.
+> ### O modelo de 2015 perde 11,9 milésimos em oito anos.
 > E chega a **2 milésimos** de um modelo treinado nos próprios dados de 2023 —
 > **99,8% do desempenho nativo**.
 
@@ -76,11 +76,11 @@ importa mais que a métrica:
 ### Covariate shift: **forte**
 
 Um classificador que tenta distinguir 2015 de 2023 **só pelas covariáveis**
-atinge **AUC 0,8020**. A população mudou bastante:
+atinge **AUC 0,8237**. A população mudou bastante:
 
 | variável | 2015 | 2023 | dif. padronizada |
 |---|---|---|---|
-| `INCOME2` (faixa de renda) | 5,61 | 6,57 | **+0,38** |
+| `INCOME2` (faixa de renda) | 5,83 | 7,01 | **+0,52** |
 | `EDUCA` | 4,91 | 5,05 | +0,14 |
 | **`MENTHLTH`** (dias ruins de saúde mental) | 3,29 | **4,33** | **+0,13** |
 | `_SMOKER3` | 3,32 | 3,43 | +0,12 |
@@ -110,8 +110,8 @@ Recalibração de intercepto e inclinação, usando **20% dos dados de 2023**:
 
 | | ROC-AUC | **ECE** | risco médio previsto |
 |---|---|---|---|
-| modelo de 2015, cru | 0,8376 | **0,00674** | 13,50% |
-| **recalibrado** | 0,8373 | **0,00170** | **14,25%** |
+| modelo de 2015, cru | 0,8376 | **0,00699** | 13,48% |
+| **recalibrado** | 0,8373 | **0,00207** | **14,25%** |
 | *(prevalência real de 2023)* | | | *14,18%* |
 
 **O erro de calibração cai 4×** e o risco médio previsto passa de 13,50% para
@@ -130,9 +130,9 @@ exatamente o mesmo padrão que `docs/18` encontrou na transposição para o Bras
 
 | # | Achado | Consequência |
 |---|---|---|
-| 1 | Perda de **11,8 milésimos** de ROC-AUC em 8 anos | O modelo envelhece bem |
+| 1 | Perda de **11,9 milésimos** de ROC-AUC em 8 anos | O modelo envelhece bem |
 | 2 | **2 milésimos** de distância para o modelo nativo de 2023 | Retreinar quase não ganha |
-| 3 | Covariate shift **forte** (AUC do detector 0,802) | A população mudou muito |
+| 3 | Covariate shift **forte** (AUC do detector 0,824) | A população mudou muito |
 | 4 | Label shift moderado: prevalência **+7,2%** | Diabetes cresceu |
 | 5 | **Concept drift praticamente ausente** | A relação risco→doença é estável |
 | 6 | Recalibrar corta o ECE em **4×** com 20% de dados novos | Manutenção barata |
@@ -155,6 +155,12 @@ Fica como o próximo passo mais barato e de maior retorno do produto.
 
 ## 7. Limitações
 
+0. **A comparação de renda entre anos exigiu correção.** `INCOME3` (2023) tem 7 =
+   50-75k **e 9 = 100-150k**; `INCOME2` (2015) tem 7 = 50-75k. A máscara antiga
+   apagava o código 7 nos dois e o 9 só em 2023, abrindo buracos **diferentes** em
+   cada ano — o deslocamento medido era em parte artefato. Corrigido (auditoria):
+   o `+0,38` publicado passou a **+0,52**, agora comparando as duas colunas
+   íntegras. Ver `docs/10`.
 1. **Duas fotos, não uma série.** Com 2015 e 2023 apenas, não dá para separar
    tendência de choque pandêmico. Os anos intermediários resolveriam.
 2. **42 das 60 variáveis.** O modelo comparado é mais fraco que o de `docs/10`

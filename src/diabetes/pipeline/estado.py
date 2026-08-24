@@ -129,7 +129,7 @@ ETAPAS: list[Etapa] = [
         ("data/processed/gold/brfss_expandido.parquet",
          "data/processed/gold/_features_expandidas.json",
          "data/processed/gold/_frente1_expandido.json"),
-        nota="+6,6% PR-AUC; o ganho e inteiramente das minorias",
+        nota="+6,4% PR-AUC; o ganho e inteiramente das minorias",
     ),
     Etapa(
         "pesos", "Frente 5 — inferencia complexa e pesos publicaveis",
@@ -138,14 +138,14 @@ ETAPAS: list[Etapa] = [
          "data/processed/diabetes_silver.parquet", "src/diabetes/external/pesos.py"),
         ("data/processed/gold/_frente5_pesos.json",
          "data/processed/gold/pesos_arquivo_entregue.parquet"),
-        nota="raking remove 95,6% do vies com a margem de acesso",
+        nota="raking remove 93,4% do vies com a margem de acesso",
     ),
     Etapa(
         "pu", "Frente 2 — Positive-Unlabeled",
         ".\\tasks.ps1 pu",
         ("data/processed/gold/brfss_expandido.parquet", "src/diabetes/models/pu.py"),
         ("data/processed/gold/_frente2_pu.json",),
-        nota="BBE estima c=0,7283 contra 0,7240 do NHANES",
+        nota="BBE nao identifica c (sem regiao pura); c=0,724 vem do NHANES",
     ),
     Etapa(
         "glassbox", "Frente 3 — EBM e predicao conforme",

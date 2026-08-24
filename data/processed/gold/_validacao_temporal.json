@@ -1,0 +1,200 @@
+{
+  "mapeamento": {
+    "resolvidas": {
+      "DIABETE3": "DIABETE4",
+      "_RFHYPE5": "_RFHYPE6",
+      "TOLDHI2": "TOLDHI3",
+      "_MICHD": "_MICHD",
+      "CVDSTRK3": "CVDSTRK3",
+      "CHCKIDNY": "CHCKDNY2",
+      "HAVARTH3": "HAVARTH4",
+      "CHCCOPD1": "CHCCOPD3",
+      "ASTHMA3": "ASTHMA3",
+      "CHCOCNCR": "CHCOCNC1",
+      "CHCSCNCR": "CHCSCNC1",
+      "ADDEPEV2": "ADDEPEV3",
+      "DIFFWALK": "DIFFWALK",
+      "BLIND": "BLIND",
+      "DECIDE": "DECIDE",
+      "DIFFDRES": "DIFFDRES",
+      "DIFFALON": "DIFFALON",
+      "_AGE80": "_AGE80",
+      "SEX": "_SEX",
+      "EDUCA": "EDUCA",
+      "INCOME2": "INCOME3",
+      "EMPLOY1": "EMPLOY1",
+      "MARITAL": "MARITAL",
+      "RENTHOM1": "RENTHOM1",
+      "_CHLDCNT": "_CHLDCNT",
+      "VETERAN3": "VETERAN3",
+      "_RACEGR3": "_RACEGR3",
+      "_HISPANC": "_HISPANC",
+      "_BMI5": "_BMI5",
+      "WTKG3": "WTKG3",
+      "HTM4": "HTM4",
+      "GENHLTH": "GENHLTH",
+      "MENTHLTH": "MENTHLTH",
+      "PHYSHLTH": "PHYSHLTH",
+      "_TOTINDA": "_TOTINDA",
+      "SMOKE100": "SMOKE100",
+      "_SMOKER3": "_SMOKER3",
+      "_RFDRHV5": "_RFDRHV8",
+      "DROCDY3_": "DROCDY4_",
+      "_DRNKWEK": "_DRNKWK2",
+      "_RFBING5": "_RFBING6",
+      "DRNKANY5": "DRNKANY6",
+      "SEATBELT": "SEATBELT"
+    },
+    "sem_equivalente_de_nome": [
+      "USEEQUIP",
+      "QLACTLM2",
+      "_FRTLT1",
+      "_VEGLT1"
+    ],
+    "fora_por_construto": [
+      "MAXVO2_",
+      "_PACAT1",
+      "_PA150R2",
+      "_PASTRNG",
+      "STRFREQ_",
+      "FRUTDA1_",
+      "VEGEDA1_",
+      "FTJUDA1_",
+      "BEANDAY_",
+      "GRENDAY_",
+      "ORNGDAY_",
+      "USENOW3",
+      "QSTLANG",
+      "INTERNET"
+    ],
+    "n_variaveis_comuns": 42
+  },
+  "modelo_2015_no_holdout_2015": {
+    "n": 86728,
+    "prevalencia_%": 13.473,
+    "roc_auc": 0.8495,
+    "pr_auc": 0.4662,
+    "recall_esp90": 0.5246,
+    "brier": 0.09048,
+    "ece": 0.00375,
+    "risco_medio_previsto_%": 13.193
+  },
+  "modelo_2015_em_2023": {
+    "n": 421745,
+    "prevalencia_%": 14.176,
+    "roc_auc": 0.8376,
+    "pr_auc": 0.4577,
+    "recall_esp90": 0.495,
+    "brier": 0.09609,
+    "ece": 0.00699,
+    "risco_medio_previsto_%": 13.477
+  },
+  "modelo_2015_em_2023_recalibrado": {
+    "n": 337497,
+    "prevalencia_%": 14.142,
+    "roc_auc": 0.8373,
+    "pr_auc": 0.4574,
+    "recall_esp90": 0.4944,
+    "brier": 0.09588,
+    "ece": 0.00207,
+    "risco_medio_previsto_%": 14.252
+  },
+  "modelo_treinado_em_2023": {
+    "n": 84185,
+    "prevalencia_%": 14.272,
+    "roc_auc": 0.8396,
+    "pr_auc": 0.4642,
+    "recall_esp90": 0.4989,
+    "brier": 0.09598,
+    "ece": 0.00222,
+    "risco_medio_previsto_%": 14.204
+  },
+  "deslocamento": {
+    "auc_do_detector_de_ano": 0.8237,
+    "interpretacao_covariate_shift": "forte",
+    "label_shift": {
+      "prevalencia_2015_%": 13.224,
+      "prevalencia_2023_%": 14.176,
+      "variacao_relativa_%": 7.2
+    },
+    "variaveis_que_mais_mudaram": [
+      {
+        "variavel": "INCOME2",
+        "media_2015": 5.83,
+        "media_2023": 7.014,
+        "dif_padronizada": 0.515
+      },
+      {
+        "variavel": "EDUCA",
+        "media_2015": 4.908,
+        "media_2023": 5.048,
+        "dif_padronizada": 0.137
+      },
+      {
+        "variavel": "MENTHLTH",
+        "media_2015": 3.286,
+        "media_2023": 4.33,
+        "dif_padronizada": 0.131
+      },
+      {
+        "variavel": "_SMOKER3",
+        "media_2015": 3.319,
+        "media_2023": 3.429,
+        "dif_padronizada": 0.12
+      },
+      {
+        "variavel": "SMOKE100",
+        "media_2015": 1.566,
+        "media_2023": 1.615,
+        "dif_padronizada": 0.099
+      },
+      {
+        "variavel": "SEX",
+        "media_2015": 1.576,
+        "media_2023": 1.529,
+        "dif_padronizada": -0.095
+      },
+      {
+        "variavel": "_RACEGR3",
+        "media_2015": 1.552,
+        "media_2023": 1.664,
+        "dif_padronizada": 0.09
+      },
+      {
+        "variavel": "WTKG3",
+        "media_2015": 8082.286,
+        "media_2023": 8272.973,
+        "dif_padronizada": 0.089
+      },
+      {
+        "variavel": "DROCDY3_",
+        "media_2015": 59.439,
+        "media_2023": 77.57,
+        "dif_padronizada": 0.086
+      },
+      {
+        "variavel": "MARITAL",
+        "media_2015": 2.216,
+        "media_2023": 2.349,
+        "dif_padronizada": 0.08
+      },
+      {
+        "variavel": "HTM4",
+        "media_2015": 169.487,
+        "media_2023": 170.292,
+        "dif_padronizada": 0.076
+      },
+      {
+        "variavel": "DECIDE",
+        "media_2015": 1.903,
+        "media_2023": 1.882,
+        "dif_padronizada": -0.067
+      }
+    ]
+  },
+  "veredito": {
+    "perda_roc_milesimos": 11.9,
+    "perda_apos_recalibrar_milesimos": 12.2,
+    "distancia_para_o_modelo_nativo_milesimos": 2.0
+  }
+}

@@ -69,10 +69,9 @@
     "outros": 1,
     "acesso_e_deteccao": 9
   },
-  "missing_medio_expandido": 0.0528,
+  "missing_medio_expandido": 0.0466,
   "variaveis_com_missing_alto": {
-    "INCOME2": 0.312,
-    "EMPLOY1": 0.307,
+    "INCOME2": 0.179,
     "PNEUVAC3": 0.177
   }
 }

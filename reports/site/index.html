@@ -109,7 +109,7 @@ footer a{color:var(--tinta2)}
     <span class="selo ok">CI verde</span>
     <span class="selo">6 bases externas</span>
     <span class="selo">25 documentos</span>
-    <span class="selo">104 testes</span>
+    <span class="selo">112 testes</span>
   </div>
   <div class="creditos">253.680 respostas do BRFSS 2015 (CDC) ·
     Prof. Marino Catarino<br>Código, dados e documentação abertos no
@@ -127,7 +127,7 @@ footer a{color:var(--tinta2)}
       <span>6 gráficos com os números por trás</span></a>
     <a class="acao" href="https://github.com/felipe44776-eseg/data-science-2-eseg-diabetes">
       <span class="ic">💻</span><b>Repositório</b>
-      <span>34 módulos Python · 6 notebooks ·
+      <span>35 módulos Python · 6 notebooks ·
         25 docs</span></a>
   </div>
 </header>
@@ -141,17 +141,25 @@ footer a{color:var(--tinta2)}
 
   <div class="grade">
     <div class="cartao">
-      <div class="numerao">0,804</div>
-      <h3>ROC-AUC do escore</h3>
-      <p>contra <b>0,7663</b> do FINDRISC, padrão
-      internacional desde 2003 — <b>+37,7 milésimos</b>,
-      medido na mesma amostra.</p></div>
+      <div class="numerao">0,817</div>
+      <h3>ROC-AUC na população</h3>
+      <p>Medido em <b>79.135</b> pessoas — todo o
+      holdout que estas cinco perguntas conseguem responder, <b>sem filtro de
+      acesso</b>.</p>
+      <p>Contra o <b>FINDRISC</b>, comparado na mesma amostra que os dois escores
+      compartilham: <b>0,8036</b> contra
+      <b>0,7667</b>, ou
+      <b>+36,9 milésimos</b>. O BRFSS só reproduz
+      <b>5 dos
+      8</b> itens do FINDRISC, então a leitura
+      correta é <i>com o mesmo número de perguntas, o nosso discrimina melhor</i> —
+      não que supere o instrumento completo.</p></div>
     <div class="cartao">
-      <div class="numerao">40,2<small>%</small></div>
+      <div class="numerao">38,8<small>%</small></div>
       <h3>dos casos, testando 10%</h3>
       <p>Rastrear apenas os 10% de maior pontuação encontra
-      <b>40,2% dos diabéticos</b> — a
-      <b>R$ 75</b> por caso identificado.</p></div>
+      <b>38,8% dos diabéticos</b> — a
+      <b>R$ 77</b> por caso identificado.</p></div>
     <div class="cartao">
       <div class="numerao">0</div>
       <h3>perguntas exigem exame</h3>
@@ -170,27 +178,29 @@ footer a{color:var(--tinta2)}
     <thead><tr><th>escore</th><th class="n">ROC-AUC</th><th>o que usa</th></tr></thead>
     <tbody>
       <tr><td>A — completo</td>
-        <td class="n">0,8082</td>
+        <td class="n">0,8093</td>
         <td>inclui exame de colesterol</td></tr>
       <tr class="destaque"><td>B — o que publicamos</td>
-        <td class="n">0,8040</td>
+        <td class="n">0,8036</td>
         <td>nenhum marcador de acesso</td></tr>
-      <tr><td>FINDRISC</td><td class="n">0,7663</td>
-        <td>referência internacional</td></tr>
+      <tr><td>FINDRISC (5 de
+        8 itens)</td>
+        <td class="n">0,7667</td>
+        <td>faltam cintura, histórico familiar e glicemia prévia</td></tr>
     </tbody></table></div>
   <p class="nota">Custo de remover o acesso:
-  <b>4,2
+  <b>5,7
   milésimos</b> de ROC-AUC. Foi o preço mais barato do projeto.</p>
 
   <h3 style="margin-top:38px">A tabela de pontos</h3>
   <p>Some os pontos e leia a faixa. É tudo — não há modelo escondido aqui.</p>
-  <div class='rolagem'><table><thead><tr><th>pergunta</th><th>resposta → pontos</th></tr></thead><tbody><tr><td>Idade</td><td><b>&lt;35</b> 0 · <b>35-44</b> 8 · <b>45-54</b> 12 · <b>55-64</b> 15 · <b>65+</b> 17</td></tr><tr><td>IMC (kg/m²)</td><td><b>&lt;25</b> 0 · <b>25-29</b> 3 · <b>30-34</b> 5 · <b>35+</b> 9</td></tr><tr><td>Saúde autoavaliada</td><td><b>excelente ou muito boa</b> 0 · <b>boa</b> 6 · <b>regular ou ruim</b> 11</td></tr><tr><td>Pressão alta</td><td><b>não</b> 0 · <b>sim</b> 7</td></tr><tr><td>Sexo</td><td><b>feminino</b> 0 · <b>masculino</b> 1</td></tr></tbody></table></div>
+  <div class='rolagem'><table><thead><tr><th>pergunta</th><th>resposta → pontos</th></tr></thead><tbody><tr><td>Idade</td><td><b>&lt;35</b> 0 · <b>35-44</b> 8 · <b>45-54</b> 12 · <b>55-64</b> 15 · <b>65+</b> 17</td></tr><tr><td>IMC (kg/m²)</td><td><b>&lt;25</b> 0 · <b>25-29</b> 2 · <b>30-34</b> 5 · <b>35+</b> 9</td></tr><tr><td>Saúde autoavaliada</td><td><b>excelente ou muito boa</b> 0 · <b>boa</b> 6 · <b>regular ou ruim</b> 11</td></tr><tr><td>Pressão alta</td><td><b>não</b> 0 · <b>sim</b> 7</td></tr><tr><td>Sexo</td><td><b>feminino</b> 0 · <b>masculino</b> 1</td></tr></tbody></table></div>
 
   <div class="rolagem"><table>
     <thead><tr><th>pontos</th><th class="n">risco de diabetes</th>
     <th class="n">n de calibração</th></tr></thead>
-    <tbody><tr><td>0 a 9</td><td class='n'>0,54%</td><td class='n'>42.155</td></tr><tr><td>10 a 15</td><td class='n'>1,76%</td><td class='n'>41.223</td></tr><tr><td>16 a 18</td><td class='n'>3,42%</td><td class='n'>35.556</td></tr><tr><td>19 a 23</td><td class='n'>6,54%</td><td class='n'>46.785</td></tr><tr class="destaque"><td>24 a 27</td><td class='n'>12,94%</td><td class='n'>43.264</td></tr><tr class="destaque"><td>28 a 30</td><td class='n'>18,51%</td><td class='n'>30.366</td></tr><tr class="destaque"><td>31 a 35</td><td class='n'>28,56%</td><td class='n'>41.807</td></tr><tr class="destaque"><td>36 a 45</td><td class='n'>45,49%</td><td class='n'>35.131</td></tr></tbody></table></div>
-  <p class="nota">Faixas calibradas em 316.287
+    <tbody><tr><td>0 a 9</td><td class='n'>0,54%</td><td class='n'>44.125</td></tr><tr><td>10 a 15</td><td class='n'>1,86%</td><td class='n'>43.897</td></tr><tr><td>16 a 18</td><td class='n'>3,77%</td><td class='n'>36.163</td></tr><tr><td>19 a 23</td><td class='n'>6,88%</td><td class='n'>43.584</td></tr><tr class="destaque"><td>24 a 26</td><td class='n'>12,29%</td><td class='n'>36.726</td></tr><tr class="destaque"><td>27 a 30</td><td class='n'>18,09%</td><td class='n'>37.844</td></tr><tr class="destaque"><td>31 a 35</td><td class='n'>29,54%</td><td class='n'>40.201</td></tr><tr class="destaque"><td>36 a 45</td><td class='n'>46,14%</td><td class='n'>33.741</td></tr></tbody></table></div>
+  <p class="nota">Faixas calibradas em 316.281
   pessoas. O risco é a <b>frequência observada</b> na faixa, não uma estimativa
   do modelo.</p>
 
@@ -200,13 +210,14 @@ footer a{color:var(--tinta2)}
     <thead><tr><th>testado em</th><th class="n">ROC-AUC</th><th>veredito</th></tr></thead>
     <tbody>
       <tr><td>EUA · holdout 2015 (partição por hash, sem vazamento)</td>
-        <td class="n">0,8040</td><td>referência</td></tr>
+        <td class="n">0,8170</td>
+        <td>referência — todo o holdout respondível, sem filtro de acesso</td></tr>
       <tr><td>Brasil · Vigitel, 15.925 entrevistas</td>
-        <td class="n">0,8020</td>
+        <td class="n">0,8032</td>
         <td>a ordem transfere; o nível precisa de recalibração</td></tr>
       <tr><td>EUA · BRFSS 2023, oito anos depois</td>
         <td class="n">0,8376</td>
-        <td>perde 11,8 milésimos;
+        <td>perde 11,9 milésimos;
         sem <i>concept drift</i></td></tr>
     </tbody></table></div>
   <p class="nota">A calculadora é uma tradução literal do modelo Python para
@@ -233,10 +244,10 @@ footer a{color:var(--tinta2)}
       <tr><td>arquivo entregue → população</td><td>robusta</td>
         <td>erro de +3,26 p.p.</td></tr>
       <tr><td>EUA → Brasil</td>
-        <td>0,804 → 0,802</td>
+        <td>0,817 → 0,803</td>
         <td>superestima 54%</td></tr>
       <tr><td>2015 → 2023</td>
-        <td>−11,8 milésimos</td>
+        <td>−11,9 milésimos</td>
         <td>ECE 4× pior</td></tr>
       <tr><td>class_weight → calibrado</td><td>idêntica</td>
         <td>ECE 67× pior</td></tr>

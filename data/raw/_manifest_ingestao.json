@@ -32,7 +32,7 @@
     "n_quarentena": 0,
     "saida_csv": "data\\raw\\diabetes_2026_raw.csv",
     "sha256_csv": "e2b5c90b37b68f8d8f6c854ab6876114afce0f4f2fa7dbae16f7383599c3ea57",
-    "segundos": 39.7
+    "segundos": 66.5
   },
   "quarentena": []
 }

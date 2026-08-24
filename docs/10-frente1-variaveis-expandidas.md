@@ -52,9 +52,22 @@ olho. Incluir qualquer uma produz AUC quase perfeito e valor zero. O módulo
 levanta `AssertionError` se alguma entrar.
 
 **Não-resposta vira `NaN`, não número.** Código 9 significa "recusou", não "nove
-vezes mais que sim". O gradient boosting trata ausente nativamente. Consequência
-importante: `INCOME2` fica com **31,2% de missing** — exatamente as 34.251 pessoas
-que o pré-processamento original **excluiu**. Agora elas ficam na amostra.
+vezes mais que sim". O gradient boosting trata ausente nativamente. `INCOME2` fica
+com **17,9% de missing** (77.714 linhas) — as 74.462 pessoas que responderam 77
+("não sabe") ou 99 ("recusou"), mais 3.252 ausentes de origem. Elas continuam na
+amostra em vez de serem descartadas, que é o ponto desta frente.
+
+> **Correção (auditoria).** Este parágrafo dizia **31,2%** e atribuía o missing às
+> 34.251 pessoas excluídas pelo pré-processamento original. Estava errado nas duas
+> pontas. A máscara de não-resposta aplicava `{7, 9, 77, 99}` a toda variável, e em
+> três delas o código 7 é **categoria válida**: `INCOME2` 7 = US$ 50-75 mil (57.166
+> pessoas), `EMPLOY1` 7 = aposentado (129.290) e `_AGEG5YR` 7/9 = 50-54 e 60-64 anos
+> (87.806). O código realmente inválido é outro em cada uma — e a regra certa já
+> existia em `external/brfss2015.py` (`descartar=(77, 99)`), contradita pelo trilho
+> expandido. Corrigido em `features/expandido.py`, com `NAO_RESPOSTA_PROPRIA` lido
+> de `REGRAS` para que os dois trilhos não possam divergir de novo. O efeito
+> preditivo é pequeno (o ganho desta frente vai de +6,62% para **+6,37%** de
+> PR-AUC), mas o efeito descritivo e causal não é — ver `docs/21` e `docs/11`.
 
 **n = 432.968** (vs. 253.680 do arquivo entregue).
 
@@ -198,7 +211,7 @@ registrada, e o relatório final reporta as duas versões lado a lado.
 | 4 | Atividade física preditivamente irrelevante (−0,30%) | Coerente com a mediação de `docs/07` §2.1 |
 | 5 | **O ganho é inteiramente das minorias** (+10 a 13 pp vs. −0,45 pp) | Ganho médio esconde redistribuição |
 | 6 | **O efeito de equidade vem de raça, não das comorbidades** | Decisão ética explícita, com as duas versões reportadas |
-| 7 | `INCOME2` volta com 31,2% de missing em vez de 34.251 linhas descartadas | Base para a Frente 5 (MNAR e pesos) |
+| 7 | `INCOME2` volta com **17,9%** de missing em vez de 34.251 linhas descartadas | Base para a Frente 5 (MNAR e pesos) |
 
 ## Limitações
 

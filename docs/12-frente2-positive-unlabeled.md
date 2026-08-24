@@ -20,25 +20,57 @@ Seja **c = P(s=1 | y=1)**, a frequência de rotulagem. NHANES ancora c = 0,724.
 
 ---
 
-## Passo 1 — a validação que não era esperada
+## Passo 1 — a validação que não existia · **RETRATADO**
+
+> ### Retratação
+> Esta seção afirmava que o BBE, usando só o BRFSS, dava **0,7283** contra
+> **0,7240** do NHANES — "duas fontes independentes concordando na terceira casa
+> decimal". **A concordância era artefato, e a auditoria a derrubou.**
+>
+> `estimar_c_bbe` devolvia `max` sobre a curva de fração rotulada acumulada. Essa
+> curva é **monotonicamente decrescente** nestes dados — dá para ver no próprio
+> artefato versionado: 0,73 → 0,66 → 0,61 → … → 0,39. Logo o `max` é **sempre o
+> primeiro bin**, ou seja, a fração rotulada no topo `100/quantis` %. A
+> "estimativa" era uma função crescente e ilimitada de `quantis`, um parâmetro com
+> default 50 que não estava declarado em documento nenhum. Havia ainda um segundo
+> defeito: o vetor consumido incluía predição **in-sample** para 80% das linhas.
 
 `c` **não é identificável só com os dados** (Blanchard et al.): exige suposição
-externa. Mas dá para estimá-lo por *Best Bin Estimation* (Garg et al. 2021):
-numa região do espaço onde todos têm a doença, a fração rotulada tende a `c`.
+externa. O *Best Bin Estimation* (Garg et al. 2021) tenta contornar isso — numa
+região do espaço onde todos têm a doença, a fração rotulada tende a `c`. Mas o
+método só funciona **se essa região existir**, e o estimador precisa dizer quando
+ela não existe. O nosso não dizia.
 
-| estimativa de c | valor |
+**Corrigido.** `estimar_c_bbe` agora só devolve número quando há **platô**: o mesmo
+estimador em três resoluções tem de concordar dentro de uma tolerância que
+incorpora o ruído amostral do bin do topo (a penalidade de amostra finita que
+faltava). E roda só no holdout.
+
+O resultado honesto, medido:
+
+| resolução | fração rotulada no topo |
 |---|---|
-| **BBE, só com os dados do BRFSS** | **0,7283** |
-| **NHANES (fonte externa, laboratorial)** | **0,7240** |
-| diferença | **0,0043** |
+| `quantis=25` (topo 4%) | 0,6218 |
+| `quantis=50` (topo 2%) | 0,6861 |
+| `quantis=100` (topo 1%) | 0,7402 |
 
-> Duas fontes completamente independentes — um inquérito telefônico de 2015 e
-> um exame de sangue de 2021-2023 — concordam na terceira casa decimal sobre
-> quanto do diabetes fica sem diagnóstico.
+**Espalhamento de 0,118** — quase seis vezes o piso de ruído. Veredito do artefato:
+`identificado: false`.
 
-Isso valida a premissa da frente inteira. E era um resultado que podia sair
-errado: se o BBE tivesse dado 0,95, a conclusão seria que não existe região pura
-de positivos no espaço do questionário e a formulação SCAR não se sustentaria.
+> ### O que isso significa
+> **Não existe região pura de positivos no espaço de 60 variáveis de questionário,
+> e `c` não é identificável por este caminho.** Ironicamente, é exatamente o
+> contrafactual que esta seção dizia estar preparada para aceitar — e que se
+> realizou assim que o estimador foi consertado.
+>
+> Isso não é resultado vazio: mede o teto de informação do questionário por outra
+> via. Nenhum perfil de risco construível a partir dessas perguntas identifica um
+> subgrupo em que *todo mundo* tem diabetes.
+
+**Nenhum número a jusante muda.** A prevalência verdadeira (14,29%), o SAR, o
+perfil dos ocultos e os 3,62 p.p. escondidos saem todos de `C_NHANES = 0,724` —
+premissa exógena declarada, com a faixa de sensibilidade do Passo 2 logo abaixo.
+O que cai é **a alegação de validação**, não a análise.
 
 ---
 

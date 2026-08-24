@@ -1,0 +1,187 @@
+{
+  "n": 440658,
+  "distribuicao": {
+    "0": 375712,
+    "2": 57256,
+    "1": 7690
+  },
+  "pct_testado": 66.47,
+  "H1_blocos": {
+    "risco (60 vars)": {
+      "rotulo": "pre vs sem — risco (60 vars)",
+      "n_treino": 287349,
+      "n_teste": 96053,
+      "prevalencia_%": 2.006,
+      "roc_auc": 0.7699,
+      "pr_auc": 0.066,
+      "pr_auc_ganho": 3.23,
+      "n_variaveis": 60
+    },
+    "acesso (9 vars)": {
+      "rotulo": "pre vs sem — acesso (9 vars)",
+      "n_treino": 287349,
+      "n_teste": 96053,
+      "prevalencia_%": 2.006,
+      "roc_auc": 0.6444,
+      "pr_auc": 0.032,
+      "pr_auc_ganho": 1.57,
+      "n_variaveis": 9
+    },
+    "ambos (69 vars)": {
+      "rotulo": "pre vs sem — ambos (69 vars)",
+      "n_treino": 287349,
+      "n_teste": 96053,
+      "prevalencia_%": 2.006,
+      "roc_auc": 0.7752,
+      "pr_auc": 0.0677,
+      "pr_auc_ganho": 3.31,
+      "n_variaveis": 69
+    }
+  },
+  "H1_controle_diabetes": {
+    "risco (60 vars)": {
+      "rotulo": "diabetes vs sem — risco (60 vars)",
+      "n_treino": 324480,
+      "n_teste": 108488,
+      "prevalencia_%": 13.224,
+      "roc_auc": 0.8519,
+      "pr_auc": 0.4696,
+      "pr_auc_ganho": 3.54,
+      "n_variaveis": 60
+    },
+    "acesso (9 vars)": {
+      "rotulo": "diabetes vs sem — acesso (9 vars)",
+      "n_treino": 324480,
+      "n_teste": 108488,
+      "prevalencia_%": 13.224,
+      "roc_auc": 0.7254,
+      "pr_auc": 0.2486,
+      "pr_auc_ganho": 1.87,
+      "n_variaveis": 9
+    },
+    "ambos (69 vars)": {
+      "rotulo": "diabetes vs sem — ambos (69 vars)",
+      "n_treino": 324480,
+      "n_teste": 108488,
+      "prevalencia_%": 13.224,
+      "roc_auc": 0.8618,
+      "pr_auc": 0.4891,
+      "pr_auc_ganho": 3.68,
+      "n_variaveis": 69
+    }
+  },
+  "H2_so_testados": {
+    "rotulo": "pre vs sem, so testados — risco",
+    "n_treino": 181209,
+    "n_teste": 60611,
+    "prevalencia_%": 2.594,
+    "roc_auc": 0.7333,
+    "pr_auc": 0.0661,
+    "pr_auc_ganho": 2.51,
+    "n_variaveis": 60
+  },
+  "C_pre_vs_diabetes": {
+    "rotulo": "diabetes vs pre — risco",
+    "n_treino": 48581,
+    "n_teste": 16365,
+    "prevalencia_%": 88.159,
+    "roc_auc": 0.6664,
+    "pr_auc": 0.9301,
+    "pr_auc_ganho": 1.06,
+    "n_variaveis": 60
+  },
+  "importancia_pre_vs_sem": [
+    {
+      "variavel": "_BMI5",
+      "importancia": 0.01645,
+      "bloco": "risco"
+    },
+    {
+      "variavel": "_RACEGR3",
+      "importancia": 0.01605,
+      "bloco": "risco"
+    },
+    {
+      "variavel": "MAXVO2_",
+      "importancia": 0.01328,
+      "bloco": "risco"
+    },
+    {
+      "variavel": "GENHLTH",
+      "importancia": 0.01144,
+      "bloco": "risco"
+    },
+    {
+      "variavel": "_RFHYPE5",
+      "importancia": 0.00674,
+      "bloco": "risco"
+    },
+    {
+      "variavel": "INCOME2",
+      "importancia": 0.00466,
+      "bloco": "risco"
+    },
+    {
+      "variavel": "TOLDHI2",
+      "importancia": 0.00431,
+      "bloco": "risco"
+    },
+    {
+      "variavel": "QLACTLM2",
+      "importancia": 0.00374,
+      "bloco": "risco"
+    },
+    {
+      "variavel": "STRFREQ_",
+      "importancia": 0.00324,
+      "bloco": "risco"
+    },
+    {
+      "variavel": "WTKG3",
+      "importancia": 0.003,
+      "bloco": "risco"
+    },
+    {
+      "variavel": "CHOLCHK",
+      "importancia": 0.00295,
+      "bloco": "acesso"
+    },
+    {
+      "variavel": "FTJUDA1_",
+      "importancia": 0.00285,
+      "bloco": "risco"
+    },
+    {
+      "variavel": "HAVARTH3",
+      "importancia": 0.00206,
+      "bloco": "risco"
+    },
+    {
+      "variavel": "VEGEDA1_",
+      "importancia": 0.00197,
+      "bloco": "risco"
+    },
+    {
+      "variavel": "PNEUVAC3",
+      "importancia": 0.00187,
+      "bloco": "acesso"
+    }
+  ],
+  "acesso_no_top10": 0,
+  "H4_risco_alto": [
+    {
+      "grupo": "risco alto · testado",
+      "n": 39541,
+      "%_sem_diabetes": 43.04,
+      "%_pre_diabetes": 3.54,
+      "%_diabetes": 53.42
+    },
+    {
+      "grupo": "risco alto · nao testado",
+      "n": 4534,
+      "%_sem_diabetes": 55.93,
+      "%_pre_diabetes": 4.19,
+      "%_diabetes": 39.88
+    }
+  ]
+}

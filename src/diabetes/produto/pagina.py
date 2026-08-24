@@ -143,6 +143,20 @@ function faixaIdade(a){ return a<35?"<35":a<45?"35-44":a<55?"45-54":a<65?"55-64"
 function faixaImc(b){ return b<25?"<25":b<30?"25-29":b<35?"30-34":"35+"; }
 function faixaSaude(g){ return g<=2?"excelente/muito boa":g==3?"boa":"regular/ruim"; }
 function escorePapel(l){
+  /* Sem esta guarda, o escore de papel MENTE para quem nao preencheu nada.
+     `faixaIdade(null)` -> null < 35 e verdadeiro (null vira 0) -> "<35" -> 0 pontos;
+     `l._BMI5/100` com null da 0 -> "<25"; `l._RFHYPE5 == 2` com null da false -> "nao".
+     Resultado: formulario em branco somava 0 pontos e exibia a faixa de MENOR risco
+     (0,54%) como se fosse resposta. O Python nunca teve o problema — `eval/escore.py`
+     exige `notna()` — mas a pagina e o que o usuario ve. */
+  const faltando = [];
+  if (l._AGE80   == null) faltando.push("idade");
+  if (l._BMI5    == null) faltando.push("IMC");
+  if (l.GENHLTH  == null) faltando.push("saude autoavaliada");
+  if (l._RFHYPE5 == null) faltando.push("pressao alta");
+  if (l.SEX      == null) faltando.push("sexo");
+  if (faltando.length) return {pontos: null, faixa: null, faltando};
+
   const t = M.escore_papel.tabela;
   const p = (t.idade[faixaIdade(l._AGE80)]||0) + (t.imc[faixaImc(l._BMI5/100)]||0)
           + (t.saude[faixaSaude(l.GENHLTH)]||0)
@@ -151,7 +165,7 @@ function escorePapel(l){
   const f = M.escore_papel.calibracao.faixas;
   let alvo = f[0];
   for (const x of f){ if (p >= x.pontos_min) alvo = x; }
-  return {pontos: p, faixa: alvo};
+  return {pontos: p, faixa: alvo, faltando};
 }
 
 /* --- percentil populacional -------------------------------------------- */
@@ -294,10 +308,14 @@ function calcular(){
 
   /* escore de papel */
   const e = escorePapel(l);
-  $("#pontos").textContent = e.pontos;
-  $("#riscoPapel").textContent = e.faixa["risco_%"].toFixed(2).replace(".",",") + "%";
+  const completo = e.faixa != null;
+  $("#pontos").textContent = completo ? e.pontos : "—";
+  $("#riscoPapel").textContent = completo
+    ? e.faixa["risco_%"].toFixed(2).replace(".",",") + "%"
+    : "responda: " + e.faltando.join(", ");
   document.querySelectorAll("#tabPapel tr[data-min]").forEach(tr => {
-    tr.classList.toggle("ativa", +tr.dataset.min === e.faixa.pontos_min);
+    tr.classList.toggle("ativa",
+      completo && +tr.dataset.min === e.faixa.pontos_min);
   });
 }
 

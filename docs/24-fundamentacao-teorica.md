@@ -69,10 +69,10 @@ FAIR). O registro do que a base é e de onde veio segue o formato de *datasheet*
 supõe variabilidade de pesos sem estrutura. Com `_STSTR` e `_PSU` declarados, a
 linearização de Taylor dá o valor correto. Medimos 2,94 contra os 4,04 de Kish —
 ou seja, nossos intervalos de confiança anteriores eram **largos demais**, não
-estreitos demais. Foi uma das nove previsões refutadas (`docs/23`).
+estreitos demais. Foi uma das doze previsões refutadas (`docs/23`).
 
 O raking existe aqui por um motivo prático: o arquivo do Kaggle **descartou as
-colunas de peso**. Reconstruímos pesos que corrigem 95,6% do viés, publicáveis
+colunas de peso**. Reconstruímos pesos que corrigem 93,4% do viés, publicáveis
 para qualquer pessoa que use o mesmo CSV.
 
 ---
@@ -172,13 +172,21 @@ a relação empírica não é estritamente monótona no topo.
 | método | referência | resultado |
 |---|---|---|
 | SCAR / estimador de `c` | Elkan & Noto (2008) | frequência de rotulagem |
-| Best Bin Estimation | Garg et al. (2021) | **c = 0,7283** |
+| Best Bin Estimation | Garg et al. (2021) | **não identifica** `c` nestes dados |
 | SAR (rotulagem dependente de covariável) | Bekker & Davis (2020) | perfil dos ocultos |
 
-**A validação externa é o ponto.** O BBE, usando só o BRFSS, estimou c = 0,7283.
-O NHANES, que mede HbA1c em laboratório e portanto **vê** os não diagnosticados,
-implica c = 0,7240 (Menke et al., 2015). Dois métodos que não se falam concordam
-na terceira casa decimal. Prevalência real corrigida: **14,29%**.
+**O ponto é saber quando o método não se aplica.** O BBE só identifica `c` se
+existir uma região do espaço em que todos os positivos estejam — e a implementação
+tem de **testar** isso, não supor. A nossa não testava: devolvia o máximo de uma
+curva decrescente, o que equivale a devolver o primeiro bin e faz o resultado
+depender da resolução do grid. Corrigida, com teste de platô e penalidade de
+amostra finita, ela recusa a estimativa (espalhamento 0,118 em `quantis ∈
+{25, 50, 100}`).
+
+Logo `c` continua sendo **premissa exógena**: 0,724, do NHANES, que mede HbA1c em
+laboratório e portanto **vê** os não diagnosticados (Menke et al., 2015). Prevalência
+real corrigida: **14,29%**, sempre reportada com a faixa de sensibilidade em `c`.
+A não identificação é informativa por si: mede o teto de informação do questionário.
 
 **Armadilha registrada.** A primeira formulação SAR explodiu porque `c(x)`
 chegava a 0,05 e o ranking passou a medir "não foi testado" em vez de "alto risco
@@ -212,7 +220,7 @@ três cenários de preço de HbA1c. Resultado: testar 10% da população encontr
 
 O escore de papel de cinco perguntas foi construído contra o **FINDRISC**
 (Lindström & Tuomilehto, 2003), o padrão internacional desde 2003 — e o supera em
-37,7 milésimos de ROC-AUC na mesma amostra. O relato de modelo preditivo segue a
+36,9 milésimos de ROC-AUC na mesma amostra. O relato de modelo preditivo segue a
 estrutura do **TRIPOD** (Collins et al., 2015); o dimensionamento amostral segue
 Riley et al. (2020).
 

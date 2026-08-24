@@ -255,3 +255,30 @@ def test_status_fica_ok_logo_apos_a_etapa_rodar(tmp_path: Path):
             p.write_text("y")
     obsoletas = [ln["chave"] for ln in status(raiz=tmp_path) if ln["estado"] == "obsoleto"]
     assert not obsoletas, obsoletas
+
+
+def test_todo_artefato_de_resultado_esta_versionado():
+    """Resultado versiona; dado nao. Sem isto, quem clona nao reconstroi nada.
+
+    A regra do `.gitignore` era por lista de prefixos, e a lista nao acompanhou as
+    cinco frentes finais: `_escore_brasil`, `_prediabetes`, `_naosupervisionada`,
+    `_causal` e `_validacao_temporal` ficaram fora do repositorio sem aviso — o
+    deck e o site leem os cinco. Agora a regra e por convencao (`_*.json`), e este
+    teste e o que impede a lista de envelhecer de novo.
+    """
+    import shutil
+    import subprocess
+
+    if not shutil.which("git") or not Path(".git").exists():
+        pytest.skip("fora de um clone git")
+
+    resultado = [s for e in ETAPAS for s in e.saidas
+                 if s.startswith("data/") and Path(s).name.startswith("_")
+                 and s.endswith(".json")]
+    assert resultado, "nenhuma etapa declara artefato de resultado"
+
+    rastreados = set(subprocess.run(
+        ["git", "ls-files", "data/"], capture_output=True, text=True,
+        check=True).stdout.split())
+    fora = [s for s in resultado if s not in rastreados]
+    assert not fora, f"artefato de resultado fora do git: {fora}"

@@ -7,18 +7,18 @@ data/processed/**/*
 data/external/**/*
 !data/**/
 !data/**/.gitkeep
-!data/**/_manifest_*.json
-!data/**/_relatorio_*.json
-!data/**/_cascata_*.json
-!data/**/_analise_*.json
-!data/**/_eda_*.json
-!data/**/_modelo_*.json
-!data/**/_escada_*.json
-!data/**/_comparacao_*.json
-!data/**/_frente*.json
-!data/**/_trilhaC_*.json
-!data/**/_features_*.json
+# Resultado versiona; dado nao (invariante 6). A convencao do projeto e que todo
+# artefato de RESULTADO comeca com "_" e e JSON — entao a regra e por convencao,
+# nao por lista de prefixos. A lista antiga deixou os 5 artefatos das frentes
+# finais (_escore_brasil, _prediabetes, _naosupervisionada, _causal,
+# _validacao_temporal) fora do repositorio sem que nada avisasse: quem clonasse
+# nao conseguia reconstruir o deck nem o site, que os leem.
+!data/**/_*.json
 !data/**/*.md
+
+# Pesos publicaveis: `docs/11` os chama de entregavel reutilizavel e mostra como
+# carrega-los. 536 KB — versionar e o que torna a promessa verdadeira.
+!data/processed/gold/pesos_arquivo_entregue.parquet
 
 # excecao: o PDF fonte do professor e grande demais (109 MB) para o git
 *.pdf

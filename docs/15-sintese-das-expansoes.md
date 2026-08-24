@@ -27,10 +27,10 @@ rendeu +0,036 de PR-AUC, e um teste exploratório com variáveis extras rendeu
 | # | Frente | Resultado principal | Doc |
 |---|---|---|---|
 | 1 | **Variáveis expandidas** | +6,62% PR-AUC — e **o ganho é inteiramente das minorias** (+10 a 13 pp de recall, contra −0,45 pp dos brancos) | `docs/10` |
-| 2 | **Positive-Unlabeled** | BBE estima c = **0,7283** contra 0,7240 do NHANES — duas fontes independentes concordam na 3ª decimal | `docs/12` |
+| 2 | **Positive-Unlabeled** | O BBE **nao identifica** `c` (espalhamento 0,118 na grade) — nao ha regiao pura de positivos no questionario. `c` fica como premissa exogena do NHANES, com faixa de sensibilidade | `docs/12` |
 | 3 | **EBM + conforme** | EBM com **12 variáveis atinge 94,4%** do boosting com 60; monotonicidade custa 0,44% | `docs/13` |
 | 4 | **Medicaid DiD** | Efeito causal sobre acesso medido (+3,11 pp de cobertura); **o desenho não tem poder** para o diagnóstico, e isso está provado | `docs/14` |
-| 5 | **Pesos e inferência** | Raking remove **95,6%** do viés do arquivo entregue; DEFF real é 2,94, não 4,04 | `docs/11` |
+| 5 | **Pesos e inferência** | Raking remove **93,4%** do viés do arquivo entregue; DEFF real é 2,94, não 4,04 | `docs/11` |
 
 ---
 
@@ -53,9 +53,16 @@ versões. Excluir raça não é neutro: é escolher manter a lacuna de 10 pontos
 
 ### 3. Duas fontes independentes concordam sobre o subdiagnóstico (Frente 2)
 
-Um inquérito telefônico de 2015 e um exame de sangue de 2021-2023 dão
-`c = 0,7283` e `c = 0,7240`. É a validação mais forte de todo o projeto — e podia
-ter saído errada.
+> **Retratado (auditoria).** Este parágrafo dizia que o BBE (0,7283) e o NHANES
+> (0,7240) concordavam na terceira casa decimal, e chamava isso de "a validação
+> mais forte de todo o projeto". A concordância era artefato de um hiperparâmetro
+> não declarado — ver `docs/12` Passo 1. Corrigido o estimador, ele **se recusa a
+> estimar**: a fração no topo vai de 0,622 a 0,740 conforme a resolução do grid.
+>
+> O resultado honesto é outro, e ainda é resultado: **nenhum perfil construível a
+> partir das 60 perguntas identifica um subgrupo em que todos têm diabetes.** É o
+> teto de informação do questionário, medido por uma segunda via. `c` permanece
+> premissa exógena do NHANES, com a faixa de sensibilidade sempre reportada.
 
 ### 4. Dois vieses opostos quase se cancelam — e isso não é um acerto (Frente 2)
 
@@ -120,7 +127,7 @@ Para a Trilha C, tudo já está medido:
 | Testar 25% da população acha… | **70%** dos casos, NNS 2,7 | `docs/13` §4 |
 | Testar 45% acha… | **90%** dos casos, NNS 3,8 | `docs/13` §4 |
 | Prevalência verdadeira (com ocultos) | **14,29%** contra 10,67% diagnosticada | `docs/12` |
-| Peso para o CSV do Kaggle | remove **95,6%** do viés | `docs/11` |
+| Peso para o CSV do Kaggle | remove **93,4%** do viés | `docs/11` |
 | Bloco de variáveis que mais importa | comorbidades (−9,2% ao remover) | `docs/10` |
 | Bloco irrelevante | **tabagismo (−0,04%)** — fora do escore | `docs/10` |
 

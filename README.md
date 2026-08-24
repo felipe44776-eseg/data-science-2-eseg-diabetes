@@ -62,8 +62,8 @@ ausente**, com hash e idade de cada artefato, e aponta a próxima etapa acionáv
 | 4 | **Pré-diabetes não é o mesmo continuum.** Nove variáveis divergem, duas invertem de direção → modelo multinomial, não ordinal | [`docs/07` §3](docs/07-analise-explicativa.md) |
 | 5 | **Brasil × EUA: 6 de 8 fatores convergem.** Hipertensão 3,136 vs 3,146 — coincidem na 3ª decimal. Mas o **IMC pesa 16% menos no Brasil** | [`docs/09`](docs/09-comparacao-binacional.md) |
 | 6 | **O ganho de variáveis novas é inteiramente das minorias**: brancos −0,45 pp de recall, negros +10,6, hispânicos +10,8 | [`docs/10`](docs/10-frente1-variaveis-expandidas.md) |
-| 7 | **Duas fontes independentes concordam sobre o subdiagnóstico**: BBE dá c = 0,7283, NHANES dá 0,7240. Prevalência real: **14,29%** contra 10,67% diagnosticada | [`docs/12`](docs/12-frente2-positive-unlabeled.md) |
-| 8 | **Cinco perguntas batem o FINDRISC** (padrão internacional desde 2003) em +37,7 milésimos de ROC-AUC | [`docs/16`](docs/16-trilhaC-escore-decisao-equidade.md) |
+| 7 | **Nenhum perfil de questionário isola um grupo em que todos têm diabetes** — o BBE não identifica `c`, o que mede o teto de informação. Prevalência real **14,29%** contra 10,67% diagnosticada, ancorada no NHANES | [`docs/12`](docs/12-frente2-positive-unlabeled.md) |
+| 8 | **Cinco perguntas batem o FINDRISC** em +36,9 milésimos de ROC-AUC — com a ressalva de que o BRFSS só reproduz 5 dos 8 itens dele, então a leitura é "com o mesmo número de perguntas, o nosso discrimina melhor" | [`docs/16`](docs/16-trilhaC-escore-decisao-equidade.md) |
 
 ---
 

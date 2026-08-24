@@ -3,6 +3,37 @@
 Os arquivos de dados não são versionados (ver `.gitignore`). Este documento é o
 **manifesto**: quem baixou, de onde, quando, e como provar que o arquivo está íntegro.
 
+## Um comando baixa tudo e prova a integridade
+
+```powershell
+.\tasks.ps1 dados                 # baixa o que falta e confere o SHA-256 de cada um
+.\tasks.ps1 dados --verificar     # so confere o que ja existe
+```
+
+O download vai para um arquivo `.parcial` e **só é renomeado se o hash bater** — conexão
+que cai não deixa arquivo truncado com o nome certo. As URLs e os hashes vivem em
+`src/diabetes/external/baixar.py`, gerados deste documento.
+
+**2,5 GB no total.** O único insumo que precisa ser copiado à mão é o PDF do enunciado
+(`data/raw/Diabetes-2026.csv.pdf`, 105 MB) — ele não tem URL pública.
+
+### Links diretos
+
+| arquivo | bytes | link |
+|---|---|---|
+| `LLCP2015.XPT` | 1.165.490.800 | [espelho UMT](https://topofire.dbs.umt.edu/public_data/federal_public_datasets/CDC%20Behavioral%20Risk%20Factor%20Surveillance%20System%20/2015%20Annual%20Survey%20Data/Data%20Files/LLCP2015.XPT%20) · [origem CDC](https://www.cdc.gov/brfss/annual_data/annual_2015.html) |
+| `LLCP2023.XPT` | 1.205.554.400 | [espelho UMT](https://topofire.dbs.umt.edu/public_data/federal_public_datasets/CDC%20Behavioral%20Risk%20Factor%20Surveillance%20System%20/2023%20Annual%20Survey%20Data/Data%20Files/LLCP2023.XPT%20) · [origem CDC](https://www.cdc.gov/brfss/annual_data/annual_2023.html) |
+| `vigitel-2015-peso-rake.zip` | 10.775.599 | https://svs.aids.gov.br/daent/cgdnt/vigitel/vigitel-2015-peso-rake.zip |
+| `vigitel-2023-peso-rake.zip` | 15.935.870 | https://svs.aids.gov.br/daent/cgdnt/vigitel/vigitel-2023-peso-rake.zip |
+| `dicionario-vigitel-2006-2024.xlsx` | 93.263 | https://svs.aids.gov.br/daent/cgdnt/vigitel/dicionario-vigitel-2006-2024.xlsx |
+
+Os cinco links foram reverificados em 2026-08-21: **HTTP 200** e `content-length` idêntico
+ao byte declarado acima.
+
+> O portal do Vigitel publica **todos os anos de 2006 a 2024** no mesmo padrão de URL
+> (`vigitel-AAAA-peso-rake.zip`). Os anos intermediários resolveriam a limitação 1 de
+> `docs/22` — separar tendência de choque pandêmico —, hoje registrada como não feita.
+
 ---
 
 ## BRFSS 2015 (CDC) — `brfss2015/LLCP2015.XPT`
@@ -140,7 +171,7 @@ Detalhe em `docs/09-comparacao-binacional.md` §0.
 > *binge*. Construtos distintos — a lista completa está em `NAO_COMPARAVEL`,
 > em `src/diabetes/external/vigitel.py`.
 
-Reproduzir: `.	asks.ps1 vigitel`
+Reproduzir: `.\tasks.ps1 vigitel`
 
 ---
 

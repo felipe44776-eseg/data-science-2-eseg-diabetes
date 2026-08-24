@@ -35,21 +35,33 @@ para os 3 níveis do escore:
 
 | | valor |
 |---|---|
-| **ROC-AUC** | **0,8020** |
+| **ROC-AUC** | **0,8032** |
 | PR-AUC | 0,2407 |
 | risco **observado** | 6,495% |
 | risco **previsto** | **9,977%** |
-| **razão previsto / observado** | **1,536** |
-| erro absoluto | **+3,48 p.p.** |
-| inclinação da calibração | 0,952 |
-| intercepto da calibração | −0,618 |
+| **razão previsto / observado** | **1,512** |
+| erro absoluto | **+3,33 p.p.** |
+| inclinação da calibração | 0,964 |
+| intercepto da calibração | −0,581 |
 
 > ### A discriminação transfere. A calibração não.
-> O escore americano **ordena corretamente** no Brasil — ROC-AUC 0,802 contra
-> 0,804 nos EUA, diferença de 2 milésimos. Mas **superestima o risco em 54%**.
+> O escore americano **ordena corretamente** no Brasil — ROC-AUC **0,8032**
+> contra **0,8170** nos EUA. Mas **superestima o risco em 51%**.
 >
-> Inclinação 0,952 (quase perfeita) com intercepto −0,618 é a assinatura exata
+> Inclinação 0,964 (quase perfeita) com intercepto −0,581 é a assinatura exata
 > desse quadro: a *ordem* está certa, o *nível* está deslocado para cima.
+
+> **Correção (auditoria).** Esta seção comparava com **0,804**, e chamava a queda
+> de "2 milésimos". Aquele 0,804 era medido na *amostra comum* de `docs/16` — que
+> exige colesterol não nulo e portanto está **filtrada por acesso**, o viés que o
+> projeto existe para combater. O comparador correto é o desempenho de B em todo o
+> holdout que ele consegue responder: **0,8170**. A queda EUA→Brasil é de
+> **13,8 milésimos**, não 2.
+>
+> A manchete qualitativa sobrevive — 13,8 milésimos é a mesma ordem dos 11,9 que
+> `docs/22` chama de "sem *concept drift*", e continua muito menor que os 51% de
+> erro de nível. **A discriminação transfere; a calibração não.** Mas a margem era
+> 7× menor do que dizíamos.
 
 Num instrumento clínico, essa é a falha mais perigosa: dizer "seu risco é 28%"
 quando o risco real é 18% gera rastreamento excessivo e ansiedade — e a métrica
@@ -131,13 +143,13 @@ importa é o **peso relativo** de cada fator:
 
 | | escore dos EUA | **escore recalibrado** |
 |---|---|---|
-| ROC-AUC | 0,8020 | 0,8046 |
-| razão previsto/observado | **1,536** | **1,132** |
-| erro de calibração | **+3,48 p.p.** | **+0,86 p.p.** |
-| inclinação | 0,952 | 0,989 |
+| ROC-AUC | 0,8032 | 0,8046 |
+| razão previsto/observado | **1,512** | **1,132** |
+| erro de calibração | **+3,33 p.p.** | **+0,86 p.p.** |
+| inclinação | 0,964 | 0,989 |
 | intercepto | −0,618 | −0,172 |
 
-**Discriminação: +2,6 milésimos — irrelevante.**
+**Discriminação: +1,4 milésimos — irrelevante.**
 **Calibração: erro cai 75%.**
 
 > Recalibrar não melhora a capacidade de ordenar pessoas por risco. Melhora a
@@ -219,9 +231,9 @@ como a limitação mais importante desta frente.
 
 | # | Achado | Consequência |
 |---|---|---|
-| 1 | Escore dos EUA **discrimina bem** no Brasil (ROC-AUC 0,802 vs 0,804) | A ordem de risco transfere |
-| 2 | Mas **superestima em 54%** (razão previsto/observado 1,536) | A tabela de risco **não** transfere |
-| 3 | Recalibrar ganha 2,6 milésimos de AUC e corta **75%** do erro de calibração | Recalibração é sobre nível, não sobre ordem |
+| 1 | Escore dos EUA **discrimina bem** no Brasil (ROC-AUC 0,803 vs 0,817 nos EUA) | A ordem de risco transfere |
+| 2 | Mas **superestima em 51%** (razão previsto/observado 1,512) | A tabela de risco **não** transfere |
+| 3 | Recalibrar ganha 1,4 milésimos de AUC e corta **75%** do erro de calibração | Recalibração é sobre nível, não sobre ordem |
 | 4 | **IMC vale 0,45×** no escore brasileiro; idade e hipertensão compensam | Escore brasileiro tem forma própria |
 | 5 | O efeito do IMC **satura acima de 25** no Brasil (gradiente 3,15× vs 5,50×) | Explica a queda de peso do IMC |
 | 6 | Imputação e mediação **descartadas** como explicação, por medição | Duas hipóteses testadas e rejeitadas |

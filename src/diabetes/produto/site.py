@@ -255,11 +255,19 @@ roda offline. Trabalho acadêmico — Data Science 2, ESEG.">
 
   <div class="grade">
     <div class="cartao">
-      <div class="numerao">{num(vs['escore_B_roc'], 3)}</div>
-      <h3>ROC-AUC do escore</h3>
-      <p>contra <b>{num(vs['findrisc_roc'], 4)}</b> do FINDRISC, padrão
-      internacional desde 2003 — <b>+{num(vs['ganho_milesimos'], 1)} milésimos</b>,
-      medido na mesma amostra.</p></div>
+      <div class="numerao">{num(b["metricas"]["roc_auc_amostra_propria"], 3)}</div>
+      <h3>ROC-AUC na população</h3>
+      <p>Medido em <b>{num(b["metricas"]["n_amostra_propria"])}</b> pessoas — todo o
+      holdout que estas cinco perguntas conseguem responder, <b>sem filtro de
+      acesso</b>.</p>
+      <p>Contra o <b>FINDRISC</b>, comparado na mesma amostra que os dois escores
+      compartilham: <b>{num(vs["escore_B_roc"], 4)}</b> contra
+      <b>{num(vs["findrisc_roc"], 4)}</b>, ou
+      <b>+{num(vs["ganho_milesimos"], 1)} milésimos</b>. O BRFSS só reproduz
+      <b>{esc['findrisc']['itens_disponiveis']} dos
+      {esc['findrisc']['itens_originais']}</b> itens do FINDRISC, então a leitura
+      correta é <i>com o mesmo número de perguntas, o nosso discrimina melhor</i> —
+      não que supere o instrumento completo.</p></div>
     <div class="cartao">
       <div class="numerao">{num(dez['%_casos_encontrados'], 1)}<small>%</small></div>
       <h3>dos casos, testando 10%</h3>
@@ -289,8 +297,10 @@ roda offline. Trabalho acadêmico — Data Science 2, ESEG.">
       <tr class="destaque"><td>B — o que publicamos</td>
         <td class="n">{num(esc['comparacao']['custo_de_remover_o_proxy_de_acesso']['roc_auc_B'], 4)}</td>
         <td>nenhum marcador de acesso</td></tr>
-      <tr><td>FINDRISC</td><td class="n">{num(vs['findrisc_roc'], 4)}</td>
-        <td>referência internacional</td></tr>
+      <tr><td>FINDRISC ({esc['findrisc']['itens_disponiveis']} de
+        {esc['findrisc']['itens_originais']} itens)</td>
+        <td class="n">{num(vs['findrisc_roc'], 4)}</td>
+        <td>faltam cintura, histórico familiar e glicemia prévia</td></tr>
     </tbody></table></div>
   <p class="nota">Custo de remover o acesso:
   <b>{num(esc['comparacao']['custo_de_remover_o_proxy_de_acesso']['perda_roc_milesimos'], 1)}
@@ -314,7 +324,8 @@ roda offline. Trabalho acadêmico — Data Science 2, ESEG.">
     <thead><tr><th>testado em</th><th class="n">ROC-AUC</th><th>veredito</th></tr></thead>
     <tbody>
       <tr><td>EUA · holdout 2015 (partição por hash, sem vazamento)</td>
-        <td class="n">{num(vs['escore_B_roc'], 4)}</td><td>referência</td></tr>
+        <td class="n">{num(b["metricas"]["roc_auc_amostra_propria"], 4)}</td>
+        <td>referência — todo o holdout respondível, sem filtro de acesso</td></tr>
       <tr><td>Brasil · Vigitel, {num(ebr['premissa']['n_avaliacao'])} entrevistas</td>
         <td class="n">{num(ebr['escore_eua_aplicado_cru']['roc_auc'], 4)}</td>
         <td>a ordem transfere; o nível precisa de recalibração</td></tr>
@@ -347,7 +358,7 @@ roda offline. Trabalho acadêmico — Data Science 2, ESEG.">
       <tr><td>arquivo entregue → população</td><td>robusta</td>
         <td>erro de +3,26 p.p.</td></tr>
       <tr><td>EUA → Brasil</td>
-        <td>0,804 → {num(ebr['escore_eua_aplicado_cru']['roc_auc'], 3)}</td>
+        <td>{num(b["metricas"]["roc_auc_amostra_propria"], 3)} → {num(ebr["escore_eua_aplicado_cru"]["roc_auc"], 3)}</td>
         <td>superestima 54%</td></tr>
       <tr><td>2015 → 2023</td>
         <td>−{num(tmp['veredito']['perda_roc_milesimos'], 1)} milésimos</td>

@@ -243,13 +243,52 @@ def test_frente1_ganho_e_o_documentado():
 
 @pytest.mark.skipif(not (GOLD / "_frente2_pu.json").exists(),
                     reason="frente 2 nao executada")
-def test_bbe_concorda_com_o_nhanes():
+def test_bbe_declara_se_c_e_identificavel():
+    """O teste antigo travava a COINCIDENCIA com o NHANES em vez de valida-la.
+
+    Ele exigia |c_bbe - c_nhanes| < 0,05 sobre um estimador que era `max` de uma
+    curva monotonica decrescente — ou seja, a fracao rotulada no topo 100/quantis %,
+    funcao crescente e ilimitada de um parametro nao declarado (q=25 da 0,656,
+    q=100 da 0,779). O teste passava por causa do default, nao por concordancia.
+
+    O que se exige agora e o que importa: o artefato tem de DIZER se `c` foi
+    identificado, e so publicar numero quando houver plato.
+    """
     d = json.loads((GOLD / "_frente2_pu.json").read_text(encoding="utf-8"))
-    assert abs(d["bbe"]["c_estimado_bbe"] - d["premissa"]["c_nhanes"]) < 0.05
+    bbe = d["bbe"]
+    assert "identificado" in bbe and "sensibilidade" in bbe
+    if bbe["identificado"]:
+        assert bbe["c_estimado_bbe"] is not None
+        assert bbe["espalhamento_na_grade"] <= bbe["tolerancia_plato"]
+    else:
+        assert bbe["c_estimado_bbe"] is None
+        assert bbe["motivo"]
 
 
-@pytest.mark.skipif(not (GOLD / "_frente3_glassbox.json").exists(),
-                    reason="frente 3 nao executada")
+def test_bbe_nao_devolve_numero_sem_plato():
+    """Estimativa que depende da resolucao do grid nao e estimativa.
+
+    Caso A — rotulagem concentrada no topo extremo (0,5% das linhas): a fracao no
+    topo muda muito conforme o bin, porque o bin maior dilui a regiao rotulada. Nao
+    ha plato, e o estimador tem de recusar.
+    Caso B — regiao pura larga (10% do topo, c=0,70): ha plato de verdade.
+    """
+    rng = np.random.default_rng(11)
+    n = 400_000
+    p = np.linspace(0, 1, n)
+
+    concentrado = np.where(p > 0.995, rng.uniform(size=n) < 0.9,
+                           rng.uniform(size=n) < 0.02).astype(int)
+    a = estimar_c_bbe(p, concentrado)
+    assert a["identificado"] is False, a["sensibilidade"]
+    assert a["c_estimado_bbe"] is None and a["motivo"]
+
+    puro = np.where(p > 0.90, rng.uniform(size=n) < 0.70,
+                    rng.uniform(size=n) < 0.10).astype(int)
+    b = estimar_c_bbe(p, puro)
+    assert b["identificado"] is True, b["sensibilidade"]
+    assert abs(b["c_estimado_bbe"] - 0.70) < 0.02
+
 def test_monotonicidade_custa_pouco():
     d = json.loads((GOLD / "_frente3_glassbox.json").read_text(encoding="utf-8"))
     assert d["monotonicidade"]["custo_pr_auc_%"] < 2.0
@@ -261,3 +300,56 @@ def test_pesos_removem_a_maior_parte_do_vies():
     d = json.loads((GOLD / "_frente5_pesos.json").read_text(encoding="utf-8"))
     assert d["correcao_de_vies"]["vies_removido_%"] > 60
     assert d["variante_com_acesso"]["vies_removido_%"] > 90
+
+
+# --- codigos de nao-resposta: o achado #1 da auditoria -----------------------
+
+def test_codigo_7_valido_sobrevive_a_limpeza():
+    """`_AGEG5YR` 7/9, `EMPLOY1` 7 e `INCOME2` 7 sao CATEGORIA, nao nao-resposta.
+
+    A mascara generica `{7, 9, 77, 99}` apagava 87.806 pessoas de 50-64 anos,
+    129.290 aposentados e 57.166 da faixa de renda 50-75k — em silencio, violando o
+    invariante 2. O efeito preditivo era desprezivel; o causal nao: o `dropna()` do
+    backdoor passou a excluir os aposentados e o OR de `docs/21` saiu errado.
+    """
+    from diabetes.features.expandido import NAO_RESPOSTA_PROPRIA, _limpar_codigos
+
+    casos = {
+        "_AGEG5YR": ([1, 7, 9, 13, 14], [1, 7, 9, 13]),   # invalido e o 14
+        "EMPLOY1":  ([1, 7, 8, 9], [1, 7, 8]),            # 7 = aposentado
+        "INCOME2":  ([1, 7, 8, 77, 99], [1, 7, 8]),       # 7 = 50-75k
+    }
+    for nome, (entrada, sobrevivem) in casos.items():
+        out = _limpar_codigos(pd.Series(entrada, dtype="float64"), nome)
+        assert sorted(out.dropna().tolist()) == sorted(sobrevivem), nome
+
+    # controle: onde 7/9 sao mesmo nao-resposta, o comportamento nao muda
+    assert _limpar_codigos(pd.Series([1.0, 7.0, 9.0]), "EDUCA").dropna().tolist() == [1.0]
+    assert set(NAO_RESPOSTA_PROPRIA) == {"_AGEG5YR", "EMPLOY1", "INCOME2"}
+
+
+def test_regra_de_nao_resposta_nao_e_redigitada():
+    """Invariante 1: a regra de `_AGEG5YR` e `INCOME2` vem de `REGRAS`, nao de copia.
+
+    Os dois trilhos do projeto se contradiziam sobre a mesma coluna do mesmo XPT:
+    `external/brfss2015.py` escrevia `descartar=(14,)` e `features/expandido.py`
+    apagava 7 e 9. Amarrar um ao outro impede que divirjam de novo.
+    """
+    from diabetes.external.brfss2015 import REGRAS
+    from diabetes.features.expandido import NAO_RESPOSTA_PROPRIA
+
+    for r in REGRAS:
+        if r.origem in NAO_RESPOSTA_PROPRIA:
+            assert set(r.descartar) == NAO_RESPOSTA_PROPRIA[r.origem], r.origem
+
+
+def test_raking_falha_alto_se_faltar_alvo_para_uma_categoria():
+    """`.fillna(1.0)` deixava 17% da amostra sem calibracao, e o IPF nunca convergia.
+
+    `docs/11` chegou a testar a hipotese "convergencia insuficiente" e a declarou
+    falsa — era verdadeira, e a causa estava duas camadas acima.
+    """
+    cats = pd.DataFrame({"g": [1.0, 1.0, 2.0, 3.0]})
+    alvo = {"g": pd.Series({1.0: 0.5, 2.0: 0.5})}      # falta a categoria 3
+    with pytest.raises(ValueError, match="ausente na margem-alvo"):
+        raking(cats, alvo, ["g"], iteracoes=5)

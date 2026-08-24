@@ -42,6 +42,8 @@ from pathlib import Path
 
 import pandas as pd
 
+from diabetes.external.brfss2015 import REGRAS
+
 ALVO = "DIABETE3"
 
 #: decorrentes do proprio diagnostico — nunca entram como preditor
@@ -199,6 +201,26 @@ SENSIVEIS = ["_RACEGR3", "_HISPANC", "SEX", "INCOME2", "EDUCA", "_AGE80"]
 #: ausente nativamente, e 7/9 como numero seria um valor 7x maior que "sim"=1.
 NAO_RESPOSTA = {7, 9, 77, 99, 777, 999, 7777, 9999, 99900}
 
+#: Variaveis em que 7 e/ou 9 sao CATEGORIA VALIDA, nao nao-resposta.
+#:
+#: A mascara generica acima apagava, sem registrar nada: `_AGEG5YR` 7 (50-54 anos)
+#: e 9 (60-64) — 87.806 pessoas; `EMPLOY1` 7 (aposentado) — 129.290; `INCOME2` 7
+#: (US$ 50-75 mil) — 57.166. Nas tres, o codigo realmente invalido e outro. Havia
+#: uma guarda para isso e ela era codigo morto: `limite = 4 if nome in (...)`
+#: seguido de `return v if limite is None else v` devolve o mesmo objeto nos dois
+#: ramos, e `INCOME2` sequer estava na lista.
+#:
+#: Os dois primeiros saem de `REGRAS` em vez de serem redigitados: a regra certa
+#: ja existia la (`descartar=(14,)`, `descartar=(77, 99)`) e o trilho expandido a
+#: contradizia — violacao do invariante 1. `EMPLOY1` nao esta em `REGRAS` porque
+#: nao e uma das 21 colunas originais, entao fica explicito aqui.
+#:
+#: Vale tambem para 2023: `external/temporal.py` renomeia `INCOME3` para
+#: `INCOME2`, e la 9 = 100-150k — outra categoria valida que a mascara comia.
+NAO_RESPOSTA_PROPRIA: dict[str, set[float]] = {
+    r.origem: set(r.descartar) for r in REGRAS if r.origem in ("_AGEG5YR", "INCOME2")
+} | {"EMPLOY1": {9}}
+
 
 def _limpar_codigos(s: pd.Series, nome: str) -> pd.Series:
     """Manda codigo de nao-resposta para NaN, respeitando a escala de cada variavel."""
@@ -212,11 +234,9 @@ def _limpar_codigos(s: pd.Series, nome: str) -> pd.Series:
         return v.mask(v >= 99900)
     if nome in ("ALCDAY5", "CHILDREN", "STRENGTH"):
         return v.mask(v.isin([777, 888, 999]))
-    limite = 4 if nome in ("_PACAT1", "_SMOKER3", "_RACEGR3", "CHECKUP1",
-                           "PERSDOC2", "EMPLOY1", "MARITAL", "CHOLCHK",
-                           "RENTHOM1", "QSTLANG", "SEATBELT", "USENOW3") else None
-    v = v.mask(v.isin(NAO_RESPOSTA))
-    return v if limite is None else v
+    if nome in NAO_RESPOSTA_PROPRIA:
+        return v.mask(v.isin(NAO_RESPOSTA_PROPRIA[nome]))
+    return v.mask(v.isin(NAO_RESPOSTA))
 
 
 def construir(xpt: Path) -> tuple[pd.DataFrame, dict]:

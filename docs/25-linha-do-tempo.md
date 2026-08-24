@@ -115,15 +115,16 @@ nos EUA. Terceira casa decimal, países diferentes.
 
 **5.218 linhas, o maior commit do projeto.** Cinco frentes independentes:
 
-1. **Variáveis expandidas** (21 → 69, recuperadas do XPT) — +6,62% de PR-AUC,
+1. **Variáveis expandidas** (21 → 69, recuperadas do XPT) — +6,37% de PR-AUC,
    com o ganho **inteiramente das minorias**: brancos −0,45 p.p. de recall,
    negros +10,6, hispânicos +10,8.
-2. **Positive-Unlabeled** — BBE estima c = **0,7283**; o NHANES, com exame de
-   sangue, implica **0,7240**. Prevalência real: **14,29%**.
+2. **Positive-Unlabeled** — prevalência real **14,29%** contra 10,67%
+   diagnosticada, ancorada no NHANES (`c = 0,724`). *A auditoria depois derrubou a
+   "validação" pelo BBE que esta fase alegava — ver `docs/12`.*
 3. **Glass-box** — EBM com restrições de monotonicidade e predição conforme.
 4. **Medicaid como experimento natural** — DiD, e a honestidade de reportar que
    **o desenho não tem poder** (MDE 0,90 p.p. contra efeito esperado de 0,16).
-5. **Pesos publicáveis** — raking que corrige 95,6% do viés do CSV do Kaggle.
+5. **Pesos publicáveis** — raking que corrige 93,4% do viés do CSV do Kaggle.
    E aqui o DEFF real (2,94, por linearização de Taylor) refutou a aproximação
    de Kish (4,04) que vínhamos usando.
 
@@ -134,7 +135,7 @@ nos EUA. Terceira casa decimal, países diferentes.
 **3.389 linhas.** Escore de papel, curva de decisão e auditoria de equidade.
 
 **A decisão de desenho mais importante do projeto:** o escore A, que usa exame de
-colesterol, tem ROC 0,8082. O escore B, sem nenhum marcador de acesso, tem 0,8040.
+colesterol, tem ROC 0,8093. O escore B, sem nenhum marcador de acesso, tem 0,8036.
 Escolhemos o B. Custo: **4,2 milésimos**.
 
 O motivo não é estatístico. Um instrumento de rastreamento que pergunta "você já
@@ -142,13 +143,17 @@ fez exame?" funciona melhor no papel e pior na vida — porque exclui exatamente
 quem nunca foi rastreado.
 
 **E o escore B bate o FINDRISC** (0,7663), padrão internacional desde 2003, em
-**+37,7 milésimos** na mesma amostra.
+**+36,9 milésimos** na mesma amostra.
 
 **Erro encontrado e corrigido nesta fase:** os escores A e B estavam sendo
 comparados em amostras diferentes — A exigia colesterol não nulo, ou seja, já
 vinha filtrado por acesso. **Era exatamente o viés que o projeto combate,
 reproduzido dentro da própria avaliação.** Corrigido para uma amostra comum de
-62.294.
+62.179.
+
+*A auditoria da fase 12 mostrou o outro lado disso: o número da amostra comum
+vinha sendo publicado como valor absoluto do escore, e ele está filtrado por
+acesso. O valor na população é 0,8170 — ver `docs/16`.*
 
 ---
 
@@ -209,10 +214,13 @@ síndrome metabólica sozinho.
 **Refutação:** o Isolation Forest **não** acha os casos ocultos — lift 0,81, as
 listas se evitam. Alto risco de diabetes é comum, não atípico.
 
-**Camada causal.** A mesma pergunta dá OR 0,51 / **0,75** / 0,86 / 0,98 conforme o
+**Camada causal.** A mesma pergunta dá OR 0,51 / **0,67** / 0,81 / 0,98 conforme o
 ajuste. O DAG diz qual é qual — e prova que M2/M3 de `docs/07` sofrem viés de
-colisor. Três refutações passam, mas o **E-value é 2,02**, com um confundidor
+colisor. Três refutações passam, mas o **E-value é 2,33**, com um confundidor
 plausível à vista.
+*(Os números publicados nesta fase eram OR 0,75 e E-value 2,02; a auditoria da
+fase 12 mostrou que o backdoor excluía os aposentados e que o IC ignorava o
+desenho amostral. Ver `docs/21`.)*
 
 **Validação temporal.** O modelo de 2015 aplicado ao BRFSS 2023 perde **11,8
 milésimos** e fica a **2 milésimos** de um treinado nativamente em 2023.

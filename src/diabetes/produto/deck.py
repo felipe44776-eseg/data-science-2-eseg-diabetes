@@ -225,6 +225,7 @@ def montar() -> str:
     ns = ler("_naosupervisionada.json")
     cau = ler("_causal.json")
     tmp = ler("_validacao_temporal.json")
+    f5 = ler("_frente5_pesos.json")
 
     S = []
 
@@ -431,11 +432,16 @@ def montar() -> str:
           <p>Segundo o NHANES, <b>27,6% dos diabéticos nos EUA não sabem</b>.
           Formalmente isto é <b>Positive-Unlabeled learning</b>, não classificação
           supervisionada.</p>
-          <p style="margin-top:20px">Estimamos a frequência de rotulagem <b>só com
-          os dados</b> e comparamos com a fonte externa:</p>
-          {tabela(["estimativa de c", "valor"], [
-              ["só com o BRFSS (BBE)", f"{pu['bbe']['c_estimado_bbe']:.4f}".replace(".", ",")],
-              ["NHANES (exame de sangue)", f"{pu['premissa']['c_nhanes']:.4f}".replace(".", ",")]])}
+          <p style="margin-top:20px">Tentamos estimar a frequência de rotulagem
+          <b>só com os dados</b> (BBE). O estimador <b>se recusa</b>: o valor depende
+          da resolução do grid, logo não há região pura de positivos.</p>
+          {tabela(["fração rotulada no topo", "valor"],
+                  [[k.replace("q=", "quantis="), num(v, 4)]
+                   for k, v in pu["bbe"]["sensibilidade"].items()])}
+          <p style="margin-top:14px;font-size:16px"><b>c fica como premissa exógena</b>
+          do NHANES ({num(pu['premissa']['c_nhanes'], 3)}), sempre com faixa de
+          sensibilidade. A não identificação é resultado: mede o teto de informação
+          do questionário.</p>
         </div>
         <div class="cartao">
           <h3>Prevalência verdadeira</h3>
@@ -504,8 +510,15 @@ def montar() -> str:
               for f in faixas], destaque=len(faixas)-1)}
         </div>
       </div>
-      <p style="margin-top:20px">ROC-AUC <b>0,804</b> contra <b>0,766</b> do
-      <b>FINDRISC</b> — o padrão internacional desde 2003, na mesma amostra.</p>"""))
+      <p style="margin-top:20px">ROC-AUC
+      <b>{num(tc['comparacao']['vs_findrisc']['escore_B_roc'], 3)}</b> contra
+      <b>{num(tc['findrisc']['roc_auc'], 3)}</b> do <b>FINDRISC</b>, na mesma amostra.</p>
+      <p style="margin-top:8px;font-size:16px;color:var(--tinta2)">O BRFSS só
+      reproduz <b>{tc['findrisc']['itens_disponiveis']} dos
+      {tc['findrisc']['itens_originais']}</b> itens do FINDRISC — faltam cintura,
+      histórico familiar e glicemia prévia. A leitura correta é <i>com o mesmo
+      número de perguntas, o nosso discrimina melhor</i>, não que supere o
+      instrumento completo.</p>"""))
 
     # 16 · custo
     cob = td["candidatos"]["escore_5_perguntas"]["cobertura"]
@@ -773,7 +786,7 @@ def montar() -> str:
       </div>"""))
 
     # 26 · fecho
-    S.append(slide("conclusão", """
+    S.append(slide("conclusão", f"""
       <h2>O que fica</h2>
       <div class="duas">
         <div>
@@ -782,7 +795,8 @@ def montar() -> str:
           prevalência em um terço e é uma amostra de quem tem acesso ao sistema
           de saúde.</p>
           <p style="margin-top:16px"><b>Publicamos os pesos</b> que corrigem
-          95,6% desse viés — utilizáveis por qualquer pessoa que use o mesmo CSV.</p>
+          {num(f5['variante_com_acesso']['vies_removido_%'], 1)}% desse viés —
+          utilizáveis por qualquer pessoa que use o mesmo CSV.</p>
         </div>
         <div>
           <h3>Sobre o valor</h3>

@@ -16,9 +16,13 @@ param(
     [Parameter(Position = 0)]
     [ValidateSet('status', 'log', 'ingest', 'clean', 'folds', 'external', 'eda',
                  'explicativo', 'figuras', 'modelos', 'vigitel',
-                 'expandido', 'pesos', 'pu', 'glassbox', 'medicaid', 'trilhac', 'produto', 'notebooks', 'deck', 'escorebr', 'prediabetes', 'naosup', 'causal', 'temporal', 'site',
+                 'expandido', 'pesos', 'pu', 'glassbox', 'medicaid', 'trilhac', 'produto', 'notebooks', 'deck', 'escorebr', 'prediabetes', 'naosup', 'causal', 'temporal', 'site', 'dados',
                  'test', 'all', 'help')]
-    [string]$Task = 'help'
+    [string]$Task = 'help',
+
+    # repassados a etapa; hoje so `dados` usa (--verificar, --forcar, --apenas)
+    [Parameter(ValueFromRemainingArguments = $true)]
+    [string[]]$Extra = @()
 )
 
 $ErrorActionPreference = 'Stop'
@@ -194,6 +198,12 @@ function Invoke-Deck {
     Invoke-Etapa 'deck' 'Deck da apresentacao' { python -m diabetes.produto.deck }
 }
 
+function Invoke-Dados {
+    Invoke-Etapa 'dados' 'Insumos externos: baixar e verificar hash' {
+        python -m diabetes.external.baixar @Extra
+    }
+}
+
 function Invoke-Site {
     Invoke-Etapa 'site' 'Pagina de entrada do site publico' {
         python -m diabetes.produto.site
@@ -266,6 +276,7 @@ switch ($Task) {
     'causal'      { Invoke-Causal }
     'temporal'    { Invoke-Temporal }
     'site'        { Invoke-Site }
+    'dados'       { Invoke-Dados }
     'test'        { Invoke-Test }
     'all' {
         Invoke-Ingest; Invoke-Clean; Invoke-Folds
