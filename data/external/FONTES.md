@@ -15,7 +15,25 @@ que cai não deixa arquivo truncado com o nome certo. As URLs e os hashes vivem 
 `src/diabetes/external/baixar.py`, gerados deste documento.
 
 **2,5 GB no total.** O único insumo que precisa ser copiado à mão é o PDF do enunciado
-(`data/raw/Diabetes-2026.csv.pdf`, 105 MB) — ele não tem URL pública.
+(`data/raw/Diabetes-2026.csv.pdf`, 105 MB) — ele não tem URL pública, mas **o hash dele
+é conferido junto com os outros**.
+
+### O PDF entregue
+
+| | |
+|---|---|
+| **Tamanho** | 109.110.739 bytes |
+| **SHA-256** | `d25054c754de24b8ab74206834f29e6f7ff1ac9088a0ab9f2646b14c36cf8cfd` |
+| **Páginas** | 4.374 |
+| **Linhas extraídas** | 253.680 · 0 em quarentena |
+| **SHA-256 do CSV gerado** | `e2b5c90b37b68f8d8f6c854ab6876114afce0f4f2fa7dbae16f7383599c3ea57` |
+
+A ingestão **compara** o hash da fonte com o do manifesto anterior antes de processar.
+Se divergir, ela **para** — porque reprocessar um PDF diferente mudaria todo número
+publicado e sobrescreveria o manifesto com o hash novo, sem que nada avisasse. Troca
+deliberada exige `--aceitar-fonte-nova` e reprocessamento completo.
+
+O CSV foi reproduzido **três vezes** a partir deste PDF, com hash idêntico nas três.
 
 ### Links diretos
 

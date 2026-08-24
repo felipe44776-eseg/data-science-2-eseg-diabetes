@@ -56,7 +56,34 @@ def _rows_from_page(page) -> list[list[str]]:
     return rows
 
 
-def extract(pdf_path: Path, out_csv: Path, manifest_path: Path | None = None) -> dict:
+def conferir_fonte(pdf_path: Path, manifest_path: Path | None) -> dict:
+    """Compara o SHA-256 do PDF com o registrado no manifesto anterior.
+
+    Gravar o hash sem nunca compara-lo prova nada: se a fonte mudar — PDF corrigido
+    pelo professor, download truncado, arquivo trocado — a ingestao reprocessaria
+    em silencio e sobrescreveria o manifesto com o hash NOVO. Todo numero a jusante
+    mudaria e nada avisaria. Esta funcao e o detector que faltava.
+
+    Devolve um dicionario com o veredito. Nao levanta: quem decide se para e o
+    chamador, porque fonte nova e um evento legitimo — desde que deliberado.
+    """
+    atual = _hash_file(pdf_path)
+    if not manifest_path or not manifest_path.exists():
+        return {"estado": "sem-referencia", "sha256_atual": atual}
+    try:
+        anterior = json.loads(manifest_path.read_text(encoding="utf-8"))["manifest"]
+    except (json.JSONDecodeError, KeyError):
+        return {"estado": "manifesto-ilegivel", "sha256_atual": atual}
+    esperado = anterior.get("sha256_pdf")
+    if esperado == atual:
+        return {"estado": "identica", "sha256_atual": atual,
+                "n_linhas_anterior": anterior.get("n_linhas")}
+    return {"estado": "MUDOU", "sha256_atual": atual, "sha256_anterior": esperado,
+            "n_linhas_anterior": anterior.get("n_linhas")}
+
+
+def extract(pdf_path: Path, out_csv: Path, manifest_path: Path | None = None,
+            aceitar_fonte_nova: bool = False) -> dict:
     """Reconstroi o CSV por coordenadas e devolve o manifesto de integridade.
 
     Percorre pagina a pagina agrupando palavras por baseline (`_rows_from_page`), o
@@ -73,6 +100,26 @@ def extract(pdf_path: Path, out_csv: Path, manifest_path: Path | None = None) ->
     O manifesto grava o SHA-256 do PDF e do CSV: e o que sustenta a reproducao, ja
     que o PDF de 109 MB fica fora do git.
     """
+    conferencia = conferir_fonte(pdf_path, manifest_path)
+    if conferencia["estado"] == "MUDOU" and not aceitar_fonte_nova:
+        raise SystemExit("\n".join([
+            "",
+            "  A FONTE MUDOU desde a ultima ingestao.",
+            f"    esperado {conferencia['sha256_anterior']}",
+            f"    obtido   {conferencia['sha256_atual']}",
+            "",
+            "  O PDF em disco nao e o que gerou os artefatos atuais. Reprocessar",
+            "  agora mudaria TODO numero publicado sem que nada avisasse.",
+            "",
+            "  Se a troca for deliberada, rode de novo com --aceitar-fonte-nova",
+            "  e reprocesse o pipeline inteiro para os artefatos voltarem a bater.",
+            "",
+        ]))
+    if conferencia["estado"] == "identica":
+        print(f"  fonte conferida: SHA-256 identico ao da ingestao anterior "
+              f"({conferencia['n_linhas_anterior']:,} linhas)".replace(",", "."),
+              file=sys.stderr)
+
     doc = fitz.open(pdf_path)
     header: list[str] | None = None
     n_rows = 0
@@ -126,6 +173,7 @@ def extract(pdf_path: Path, out_csv: Path, manifest_path: Path | None = None) ->
         "saida_csv": str(out_csv),
         "sha256_csv": _hash_file(out_csv),
         "segundos": round(time.time() - t0, 1),
+        "conferencia_da_fonte": conferencia["estado"],
     }
     if manifest_path:
         manifest_path.parent.mkdir(parents=True, exist_ok=True)
@@ -143,8 +191,12 @@ def main() -> None:
     ap.add_argument("--pdf", type=Path, required=True)
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--manifest", type=Path, default=None)
+    ap.add_argument("--aceitar-fonte-nova", action="store_true",
+                    help="prossegue mesmo se o PDF mudou desde a "
+                         "ultima ingestao (exige reprocessar tudo)")
     args = ap.parse_args()
-    m = extract(args.pdf, args.out, args.manifest)
+    m = extract(args.pdf, args.out, args.manifest,
+                aceitar_fonte_nova=args.aceitar_fonte_nova)
     print(json.dumps(m, ensure_ascii=False, indent=2))
 
 

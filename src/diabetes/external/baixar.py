@@ -89,10 +89,15 @@ FONTES: list[Fonte] = [
     ),
 ]
 
-#: entregue pelo professor, sem URL publica — tem de ser copiado a mao
+#: Entregue pelo professor, sem URL publica — tem de ser copiado a mao. O hash vem
+#: do manifesto da ingestao (`data/raw/_manifest_ingestao.json`): existir nao basta,
+#: tem de ser O MESMO arquivo que gerou os artefatos publicados.
 SEM_URL = {
-    "data/raw/Diabetes-2026.csv.pdf":
-        "PDF de 4.374 paginas entregue no enunciado. Copie para data/raw/.",
+    "data/raw/Diabetes-2026.csv.pdf": {
+        "nota": "PDF de 4.374 paginas entregue no enunciado. Copie para data/raw/.",
+        "bytes": 109_110_739,
+        "sha256": "d25054c754de24b8ab74206834f29e6f7ff1ac9088a0ab9f2646b14c36cf8cfd",
+    },
 }
 
 
@@ -186,11 +191,19 @@ def main() -> None:
         print(f"  [ok]      {f.chave:20} baixado e verificado")
 
     print("\n  --- insumos sem URL publica ---")
-    for caminho, nota in SEM_URL.items():
-        existe = (RAIZ / caminho).exists()
-        print(f"  [{'ok' if existe else 'AUSENTE'}]      {caminho}")
-        if not existe:
-            print(f"            {nota}")
+    for caminho, info in SEM_URL.items():
+        # existir nao basta: tem de ser O MESMO arquivo que gerou os artefatos.
+        # Sem esta conferencia, um PDF trocado passaria e todo numero publicado
+        # mudaria na proxima ingestao sem que nada avisasse.
+        f = Fonte(Path(caminho).name, caminho, "", info["bytes"], info["sha256"])
+        r = verificar(f)
+        print(f"  [{'ok' if r['estado'] == 'ok' else r['estado'].upper()}]"
+              f"      {caminho}")
+        if r["estado"] != "ok":
+            print(f"            {info['nota']}")
+            if r["estado"] == "hash-errado":
+                print(f"            esperado {info['sha256']}")
+                print(f"            obtido   {r['obtido']}")
             problemas.append(caminho)
 
     if problemas:
