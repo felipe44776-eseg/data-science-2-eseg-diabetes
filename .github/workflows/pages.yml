@@ -40,7 +40,7 @@ jobs:
       - name: montar o site
         run: |
           set -euo pipefail
-          mkdir -p site/calculadora site/deck site/figuras
+          mkdir -p site/calculadora site/deck site/figuras site/metodo
 
           cp reports/site/index.html          site/index.html
           cp reports/produto/index.html       site/calculadora/index.html
@@ -48,6 +48,7 @@ jobs:
           cp reports/deck/apresentacao.html   site/deck/index.html
           cp reports/figures/index.html       site/figuras/index.html
           cp reports/figures/*.svg            site/figuras/
+          cp reports/metodo/index.html        site/metodo/index.html
 
           # sem isto o Jekyll do Pages ignora arquivos iniciados por _
           touch site/.nojekyll
@@ -58,7 +59,7 @@ jobs:
       - name: conferir que nada ficou vazio
         run: |
           set -euo pipefail
-          for f in site/index.html site/calculadora/index.html site/deck/index.html; do
+          for f in site/index.html site/calculadora/index.html site/deck/index.html site/metodo/index.html; do
             test -s "$f" || { echo "vazio: $f"; exit 1; }
           done
           # a calculadora e autocontida: nao pode depender de host externo

@@ -236,6 +236,9 @@ roda offline. Trabalho acadêmico — Data Science 2, ESEG.">
     <a class="acao" href="deck/">
       <span class="ic">🎤</span><b>Apresentação</b>
       <span>26 slides · ← → navega · Ctrl+P exporta em PDF</span></a>
+    <a class="acao" href="metodo/">
+      <span class="ic">🧭</span><b>O método, passo a passo</b>
+      <span>15 decisões · matriz de confusão, calibração, curva de decisão</span></a>
     <a class="acao" href="figuras/">
       <span class="ic">📊</span><b>Figuras e tabelas</b>
       <span>6 gráficos com os números por trás</span></a>
@@ -377,6 +380,8 @@ roda offline. Trabalho acadêmico — Data Science 2, ESEG.">
   <ul class="lista-docs">
     <li><a href="{BASE_REPO}/blob/main/docs/23-sintese-final.md">docs/23 — síntese
       final</a> · o trabalho inteiro em 10 minutos</li>
+    <li><a href="metodo/">O método, passo a passo</a> · as 15 decisões, com o
+      gráfico que sustenta cada uma</li>
     <li><a href="{BASE_REPO}/blob/main/docs/24-fundamentacao-teorica.md">docs/24 —
       fundamentação teórica</a> · método por método, com a bibliografia</li>
     <li><a href="{BASE_REPO}/blob/main/docs/05-comparacao-brfss-original.md">docs/05 —

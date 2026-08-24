@@ -269,3 +269,61 @@ def test_escore_de_papel_recusa_formulario_em_branco():
     # o render tem de tratar o caso, nao so a funcao
     assert 'const completo = e.faixa != null;' in JS
     assert '$("#pontos").textContent = completo ? e.pontos : "—";' in JS
+
+
+# --- pagina do metodo -------------------------------------------------------
+
+METODO = Path("reports/metodo/index.html")
+
+
+def test_matriz_de_confusao_e_coerente():
+    """As quatro celulas tem de fechar, e o limiar NAO pode ser 0,5.
+
+    Com 14% de prevalencia, cortar em 0,5 joga quase todo mundo na coluna negativa
+    e a acuracia fica otima — exatamente o que o ADR 0005 proibe. O limiar sai da
+    especificidade, e este teste trava isso.
+    """
+    import numpy as np
+
+    from diabetes.produto.metodo import ESPECIFICIDADE, matriz_de_confusao
+
+    rng = np.random.default_rng(3)
+    n = 40_000
+    y = (rng.uniform(size=n) < 0.14).astype(int)
+    p = np.clip(rng.normal(0.3 + 0.25 * y, 0.15), 0, 1)
+    m = matriz_de_confusao(y, p)
+
+    assert m["vp"] + m["fp"] + m["fn"] + m["vn"] == n
+    assert m["vp"] + m["fn"] == int(y.sum())
+    assert abs(m["especificidade"] - ESPECIFICIDADE) < 0.01
+    assert m["recall"] == pytest.approx(m["vp"] / (m["vp"] + m["fn"]), abs=1e-4)
+    assert m["precisao"] == pytest.approx(m["vp"] / (m["vp"] + m["fp"]), abs=1e-4)
+    # com prevalencia baixa o limiar operacional fica bem abaixo de 0,5
+    assert m["limiar"] < 0.5
+
+
+@pytest.mark.skipif(not METODO.exists(), reason="pagina do metodo nao gerada")
+def test_pagina_do_metodo_tem_as_etapas_e_os_graficos():
+    """Cada etapa precisa do grafico que sustenta a decisao — nao e ilustracao."""
+    html = METODO.read_text(encoding="utf-8")
+    assert html.count('<section class="etapa"') == 15
+    assert html.count("<figure>") >= 8
+    for termo in ("Matriz de confusão", "precision-recall", "Calibração",
+                  "Curva de decisão", "parcimônia", "Equidade"):
+        assert termo in html, termo
+    # toda figura vem legendada com a decisao que embasa
+    assert html.count("A decisão que este gráfico sustenta") >= 8
+    assert 'href="../"' in html, "falta o caminho de volta"
+
+
+@pytest.mark.skipif(not METODO.exists(), reason="pagina do metodo nao gerada")
+def test_svgs_do_metodo_sao_bem_formados():
+    """SVG quebrado nao aparece como erro: aparece como espaco em branco."""
+    import re
+    import xml.etree.ElementTree as ET
+
+    html = METODO.read_text(encoding="utf-8")
+    svgs = re.findall(r"<svg.*?</svg>", html, re.S)
+    assert len(svgs) >= 8
+    for s in svgs:
+        ET.fromstring(s)  # levanta se mal formado
