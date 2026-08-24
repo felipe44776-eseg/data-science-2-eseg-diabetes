@@ -327,3 +327,29 @@ def test_svgs_do_metodo_sao_bem_formados():
     assert len(svgs) >= 8
     for s in svgs:
         ET.fromstring(s)  # levanta se mal formado
+
+
+def test_grafico_nao_desenha_serie_toda_zerada():
+    """Chave errada num artefato produz gráfico plausível e vazio, sem erro nenhum.
+
+    Aconteceu: `g_equidade` lia "tpr"/"ppv" enquanto o artefato grava
+    "recall_tpr"/"precisao_ppv", e o `.get(k) or 0` desenhava cinco barras zeradas.
+    O SVG era válido, a página abria, e todos os grupos apareciam com 0,0%.
+    """
+    import json
+    import re
+
+    from diabetes.produto.metodo import g_equidade
+
+    caminho = Path("data/processed/gold/_trilhaC_equidade.json")
+    if not caminho.exists():
+        pytest.skip("trilha C nao executada")
+    grupos = json.loads(caminho.read_text(encoding="utf-8"))["observado"]["raca"]["por_grupo"]
+    svg = g_equidade(grupos)
+    valores = re.findall(r">(\d+,\d)%<", svg)
+    assert valores, "nenhum valor rotulado no gráfico"
+    assert any(v != "0,0" for v in valores), f"série inteira zerada: {valores}"
+
+    # e chave ausente tem de FALHAR, nao virar zero
+    with pytest.raises(KeyError):
+        g_equidade([{"grupo": "x", "n": 1000}])

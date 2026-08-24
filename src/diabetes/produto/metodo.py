@@ -350,8 +350,12 @@ def g_equidade(grupos: list[dict]) -> str:
     yy = 96
     for g in grupos:
         p.append(txt(ml - 10, yy + 20, str(g["grupo"])[:26], "rot", "end"))
-        for k, cor, dy in (("tpr", S1, 0), ("ppv", S2, 20)):
-            v = float(g.get(k) or 0)
+        # Chave errada com `.get(..., 0)` nao levanta erro: desenha barra zerada e a
+        # pagina fica plausivel e vazia. Foi o que aconteceu na primeira versao
+        # (usava "tpr"/"ppv"; o artefato grava "recall_tpr"/"precisao_ppv"). Indexar
+        # direto faz o build falhar, que e o comportamento correto.
+        for k, cor, dy in (("recall_tpr", S1, 0), ("precisao_ppv", S2, 20)):
+            v = float(g[k])
             p.append(barra_h(ml, yy + dy, x(v) - ml, 15, cor))
             p.append(txt(x(v) + 8, yy + dy + 12, f"{v:.1%}".replace(".", ","), "val"))
         yy += 46
