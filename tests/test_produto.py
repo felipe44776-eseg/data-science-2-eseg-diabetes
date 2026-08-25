@@ -306,7 +306,8 @@ def test_matriz_de_confusao_e_coerente():
 def test_pagina_do_metodo_tem_as_etapas_e_os_graficos():
     """Cada etapa precisa do grafico que sustenta a decisao — nao e ilustracao."""
     html = METODO.read_text(encoding="utf-8")
-    assert html.count('<section class="etapa"') == 15
+    # 15 etapas do metodo + a secao de referencia (glossario)
+    assert html.count('<section class="etapa"') == 16
     assert html.count("<figure>") >= 8
     for termo in ("Matriz de confusão", "precision-recall", "Calibração",
                   "Curva de decisão", "parcimônia", "Equidade"):
@@ -400,3 +401,57 @@ def test_faixas_de_idade_do_brfss_estao_certas():
     for faixa in ("18+", "30+", "40+", "50+", "60+", "70+"):
         assert f">{faixa}<" in html, faixa
     assert ">28+<" not in html and ">38+<" not in html
+
+
+def test_tabela_2x2_do_glossario_fecha():
+    """A aritmética do OR tem de bater com a tabela que a página mostra.
+
+    O glossário existe para quem quiser conferir a conta. Se as células e o OR
+    publicado divergirem, a página ensina errado — pior que não ensinar.
+    """
+    from diabetes.produto.metodo import tabela_2x2
+
+    if not Path("data/processed/gold/brfss_expandido.parquet").exists():
+        pytest.skip("parquet expandido ausente")
+    t = tabela_2x2()
+
+    # OR = (a·d)/(b·c), e tambem a razao entre as duas chances
+    assert t["or"] == pytest.approx(t["a"] * t["d"] / (t["b"] * t["c"]), rel=1e-9)
+    assert t["or"] == pytest.approx(t["chance1"] / t["chance0"], rel=1e-9)
+    # RR e razao de PROBABILIDADES, e com desfecho comum fica abaixo do OR
+    assert t["rr"] == pytest.approx((t["p1"] / 100) / (t["p0"] / 100), rel=1e-9)
+    assert t["rr"] < t["or"], "com desfecho comum o OR exagera em relação ao RR"
+    assert 6.0 < t["or"] < 8.0, t["or"]
+
+
+@pytest.mark.skipif(not METODO.exists(), reason="pagina do metodo nao gerada")
+def test_glossario_publica_formula_e_numero():
+    """Cada verbete precisa da fórmula E do valor real — um sem o outro não ensina."""
+    html = METODO.read_text(encoding="utf-8")
+    assert 'id="glossario"' in html
+    for termo in ("Razão de chances", "Risco relativo", "Regressão logística",
+                  "PR-AUC", "ECE", "DEFF", "E-value", "Lift"):
+        assert termo in html, termo
+    # MathML nativo, sem biblioteca externa (a pagina tem de ser autocontida)
+    assert html.count("<math") >= 10
+    assert "<mfrac>" in html and "MathJax" not in html and "katex" not in html.lower()
+    # todo verbete traz o numero medido, nao so a formula
+    assert html.count("No projeto:") >= 8
+
+
+@pytest.mark.skipif(not METODO.exists(), reason="pagina do metodo nao gerada")
+def test_glossario_usa_separador_ptbr():
+    """`.replace(",", ".")` global no milhar come a vírgula decimal.
+
+    Foi assim que o OR saiu como "6.9998" em vez de "6,9998" — o mesmo defeito que
+    `deck.num` já documenta desde a primeira vez que aconteceu.
+    """
+    import re
+
+    html = METODO.read_text(encoding="utf-8")
+    trecho = html[html.find('id="glossario"'):]
+    texto = re.sub(r"<[^>]+>", " ", trecho)
+    # decimal com ponto e 1-2 casas nao existe em pt-BR; milhar tem sempre 3
+    suspeitos = [x for x in re.findall(r"\d+\.\d+", texto)
+                 if len(x.split(".")[1]) != 3]
+    assert not suspeitos, f"decimal com ponto: {suspeitos[:5]}"

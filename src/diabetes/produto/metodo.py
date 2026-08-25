@@ -29,6 +29,7 @@ import numpy as np
 import pandas as pd
 
 from diabetes.models.expandido import particionar
+from diabetes.produto.deck import num
 from diabetes.produto.exportar import prever_do_json
 from diabetes.viz.tema import Escala, barra_h, barra_v, legenda, linha, ponto, svg, txt
 
@@ -499,8 +500,11 @@ b,strong{color:var(--tinta);font-weight:640}
 
 /* --- etapa --- */
 .etapa{padding:52px 0;border-top:1px solid var(--linha)}
+/* `.n` e o rotulo 'ETAPA 01'. A 12px, --s1 (#2a78d6) da 4,42:1 sobre o
+   fundo claro — abaixo do minimo. `--olho` e a versao escurecida, usada
+   so em texto; barras e links seguem com --s1. */
 .n{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.08em;
-  color:var(--s1);margin-bottom:8px}
+  color:var(--olho);margin-bottom:8px}
 .qa{display:grid;grid-template-columns:118px 1fr;gap:10px 18px;margin-top:20px;
   font-size:16px}
 .qa dt{color:var(--tinta3);font-size:12px;text-transform:uppercase;
@@ -523,6 +527,19 @@ figcaption b{color:var(--tinta2)}
 .armadilha p{color:var(--tinta);font-size:15.5px;max-width:70ch}
 .armadilha .rot{font-size:12px;text-transform:uppercase;letter-spacing:.07em;
   color:var(--alerta-rot);font-weight:670;display:block;margin-bottom:5px}
+.glossario{display:grid;gap:20px;margin-top:26px}
+.verbete{background:var(--cartao);border:1px solid var(--linha);border-radius:14px;
+  padding:22px 24px}
+.verbete h3{font-size:18px;margin-bottom:12px}
+.verbete .sigla{font-size:12px;font-weight:600;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--tinta3);margin-left:8px}
+.verbete p{font-size:15.5px}
+.verbete .exemplo{margin-top:12px;padding-left:14px;border-left:3px solid var(--s3)}
+.verbete .cuidado{margin-top:10px;padding-left:14px;border-left:3px solid var(--s2)}
+.formula{overflow-x:auto;padding:14px 0 16px;font-size:19px;color:var(--tinta)}
+math{color:var(--tinta)}
+.dois-por-dois{margin-top:12px;font-size:15px}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
 footer{padding:44px 0 64px;border-top:1px solid var(--linha);font-size:14px;
   color:var(--tinta3)}
 """
@@ -560,6 +577,303 @@ def _doc(nome: str, rotulo: str) -> str:
     return f'<a href="{base}{nome}">{rotulo}</a>'
 
 
+
+
+# ==========================================================================
+# glossario de metricas
+# ==========================================================================
+
+def tabela_2x2(variavel: str = "_RFHYPE5", exposto: int = 2) -> dict:
+    """Tabela 2x2 ponderada da variavel contra o alvo, com OR e RR calculados.
+
+    Existe para o glossario mostrar a aritmetica com o dado real em vez de um
+    exemplo inventado: quem le confere a conta somando as quatro celulas.
+
+    Ponderada por `_LLCPWT` — as celulas sao soma de peso, nao contagem de linha,
+    porque e assim que o projeto reporta qualquer prevalencia (invariante 10).
+    """
+    d = pd.read_parquet(GOLD / "brfss_expandido.parquet",
+                        columns=[variavel, "diabetes", "_LLCPWT"])
+    d = d[d[variavel].isin([1, 2]) & d["diabetes"].isin([0, 1])]
+    w = d["_LLCPWT"].astype(float).to_numpy()
+    exp = (d[variavel] == exposto).to_numpy()
+    alvo = (d["diabetes"] == 1).to_numpy()
+
+    def _soma(m: np.ndarray) -> float:
+        return float(w[m].sum())
+
+    a, b = _soma(exp & alvo), _soma(exp & ~alvo)
+    c, e = _soma(~exp & alvo), _soma(~exp & ~alvo)
+    p1, p0 = a / (a + b), c / (c + e)
+    return {"a": a, "b": b, "c": c, "d": e,
+            "chance1": a / b, "chance0": c / e,
+            "or": (a * e) / (b * c), "rr": p1 / p0,
+            "p1": p1 * 100, "p0": p0 * 100}
+
+
+# --- MathML: nativo do navegador, sem biblioteca -------------------------
+# KaTeX e MathJax viriam de CDN, e o projeto exige pagina autocontida. MathML
+# Core e suportado por Chrome, Firefox e Safari e ainda e lido por leitor de tela.
+
+def _n(x) -> str:
+    """Numero."""
+    return f"<mn>{x}</mn>"
+
+
+def _i(x) -> str:
+    """Identificador (variavel)."""
+    return f"<mi>{x}</mi>"
+
+
+def _o(x) -> str:
+    """Operador."""
+    return f"<mo>{x}</mo>"
+
+
+def _frac(cima: str, baixo: str) -> str:
+    """Fracao."""
+    return f"<mfrac><mrow>{cima}</mrow><mrow>{baixo}</mrow></mfrac>"
+
+
+def _sup(base: str, exp: str) -> str:
+    """Potencia."""
+    return f"<msup><mrow>{base}</mrow><mrow>{exp}</mrow></msup>"
+
+
+def _raiz(x: str) -> str:
+    """Raiz quadrada."""
+    return f"<msqrt><mrow>{x}</mrow></msqrt>"
+
+
+def _math(*partes: str) -> str:
+    """Envelope MathML em bloco."""
+    return ('<math display="block" xmlns="http://www.w3.org/1998/Math/MathML">'
+            + "".join(partes) + "</math>")
+
+
+def _verbete(termo: str, sigla: str, formula: str, leitura: str,
+             exemplo: str, cuidado: str = "") -> str:
+    """Um verbete: termo, formula, como se le, o numero real e a armadilha."""
+    partes = [f'<div class="verbete"><h3>{termo} '
+              f'<span class="sigla">{sigla}</span></h3>',
+              f'<div class="formula">{formula}</div>',
+              f"<p>{leitura}</p>",
+              f'<p class="exemplo"><b>No projeto:</b> {exemplo}</p>']
+    if cuidado:
+        partes.append(f'<p class="cuidado"><b>Cuidado:</b> {cuidado}</p>')
+    partes.append("</div>")
+    return "".join(partes)
+
+
+def _glossario(t: dict, mconf: dict, esc: dict, cau: dict,
+               curvas: dict) -> str:
+    """Seção de referência: a fórmula de cada métrica, com o número que ela produz.
+
+    Nasceu de uma pergunta direta — "o que é o OR, qual a fórmula?". Um projeto que
+    publica razão de chances, PR-AUC, ECE e E-value em quinze superfícies deve a
+    quem lê a conta de cada um, com o dado real ao lado.
+    """
+    bloco = esc["sem_proxies_de_acesso"]["modelos"]["5_gb_calibrado"]["holdout"]
+    hip = f"{t['or']:.4f}".replace(".", ",")
+
+    linhas_2x2 = (
+        '<div class="rolagem"><table class="dois-por-dois"><thead><tr><th></th>'
+        "<th class='num'>com diabetes</th><th class='num'>sem diabetes</th>"
+        "</tr></thead>"
+        "<tbody>"
+        f"<tr><td>com pressão alta</td><td class='num'><b>a</b> = {num(t['a'])}</td>"
+        f"<td class='num'><b>b</b> = {num(t['b'])}</td></tr>"
+        f"<tr><td>sem pressão alta</td><td class='num'><b>c</b> = {num(t['c'])}</td>"
+        f"<td class='num'><b>d</b> = {num(t['d'])}</td></tr>"
+        "</tbody></table></div>")
+
+    v = []
+
+    v.append(_verbete(
+        "Chance", "odds",
+        _math(_i("odds"), _o("="), _frac(_i("p"), _n("1") + _o("−") + _i("p"))),
+        "Não é probabilidade. Probabilidade é <i>casos ÷ total</i>; chance é "
+        "<i>casos ÷ não-casos</i>. Se 24% das pessoas com pressão alta têm "
+        "diabetes, a probabilidade é 0,24 e a chance é 0,24/0,76 = 0,32 — “32 com "
+        "para cada 100 sem”.",
+        f"chance entre quem tem pressão alta: <b>{t['chance1']:.4f}</b>; entre quem "
+        f"não tem: <b>{t['chance0']:.4f}</b>".replace(".", ",")))
+
+    v.append(_verbete(
+        "Razão de chances", "OR",
+        _math(_i("OR"), _o("="),
+              _frac(_frac(_sub_p(1), _n("1") + _o("−") + _sub_p(1)),
+                    _frac(_sub_p(0), _n("1") + _o("−") + _sub_p(0))),
+              _o("="), _frac(_i("a") + _o("·") + _i("d"), _i("b") + _o("·") + _i("c"))),
+        "A razão entre as duas chances. A segunda forma sai direto da tabela 2×2 — "
+        "é a mesma conta. Esta é a tabela real do projeto, ponderada por "
+        "<code>_LLCPWT</code> (as células são soma de peso, não contagem de linha):"
+        + linhas_2x2,
+        # `.replace(",", ".")` no texto inteiro trocaria tambem a virgula DECIMAL de
+        # `hip` — foi exatamente assim que "6,9998" virou "6.9998". `num` formata em
+        # vez de substituir; a nota em `deck.num` conta a primeira vez que isto
+        # aconteceu.
+        f"<b>OR = ({num(t['a'])} × {num(t['d'])}) ÷ "
+        f"({num(t['b'])} × {num(t['c'])}) = {hip}</b>" +
+        " — a chance de ter diabetes é 7× maior entre quem tem pressão alta.",
+        "OR <b>não</b> é “7× mais provável”. Ver o verbete seguinte."))
+
+    v.append(_verbete(
+        "Risco relativo", "RR",
+        _math(_i("RR"), _o("="), _frac(_sub_p(1), _sub_p(0))),
+        "A razão entre as duas <b>probabilidades</b>. É o que a maioria das pessoas "
+        "entende quando ouve “X vezes mais”.",
+        f"prevalência de {t['p1']:.2f}% contra {t['p0']:.2f}% → "
+        f"<b>RR = {t['rr']:.2f}</b>".replace(".", ","),
+        f"<b>OR {hip} ≠ RR {t['rr']:.2f}</b>".replace(".", ",") +
+        ". O OR sempre exagera em relação ao RR, e quanto mais comum o desfecho, "
+        "mais exagera. Só convergem quando o desfecho é raro."))
+
+    v.append(_verbete(
+        "Regressão logística", "log-odds",
+        _math("<mi>log</mi>",
+              _frac(_i("p"), _n("1") + _o("−") + _i("p")), _o("="),
+              _sub_b(0), _o("+"), _sub_b(1) + _i("x") + "<mn>1</mn>", _o("+"),
+              "<mo>⋯</mo>", _o("+"), _sub_b("k") + _i("x") + _i("k")),
+        "É de onde o OR vem na prática. Cada coeficiente é o <b>logaritmo do OR</b> "
+        "daquela variável, com as outras fixas — então "
+        + _math(_i("OR"), _o("="), _sup(_i("e"), "<mi>β</mi>")) +
+        " e o intervalo de confiança sai de "
+        + _math("<mi>exp</mi>", _o("("), "<mi>β</mi>", _o("±"), _n("1,96"),
+                _o("·"), "<mi>EP</mi>", _o("("), "<mi>β</mi>", _o(")"), _o(")")),
+        "é o que separa o OR <b>bruto</b> do <b>ajustado</b>. Bruto, pressão alta dá "
+        f"{hip}; ajustado por idade, renda e IMC, dá <b>3,146</b> — porque quem tem "
+        "pressão alta também é mais velho, e idade já causa diabetes por conta "
+        "própria.",
+        "O IC é <b>assimétrico</b> em torno do OR, porque a exponencial não é "
+        "linear. Em <code>docs/09</code> o intervalo [2,64; 3,73] não tem 3,136 no "
+        "meio — e isso está certo."))
+
+    v.append(_verbete(
+        "Precisão, recall, especificidade", "da matriz 2×2",
+        _math(_i("recall"), _o("="), _frac(_i("VP"), _i("VP") + _o("+") + _i("FN")),
+              "<mspace width='1.4em'/>",
+              _i("precisão"), _o("="),
+              _frac(_i("VP"), _i("VP") + _o("+") + _i("FP")),
+              "<mspace width='1.4em'/>",
+              _i("espec."), _o("="),
+              _frac(_i("VN"), _i("VN") + _o("+") + _i("FP"))),
+        "As três leem a mesma matriz por lados diferentes. <b>Recall</b>: de quem "
+        "tem, quantos achei. <b>Precisão</b>: de quem mandei testar, quantos eram "
+        "casos. <b>Especificidade</b>: de quem não tem, quantos poupei.",
+        f"no limiar adotado: recall <b>{mconf['recall']:.1%}</b>, precisão "
+        f"<b>{mconf['precisao']:.1%}</b>, especificidade "
+        f"<b>{mconf['especificidade']:.1%}</b>".replace(".", ","),
+        "Não existe melhorar as três ao mesmo tempo — mover o limiar troca uma pela "
+        "outra. É por isso que a etapa 08 fixa a especificidade primeiro."))
+
+    v.append(_verbete(
+        "Área sob a curva precision-recall", "PR-AUC",
+        _math(_i("PR-AUC"), _o("="), "<mo>∫</mo>",
+              _sup("", "<mn>1</mn>"), _i("precisão"),
+              _o("("), _i("r"), _o(")"), _i("dr")),
+        "A média da precisão ao longo de todos os valores de recall. É a métrica "
+        "primária do projeto porque a linha de base dela é a <b>prevalência</b> — "
+        "um modelo inútil marca "
+        f"{curvas['prevalencia']:.1%}".replace(".", ",") +
+        ", não 50% como na ROC.",
+        f"o melhor modelo marca <b>{bloco['pr_auc']:.4f}</b>".replace(".", ",") +
+        f", contra uma linha de base de {curvas['prevalencia']:.1%}".replace(".", ","),
+        "ROC-AUC alta com PR-AUC medíocre é comum em base desbalanceada, e significa "
+        "que o modelo ordena bem mas erra muito entre os que seleciona."))
+
+    v.append(_verbete(
+        "Erro de calibração esperado", "ECE",
+        _math(_i("ECE"), _o("="),
+              "<munderover><mo>∑</mo><mrow><mi>m</mi><mo>=</mo><mn>1</mn></mrow>"
+              "<mi>M</mi></munderover>",
+              _frac("<mo>|</mo>" + _sub_B("m") + "<mo>|</mo>", _i("n")),
+              "<mo>|</mo>", _i("obs"), _o("("), _sub_B("m"), _o(")"), _o("−"),
+              _i("prev"), _o("("), _sub_B("m"), _o(")"), "<mo>|</mo>"),
+        "Divide as previsões em faixas, e em cada uma compara o risco previsto com a "
+        "frequência observada. Mede se “20% de risco” significa mesmo que 20 em cada "
+        "100 daquele grupo têm a doença.",
+        f"o modelo calibrado marca <b>{bloco['ece']:.5f}</b>".replace(".", ",") +
+        "; sem calibrar, o ECE piora <b>67×</b> com a ROC-AUC idêntica",
+        "É a métrica que mais quebra quando o modelo muda de contexto, e a que quase "
+        "ninguém reporta. Ver a etapa 15."))
+
+    v.append(_verbete(
+        "Efeito de desenho", "DEFF",
+        _math(_i("DEFF"), _o("="),
+              _frac("<msubsup><mi>V</mi><mrow>complexa</mrow><mrow></mrow></msubsup>",
+                    "<msubsup><mi>V</mi><mrow>aleatória</mrow><mrow></mrow>"
+                    "</msubsup>"),
+              "<mspace width='1.4em'/>",
+              _sub_n("ef"), _o("="), _frac(_i("n"), _i("DEFF"))),
+        "Quanto a amostragem complexa infla a variância em relação a uma amostra "
+        "aleatória simples do mesmo tamanho. O <b>n efetivo</b> é quantas pessoas a "
+        "amostra “vale” de verdade para fins de intervalo de confiança.",
+        "DEFF real por linearização de Taylor: <b>2,94</b> — e não os 4,04 da "
+        "aproximação de Kish que usávamos, o que significa que nossos intervalos "
+        "eram <b>largos demais</b>, não estreitos",
+        "Ignorar o desenho e calcular o IC como amostra aleatória simples produz "
+        "intervalo estreito demais. Foi um dos achados da auditoria em "
+        "<code>docs/21</code>."))
+
+    v.append(_verbete(
+        "E-value", "sensibilidade a confundimento",
+        _math(_i("E"), _o("="), _i("RR"), _o("+"),
+              _raiz(_i("RR") + _o("(") + _i("RR") + _o("−") + _n("1") + _o(")"))),
+        "Quão forte teria de ser um confundidor <b>não medido</b> — associado tanto "
+        "à exposição quanto ao desfecho — para anular o efeito observado. É o único "
+        "número da camada causal que não depende do DAG estar certo.",
+        f"atividade física: OR ajustado "
+        f"{cau['estimativa_causal_efeito_total']['or']:.3f}".replace(".", ",") +
+        f" → E-value <b>{cau['e_value']['e_value_estimativa']:.2f}</b>"
+        .replace(".", ",") + ". Hipertensão, na mesma escala: <b>7,23</b>",
+        "E-value alto não prova causa; E-value baixo <b>enfraquece</b> a alegação. "
+        "2,33 é frágil: capacidade funcional prévia é um candidato plausível."))
+
+    v.append(_verbete(
+        "Lift", "de uma regra ou interseção",
+        _math(_i("lift"), _o("="),
+              _frac(_i("P") + _o("(") + _i("A") + _o("∩") + _i("B") + _o(")"),
+                    _i("P") + _o("(") + _i("A") + _o(")") + _o("·") + _i("P")
+                    + _o("(") + _i("B") + _o(")"))),
+        "Quantas vezes dois eventos aparecem juntos além do que o acaso explicaria. "
+        "<b>1,0 = independentes.</b> Acima de 1, atraem-se; abaixo, evitam-se.",
+        "a síndrome metabólica reconstruída pelo FP-Growth dá lift <b>3,83</b>; já o "
+        "cruzamento entre <i>outliers</i> e prováveis não diagnosticados deu "
+        "<b>0,76</b> — as duas listas se <b>evitam</b>, e a hipótese caiu",
+        "Lift abaixo de 1 é resultado, não ausência de resultado. Foi o que refutou "
+        "a proposta de <code>docs/02</code>."))
+
+    return ('<section class="etapa" id="glossario">'
+            '<span class="n">REFERÊNCIA</span>'
+            "<h2>Glossário: a fórmula de cada número</h2>"
+            "<p>Cada métrica que o projeto publica, com a conta que a produz e o "
+            "valor real que ela deu aqui. As fórmulas estão em MathML nativo — sem "
+            "biblioteca, sem CDN, e legíveis por leitor de tela.</p>"
+            f'<div class="glossario">{"".join(v)}</div>'
+            "</section>")
+
+
+def _sub_p(i) -> str:
+    """p com índice — probabilidade no grupo exposto (1) ou não exposto (0)."""
+    return f"<msub><mi>p</mi><mn>{i}</mn></msub>"
+
+
+def _sub_b(i) -> str:
+    """β com índice."""
+    return f"<msub><mi>β</mi><mi>{i}</mi></msub>" if not str(i).isdigit() \
+        else f"<msub><mi>β</mi><mn>{i}</mn></msub>"
+
+
+def _sub_B(i) -> str:
+    """B com índice — a m-ésima faixa de calibração."""
+    return f"<msub><mi>B</mi><mi>{i}</mi></msub>"
+
+
+def _sub_n(i) -> str:
+    """n com índice."""
+    return f"<msub><mi>n</mi><mrow>{i}</mrow></msub>"
+
 def montar() -> str:
     """Monta a pagina do metodo a partir dos artefatos e do modelo servido."""
     man = ler("_manifest_ingestao.json", RAIZ / "data" / "raw")["manifest"]
@@ -580,6 +894,7 @@ def montar() -> str:
     y, p = prever_holdout()
     mconf = matriz_de_confusao(y, p)
     curvas = _curva(y, p)
+    t2x2 = tabela_2x2()
     dez = next((c for c in td["candidatos"]["escore_5_perguntas"]["cobertura"]
                 if c["%_testado"] == 10.0),
                td["candidatos"]["escore_5_perguntas"]["cobertura"][0])
@@ -864,8 +1179,13 @@ def montar() -> str:
         ("rotulo", "O rótulo mente"), ("causal", "Isso é causal?"),
         ("transporte", "Funciona fora daqui?"),
     ]
+    titulos_extra = [("glossario", "Glossário das métricas")]
     sumario = "".join(f'<li><a href="#{c}">{n:02d}. {t}</a></li>'
                       for n, (c, t) in enumerate(titulos, start=1))
+    sumario += "".join(f'<li><a href="#{c}">↪ {t}</a></li>'
+                       for c, t in titulos_extra)
+
+    e.append(_glossario(t2x2, mconf, esc, cau, curvas))
 
     return ("<!doctype html><html lang=\"pt-BR\"><head>\n"
             "<meta charset=\"utf-8\">"
