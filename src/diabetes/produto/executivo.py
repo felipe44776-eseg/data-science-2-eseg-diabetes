@@ -111,7 +111,7 @@ def g_odds(binarias: list[dict], n: int = 8) -> str:
     p.append(txt(20, H - 12,
                  "Quem nunca fez exame não aparece como diabético — aparece como "
                  "saudável.", "rot"))
-    return svg(W, H, "".join(p), "Fatores associados a diabetes")
+    return svg(W, H, "".join(p), "Fatores associados a diabetes", escala=1.45)
 
 
 def g_gradientes(ordinais: list[dict], imc: dict) -> str:
@@ -163,7 +163,7 @@ def g_gradientes(ordinais: list[dict], imc: dict) -> str:
     p.append(txt(20, H - 22,
                  "São gradientes fortes o bastante para caber em cinco perguntas — "
                  "e é isso que o escore explora.", "rot"))
-    return svg(W, H, "".join(p), "Gradientes de prevalência")
+    return svg(W, H, "".join(p), "Gradientes de prevalência", escala=1.3)
 
 
 def g_bases(bi: dict) -> str:
@@ -196,7 +196,7 @@ def g_bases(bi: dict) -> str:
                  "terceira casa decimal.", "rot"))
     p.append(txt(20, H - 10,
                  "Duas pesquisas independentes, dois países — o mesmo número.", "rot"))
-    return svg(W, H, "".join(p), "Comparação Brasil x EUA")
+    return svg(W, H, "".join(p), "Comparação Brasil x EUA", escala=1.45)
 
 
 def montar() -> str:
@@ -299,7 +299,7 @@ def montar() -> str:
     S.append(slide("acertamos quanto?", f"""
       <h2>De cada 100 diabéticos, quantos encontramos?</h2>
       <div class="duas">
-        <div>{g_confusao(mconf)}</div>
+        <div>{g_confusao(mconf, compacto=True)}</div>
         <div>
           <p>Ajustamos o modelo para <b>errar pouco em quem não tem</b>: de cada 10
           pessoas saudáveis, 9 são corretamente deixadas de fora.</p>
@@ -319,7 +319,7 @@ def montar() -> str:
     S.append(slide("orçamento", f"""
       <h2>Quantos exames comprar</h2>
       <div class="duas">
-        <div>{g_cobertura(cob)}</div>
+        <div>{g_cobertura(cob, compacto=True)}</div>
         <div>
           <div class="numerao">{num(dez['%_casos_encontrados'], 1)}<small>%</small></div>
           <p class="legenda">dos diabéticos encontrados testando apenas <b>10%</b>
@@ -338,7 +338,8 @@ def montar() -> str:
     S.append(slide("quantas perguntas", f"""
       <h2>Não precisa de 60 perguntas</h2>
       {g_parcimonia(esc['parcimonia']['curva'],
-                    esc['parcimonia']['teto_referencia'], ROTULO_CURTO)}
+                    esc['parcimonia']['teto_referencia'], ROTULO_CURTO,
+                    compacto=True)}
       <p style="margin-top:14px">A curva satura cedo: as primeiras perguntas carregam
       quase tudo. Foi o que permitiu reduzir a <b>cinco</b> — e o que separa um
       instrumento aplicável de um modelo que só roda em computador.</p>"""))
@@ -432,7 +433,14 @@ def montar() -> str:
     return f"""<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
 <meta name="viewport" content="width=1280">
 <title>Quem os dados de saúde deixam de fora · apresentação executiva · ESEG</title>
-<style>{CSS}</style></head><body>
+<style>{CSS}
+/* Os graficos foram desenhados para pagina de relatorio (900px, leitura de mesa).
+   Num slide de 1280x720 projetado eles ficavam com texto de 11px ao lado de corpo
+   de 19px, e sobrava um terco de slide vazio. `width:100%` sobre o viewBox escala
+   tudo junto — a tipografia do grafico cresce na mesma proporcao. */
+.slide svg{{width:100%;height:auto;display:block}}
+.slide .duas svg{{max-height:430px}}
+</style></head><body>
 <div class="prog"></div>{corpo}
 <div class="ajuda">← → navega · Ctrl+P exporta em PDF (paisagem, sem margens)</div>
 <script>{JS}</script></body></html>"""

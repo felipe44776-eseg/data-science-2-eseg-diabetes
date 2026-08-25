@@ -30,7 +30,10 @@ CLARO = {
     "plano": "#f9f9f7",
     "tinta": "#0b0b0b",
     "tinta2": "#52514e",
-    "tinta3": "#898781",
+    # #898781 dava 3,50:1 sobre a superficie clara — abaixo do minimo de 4,5:1 do
+    # WCAG AA para texto normal, e `tinta3` e a cor de TODO rotulo de eixo. Medido
+    # com Puppeteer: 58 rotulos por pagina reprovavam. #706e68 da 4,97:1.
+    "tinta3": "#706e68",
     "grade": "#e1e0d9",
     "eixo": "#c3c2b7",
     "s1": "#2a78d6",
@@ -59,19 +62,28 @@ ESCURO = {
 
 FONTE = 'system-ui, -apple-system, "Segoe UI", sans-serif'
 
-#: bloco de estilo embutido em cada SVG isolado, para que o arquivo .svg
-#: sozinho continue respeitando o tema do visualizador
+#: Bloco de estilo embutido em cada SVG, para que o arquivo `.svg` aberto sozinho
+#: continue respeitando o tema do visualizador.
+#:
+#: Os tokens vao em `svg{{}}`, NAO em `:root{{}}`. Parece detalhe e nao e: quando o
+#: SVG e embutido numa pagina HTML — que e o caso do deck, da pagina do metodo e da
+#: de figuras — um `:root` dentro do `<style>` do SVG casa com o `<html>` do
+#: documento e **sobrescreve os tokens da pagina inteira**. Em modo escuro isso
+#: trocava `--tinta` por uma cor clara enquanto o fundo do slide continuava claro:
+#: contraste de 1,03:1, texto invisivel em todos os slides. Em `svg{{}}` as
+#: variaveis cascateiam para os filhos do proprio grafico e param ali; no arquivo
+#: isolado o elemento raiz E o `<svg>`, entao nada se perde.
 ESTILO_SVG = """
-:root{{{claro}}}
-@media (prefers-color-scheme: dark){{:root{{{escuro}}}}}
+svg{{{claro}}}
+@media (prefers-color-scheme: dark){{svg{{{escuro}}}}}
 text{{font-family:{fonte};fill:var(--tinta)}}
-.rot{{fill:var(--tinta2);font-size:12px}}
-.eixo{{fill:var(--tinta3);font-size:11px}}
-.titulo{{fill:var(--tinta);font-size:15px;font-weight:600}}
-.sub{{fill:var(--tinta2);font-size:12px}}
+.rot{{fill:var(--tinta2);font-size:{r}px}}
+.eixo{{fill:var(--tinta3);font-size:{e}px}}
+.titulo{{fill:var(--tinta);font-size:{t}px;font-weight:600}}
+.sub{{fill:var(--tinta2);font-size:{r}px}}
 .grade{{stroke:var(--grade);stroke-width:1}}
 .base{{stroke:var(--eixo);stroke-width:1}}
-.val{{fill:var(--tinta);font-size:11px;font-variant-numeric:tabular-nums}}
+.val{{fill:var(--tinta);font-size:{e}px;font-variant-numeric:tabular-nums}}
 """
 
 
@@ -79,15 +91,21 @@ def _vars(d: dict) -> str:
     return "".join(f"--{k}:{v};" for k, v in d.items())
 
 
-def estilo() -> str:
+def estilo(escala: float = 1.0) -> str:
     """Bloco `<style>` com os tokens dos dois modos, para embutir em cada SVG.
 
-    Os tokens entram como variaveis CSS em `:root` mais um `prefers-color-scheme`,
-    entao o `.svg` aberto sozinho no navegador continua respeitando o tema do
-    sistema. Sem isso o arquivo isolado sairia com a paleta clara chumbada e ficaria
-    ilegivel em modo escuro.
+    Os tokens entram em `svg{}` mais um `prefers-color-scheme`, entao o `.svg`
+    aberto sozinho continua respeitando o tema do sistema — e, embutido em HTML, nao
+    vaza para a pagina. Ver a nota em `ESTILO_SVG`.
+
+    `escala` multiplica os corpos de texto. Existe porque o mesmo grafico serve a
+    dois contextos com distancias de leitura diferentes: numa pagina de relatorio,
+    11px lidos a 50 cm; num slide projetado, o SVG e reduzido para caber na coluna e
+    o mesmo 11px vira ~9px vistos de longe. Medido com Puppeteer.
     """
-    return ESTILO_SVG.format(claro=_vars(CLARO), escuro=_vars(ESCURO), fonte=FONTE)
+    return ESTILO_SVG.format(claro=_vars(CLARO), escuro=_vars(ESCURO), fonte=FONTE,
+                             r=round(12 * escala, 1), e=round(11 * escala, 1),
+                             t=round(15 * escala, 1))
 
 
 # --- primitivos -----------------------------------------------------------
@@ -169,7 +187,8 @@ def legenda(x: float, y: float, itens: list[tuple[str, str]]) -> str:
     return "".join(partes)
 
 
-def svg(largura: int, altura: int, corpo: str, titulo: str = "") -> str:
+def svg(largura: int, altura: int, corpo: str, titulo: str = "",
+        escala: float = 1.0) -> str:
     """Envelope do SVG: viewBox, estilo embutido, fundo de superficie e rotulo ARIA.
 
     `role="img"` com `aria-label` e o que da nome acessivel a figura. `viewBox` ao
@@ -184,7 +203,7 @@ def svg(largura: int, altura: int, corpo: str, titulo: str = "") -> str:
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {largura} {altura}" '
         f'width="{largura}" height="{altura}" role="img" '
         f'aria-label="{escape(titulo)}">'
-        f"<style>{estilo()}</style>"
+        f"<style>{estilo(escala)}</style>"
         f'<rect width="{largura}" height="{altura}" fill="var(--superficie)"/>'
         f"{corpo}</svg>"
     )

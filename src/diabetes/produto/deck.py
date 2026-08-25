@@ -51,13 +51,28 @@ def num(x: float, casas: int = 0) -> str:
 # --------------------------------------------------------------------------
 
 CSS = """
+/* Paleta clara — a mesma de `viz/tema.py`, para que slide e grafico casem. */
 :root{
-  --bg:#fcfcfb; --tinta:#0b0b0b; --tinta2:#52514e; --tinta3:#898781;
+  --bg:#fcfcfb; --tinta:#0b0b0b; --tinta2:#52514e; --tinta3:#706e68;
   --linha:#e1e0d9; --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --alerta:#d03b3b;
-  --realce:#f0efec;
+  --realce:#f0efec; --mesa:#3a3a38;
+  /* o rotulo de secao e azul sobre claro: #2a78d6 da 4,30:1, abaixo do
+     minimo. So o texto muda de tom; as barras seguem com --s1. */
+  --olho:#1f6ac4;
+}
+/* Modo escuro. Os SVG embutidos ja viram para a paleta escura de `tema.py` por
+   conta propria; sem este bloco o slide continuava claro e o grafico escuro, e o
+   texto do slide caia para contraste de 1,03:1 — invisivel. Os valores espelham
+   `tema.ESCURO` para que fundo de slide e superficie do grafico casem. */
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#1a1a19; --tinta:#ffffff; --tinta2:#c3c2b7; --tinta3:#898781;
+    --linha:#2c2c2a; --s1:#3987e5; --s2:#d95926; --s3:#199e70; --alerta:#e66767;
+    --realce:#262623; --mesa:#0d0d0d; --olho:#5fa0e8;
+  }
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#3a3a38;font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;
+body{background:var(--mesa);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;
   color:var(--tinta)}
 .slide{position:relative;width:1280px;height:720px;background:var(--bg);
   margin:22px auto;padding:56px 72px;overflow:hidden;
@@ -65,7 +80,7 @@ body{background:#3a3a38;font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-se
 .slide::after{content:attr(data-n);position:absolute;right:30px;bottom:20px;
   font-size:12px;color:var(--tinta3);font-variant-numeric:tabular-nums}
 .olho{font-size:12px;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--s1);font-weight:650;margin-bottom:12px}
+  color:var(--olho);font-weight:650;margin-bottom:12px}
 h1{font-size:52px;line-height:1.08;letter-spacing:-.025em;font-weight:680}
 h2{font-size:34px;line-height:1.15;letter-spacing:-.02em;font-weight:660;
   margin-bottom:18px}
@@ -119,8 +134,17 @@ tr.destaque td{background:color-mix(in srgb,var(--s1) 10%,transparent);font-weig
 .ajuda{position:fixed;right:14px;bottom:12px;font-size:12px;color:#c9c8c2;z-index:9}
 @page{size:1280px 720px;margin:0}
 @media print{
+  /* PDF sai SEMPRE claro, independente do tema da tela: papel e projetor nao
+     herdam `prefers-color-scheme`, e slide escuro impresso gasta toner e perde
+     contraste. `print-color-adjust` impede o navegador de "otimizar" os fundos. */
+  :root{
+    --bg:#fcfcfb; --tinta:#0b0b0b; --tinta2:#52514e; --tinta3:#898781;
+    --linha:#e1e0d9; --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --alerta:#d03b3b;
+    --realce:#f0efec; --mesa:#fff; --olho:#1f6ac4;
+  }
   body{background:#fff}
-  .slide{margin:0;box-shadow:none;break-after:page;page-break-after:always}
+  .slide{margin:0;box-shadow:none;break-after:page;page-break-after:always;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
   .prog,.ajuda{display:none}
 }
 """

@@ -127,40 +127,80 @@ def _curva(y: np.ndarray, p: np.ndarray, pontos: int = 60) -> dict:
 # graficos
 # ==========================================================================
 
-def g_confusao(m: dict) -> str:
-    """Matriz de confusao como quatro blocos proporcionais, com taxa e contagem."""
-    W, H = 620, 340
-    ml, mt, cel = 150, 74, 190
-    total = m["n"]
-    blocos = [
-        (0, 0, "Verdadeiro positivo", m["vp"], S3, "achado"),
-        (1, 0, "Falso positivo", m["fp"], S2, "testado a toa"),
-        (0, 1, "Falso negativo", m["fn"], QUEDA, "perdido"),
-        (1, 1, "Verdadeiro negativo", m["vn"], "var(--tinta3)", "poupado"),
-    ]
-    p = [txt(20, 30, "Matriz de confusão do modelo servido", "titulo"),
-         txt(20, 50, f"limiar em especificidade de {ESPECIFICIDADE:.0%} · "
-                     f"holdout de {total:,} pessoas".replace(",", "."), "sub"),
-         txt(ml + cel, mt - 14, "PREVISTO", "eixo", "middle"),
-         txt(ml - 118, mt + cel, "OBSERVADO", "eixo")]
+def g_confusao(m: dict, compacto: bool = False) -> str:
+    """Matriz de confusao como quatro blocos, com taxa e contagem.
+
+    `compacto` remove titulo e subtitulo internos: dentro de um slide o `<h2>` ja
+    diz o que e o grafico, e repetir custa espaco vertical que a projecao nao tem.
+
+    A geometria foi refeita depois que o Puppeteer mostrou os rotulos colidindo —
+    "risco alto" caia por cima de "PREVISTO" e "OBSERVADO" flutuava fora do eixo.
+    Agora as faixas de rotulo tem altura propria (`FAIXA`) em vez de serem
+    posicionadas por deslocamento negativo a partir do topo da grade.
+    """
+    # Em modo compacto o texto vai a 1,5x, entao celula, faixa e coluna de rotulo
+    # crescem junto — senao o rodape sai pela borda e o eixo rotacionado cobre os
+    # rotulos de linha. Ambos aconteceram, e so apareceram no screenshot.
+    if compacto:
+        LARG, ALT, FAIXA, ROT, topo = 268.0, 136.0, 34.0, 210.0, 12.0
+    else:
+        LARG, ALT, FAIXA, ROT, topo = 250.0, 118.0, 26.0, 132.0, 74.0
+    W = int(ROT + LARG * 2 + 30)
+    H = int(topo + FAIXA + ALT * 2 + (74 if compacto else 54))
+    grade_y = topo + FAIXA
+
+    p = []
+    if not compacto:
+        p += [txt(20, 30, "Matriz de confusão do modelo servido", "titulo"),
+              txt(20, 50, f"limiar em especificidade de {ESPECIFICIDADE:.0%} · "
+                          f"holdout de {m['n']:,} pessoas".replace(",", "."), "sub")]
+
+    # cabecalho das colunas, na faixa reservada — nunca sobre a grade
+    p.append(txt(ROT + LARG, topo + 12, "O QUE O MODELO DIZ", "eixo", "middle"))
     for col, rot in ((0, "risco alto"), (1, "risco baixo")):
-        p.append(txt(ml + col * cel + cel / 2, mt - 32, rot, "rot", "middle"))
-    for lin, rot in ((0, "tem diagnóstico"), (1, "sem diagnóstico")):
-        p.append(txt(ml - 10, mt + lin * (cel / 2) + 34, rot, "rot", "end"))
+        p.append(txt(ROT + col * LARG + LARG / 2, grade_y - 4, rot, "rot", "middle"))
+    # eixo vertical rotacionado, encostado na coluna de rotulos
+    eixo_x = 20.0
+    p.append(f'<text x="{eixo_x}" y="{grade_y + ALT}" class="eixo" '
+             f'text-anchor="middle" transform="rotate(-90 {eixo_x} '
+             f'{grade_y + ALT})">O QUE A PESSOA TEM</text>')
 
-    for col, lin, nome, v, cor, papel in blocos:
-        x, yy = ml + col * cel, mt + lin * (cel / 2)
-        pct = v / total * 100
-        p.append(f'<rect x="{x}" y="{yy}" width="{cel - 6}" height="{cel / 2 - 6}" '
-                 f'rx="8" fill="{cor}" opacity="0.16"/>')
-        p.append(txt(x + 14, yy + 34, f"{v:,}".replace(",", "."), "val"))
-        p.append(txt(x + 14, yy + 54, f"{pct:.1f}% do total".replace(".", ","), "rot"))
-        p.append(txt(x + 14, yy + 74, f"{nome} · {papel}", "rot"))
+    blocos = [
+        (0, 0, "Verdadeiro positivo", "encontrado", m["vp"], S3),
+        (1, 0, "Falso negativo", "perdido", m["fn"], QUEDA),
+        (0, 1, "Falso positivo", "testado à toa", m["fp"], S2),
+        (1, 1, "Verdadeiro negativo", "poupado", m["vn"], "var(--tinta3)"),
+    ]
+    for lin, rot in ((0, "tem diagnóstico"), (1, "não tem")):
+        p.append(txt(ROT - 14, grade_y + lin * ALT + ALT / 2 + 5, rot, "rot", "end"))
+    for col, lin, nome, papel, v, cor in blocos:
+        x, y = ROT + col * LARG, grade_y + lin * ALT
+        p.append(f'<rect x="{x}" y="{y}" width="{LARG - 8}" height="{ALT - 8}" '
+                 f'rx="10" fill="{cor}" opacity="0.18"/>')
+        dy = (40, 66, 92) if compacto else (34, 54, 72)
+        p.append(txt(x + 18, y + dy[0], f"{v:,}".replace(",", "."), "val"))
+        p.append(txt(x + 18, y + dy[1], f"{nome} · {papel}", "rot"))
+        p.append(txt(x + 18, y + dy[2],
+                     f"{v / m['n'] * 100:.1f}% do total".replace(".", ","), "eixo"))
 
-    p.append(txt(20, H - 30,
-                 f"recall {m['recall']:.1%} · precisão {m['precisao']:.1%} · "
-                 f"especificidade {m['especificidade']:.1%}".replace(".", ","), "rot"))
-    return svg(W, H, "".join(p), "Matriz de confusão")
+    # duas linhas em modo compacto: a 18px a frase inteira passava de 780px num
+    # viewBox de 720 e era cortada em silencio pela borda do SVG
+    if compacto:
+        p.append(txt(ROT, H - 42,
+                     f"encontra {m['recall']:.1%} de quem tem diagnóstico · "
+                     f"{m['precisao']:.1%} dos testados são casos"
+                     .replace(".", ","), "rot"))
+        p.append(txt(ROT, H - 16,
+                     f"erra {1 - m['especificidade']:.1%} de quem não tem"
+                     .replace(".", ","), "rot"))
+    else:
+        p.append(txt(ROT, H - 20,
+                     f"encontra {m['recall']:.1%} de quem tem · "
+                     f"{m['precisao']:.1%} dos testados são casos · "
+                     f"erra {1 - m['especificidade']:.1%} de quem não tem"
+                     .replace(".", ","), "rot"))
+    return svg(W, H, "".join(p), "Matriz de confusão",
+               escala=1.5 if compacto else 1.0)
 
 
 def g_roc_pr(c: dict) -> str:
@@ -253,7 +293,8 @@ def g_escada(modelos: dict) -> str:
 
 
 def g_parcimonia(curva: list[dict], teto: float,
-                 rotulos: dict[str, str] | None = None) -> str:
+                 rotulos: dict[str, str] | None = None,
+                 compacto: bool = False) -> str:
     """% do teto por numero de variaveis — sustenta o escore de 5 perguntas.
 
     `rotulos` troca o nome tecnico da variavel por um legivel. A pagina do metodo
@@ -261,14 +302,15 @@ def g_parcimonia(curva: list[dict], teto: float,
     mapa, porque `saude_geral` nao diz nada para quem decide.
     """
     rotulos = rotulos or {}
-    W, H = 780, 340
-    ml, mt, mb = 66, 76, 66
+    W, H = (780, 286) if compacto else (780, 340)
+    ml, mt, mb = 66, (22 if compacto else 76), 66
     lado = W - ml - 60
     ex = Escala(1, max(c["n_variaveis"] for c in curva), ml, ml + lado)
     ey = Escala(0, 100, H - mb, mt)
-    p = [txt(20, 30, "Curva de parcimônia — quantas perguntas bastam?", "titulo"),
-         txt(20, 50, "% do PR-AUC do modelo completo, por nº de variáveis "
-                     "(seleção gulosa)", "sub")]
+    p = [] if compacto else [
+        txt(20, 30, "Curva de parcimônia — quantas perguntas bastam?", "titulo"),
+        txt(20, 50, "% do PR-AUC do modelo completo, por nº de variáveis "
+                    "(seleção gulosa)", "sub")]
     for v in (0, 50, 100):
         p.append(txt(ml - 8, ey(v) + 4, f"{v}%", "eixo", "end"))
         p.append(f'<line x1="{ml}" y1="{ey(v):.1f}" x2="{ml + lado}" '
@@ -285,7 +327,8 @@ def g_parcimonia(curva: list[dict], teto: float,
                  f"Teto de referência: PR-AUC {teto:.4f}. ".replace(".", ",")
                  + "A curva satura cedo — é o que justifica um escore de papel.",
                  "rot"))
-    return svg(W, H, "".join(p), "Curva de parcimônia")
+    return svg(W, H, "".join(p), "Curva de parcimônia",
+               escala=1.35 if compacto else 1.0)
 
 
 def g_decisao(curva: list[dict]) -> str:
@@ -317,16 +360,20 @@ def g_decisao(curva: list[dict]) -> str:
     return svg(W, H, "".join(p), "Curva de decisão")
 
 
-def g_cobertura(cob: list[dict]) -> str:
-    """% de casos encontrados por % da populacao testada — traduz metrica em orcamento."""
-    W, H = 780, 330
-    ml, mt, mb = 66, 76, 62
+def g_cobertura(cob: list[dict], compacto: bool = False) -> str:
+    """% de casos encontrados por % da populacao testada — traduz metrica em orcamento.
+
+    `compacto` remove titulo e subtitulo: num slide o `<h2>` ja os diz.
+    """
+    W, H = (780, 268) if compacto else (780, 330)
+    ml, mt, mb = 66, (18 if compacto else 76), 62
     lado = W - ml - 46
     ex = Escala(0, max(c["%_testado"] for c in cob), ml, ml + lado)
     ey = Escala(0, 100, H - mb, mt)
-    p = [txt(20, 30, "Quantos testar, quantos achar", "titulo"),
-         txt(20, 50, "% dos casos encontrados por % da população rastreada", "sub"),
-         _guia([(ex(0), ey(0)), (ex(100), ey(100))])]
+    p = [] if compacto else [
+        txt(20, 30, "Quantos testar, quantos achar", "titulo"),
+        txt(20, 50, "% dos casos encontrados por % da população rastreada", "sub")]
+    p.append(_guia([(ex(0), ey(0)), (ex(100), ey(100))]))
     for v in (0, 50, 100):
         p.append(txt(ml - 8, ey(v) + 4, f"{v}%", "eixo", "end"))
         p.append(f'<line x1="{ml}" y1="{ey(v):.1f}" x2="{ml + lado}" '
@@ -341,7 +388,8 @@ def g_cobertura(cob: list[dict]) -> str:
                  f"Testando 10% acha {dez['%_casos_encontrados']:.1f}% dos casos, "
                  f"a R$ {dez['custo_por_caso_R$'][1]:.0f} por caso."
                  .replace(".", ","), "rot"))
-    return svg(W, H, "".join(p), "Curva de cobertura")
+    return svg(W, H, "".join(p), "Curva de cobertura",
+               escala=1.5 if compacto else 1.0)
 
 
 def g_equidade(grupos: list[dict]) -> str:
