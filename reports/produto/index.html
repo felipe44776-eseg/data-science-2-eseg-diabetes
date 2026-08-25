@@ -3,7 +3,10 @@
 <title>Calculadora de risco de diabetes — Data Science 2 · ESEG</title>
 <style>
 :root{color-scheme:light dark;
-  --bg:#f9f9f7; --card:#fcfcfb; --ink:#0b0b0b; --ink2:#52514e; --ink3:#898781;
+  /* --ink3 e a cor de todo rotulo secundario: h2 de secao, cabecalho de tabela
+     e nota de campo. #898781 dava 3,50:1 sobre o cartao claro, abaixo do minimo
+     de 4,5:1 do WCAG AA. Medido com Puppeteer no HTML publicado. */
+  --bg:#f9f9f7; --card:#fcfcfb; --ink:#0b0b0b; --ink2:#52514e; --ink3:#706e68;
   --linha:#e1e0d9; --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --alerta:#d03b3b;
   --campo:#fff; --sombra:0 1px 3px rgba(11,11,11,.06)}
 @media (prefers-color-scheme:dark){:root{

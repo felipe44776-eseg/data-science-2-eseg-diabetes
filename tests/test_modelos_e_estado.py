@@ -282,3 +282,64 @@ def test_todo_artefato_de_resultado_esta_versionado():
         check=True).stdout.split())
     fora = [s for s in resultado if s not in rastreados]
     assert not fora, f"artefato de resultado fora do git: {fora}"
+
+
+# --- tema: o vazamento que apagou os slides ---------------------------------
+
+def test_estilo_do_svg_nao_vaza_para_a_pagina():
+    """`:root` dentro de um SVG embutido casa com o `<html>` do documento.
+
+    Era assim: cada gráfico redefinia `--tinta` e `--superficie` da página inteira.
+    Em modo claro os valores coincidiam por acaso e nada aparecia; em modo escuro a
+    tinta virava clara com o fundo do slide ainda claro — **contraste de 1,03:1 nos
+    12 slides**, medido com Puppeteer. Texto invisível, sem nenhum erro.
+
+    Os tokens têm de ficar em `svg{}`: cascateiam para os filhos do gráfico e param
+    ali. No arquivo `.svg` isolado o elemento raiz É o `<svg>`, então nada se perde.
+    """
+    from diabetes.viz.tema import estilo
+
+    css = estilo()
+    assert ":root" not in css, "o estilo do SVG voltou a mirar o documento inteiro"
+    assert css.lstrip().startswith("svg{"), "os tokens claros têm de estar em svg{}"
+    assert "@media (prefers-color-scheme: dark){svg{" in css
+
+
+def test_escala_tipografica_do_svg():
+    """O mesmo gráfico serve página de relatório e slide projetado.
+
+    Num slide o SVG é *reduzido* para caber na coluna, então 11px viram ~9px vistos
+    de longe. `escala` compensa. Sem ela a legenda ficava ilegível na projeção.
+    """
+    from diabetes.viz.tema import estilo
+
+    normal, grande = estilo(), estilo(1.5)
+    assert "font-size:11.0px" in normal and "font-size:16.5px" in grande
+    assert "font-size:12.0px" in normal and "font-size:18.0px" in grande
+    assert "font-size:15.0px" in normal and "font-size:22.5px" in grande
+
+
+def test_paleta_clara_passa_no_minimo_de_contraste():
+    """`tinta3` é a cor de todo rótulo de eixo — 58 por página.
+
+    Ela estava em #898781, que dá 3,50:1 sobre a superfície clara: abaixo do mínimo
+    de 4,5:1 do WCAG AA para texto normal. Este teste calcula a razão em vez de
+    confiar em inspeção visual, que foi justamente o que deixou passar.
+    """
+    from diabetes.viz.tema import CLARO, ESCURO
+
+    def luminancia(hexa: str) -> float:
+        canais = [int(hexa[i:i + 2], 16) / 255 for i in (1, 3, 5)]
+        lin = [c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4
+               for c in canais]
+        return 0.2126 * lin[0] + 0.7152 * lin[1] + 0.0722 * lin[2]
+
+    def razao(a: str, b: str) -> float:
+        x, y = sorted((luminancia(a), luminancia(b)), reverse=True)
+        return (x + 0.05) / (y + 0.05)
+
+    for paleta, nome in ((CLARO, "claro"), (ESCURO, "escuro")):
+        fundo = paleta["superficie"]
+        for tinta in ("tinta", "tinta2", "tinta3"):
+            r = razao(paleta[tinta], fundo)
+            assert r >= 4.5, f"{nome}/{tinta}: {r:.2f}:1 — mínimo WCAG AA é 4,5:1"

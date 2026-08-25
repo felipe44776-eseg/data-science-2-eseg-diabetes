@@ -9,11 +9,18 @@ roda offline. Trabalho acadêmico — Data Science 2, ESEG.">
   --bg:#fcfcfb; --cartao:#fff; --tinta:#0b0b0b; --tinta2:#52514e; --tinta3:#8a8880;
   --linha:#e4e3dc; --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --alerta:#d03b3b;
   --realce:#f2f1ed;
+  /* #8a8880 dava 3,46:1 sobre o fundo claro — abaixo do minimo de 4,5:1 do
+     WCAG AA, e e a cor de toda nota e legenda de tabela. Medido com Puppeteer. */
+  --tinta3:#706e68;
+  /* o rotulo de secao e azul a 12px: #2a78d6 da 4,30:1. So o texto
+     escurece; as barras e links seguem com --s1. */
+  --olho:#1f6ac4;
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-tema="claro"]){
     --bg:#141413; --cartao:#1c1c1a; --tinta:#f2f1ec; --tinta2:#b8b6ae; --tinta3:#807e76;
     --linha:#2e2e2b; --realce:#232320; --s1:#5fa0e8; --s2:#f08b5f; --s3:#3fc994;
+    --olho:#5fa0e8;
   }
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -32,7 +39,7 @@ p+p{margin-top:12px}
 b,strong{color:var(--tinta);font-weight:640}
 section{padding:56px 0;border-top:1px solid var(--linha)}
 section:first-of-type{border-top:0}
-.olho{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--s1);
+.olho{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--olho);
   font-weight:660;margin-bottom:10px}
 
 /* ---- topo ---- */
@@ -109,7 +116,7 @@ footer a{color:var(--tinta2)}
     <span class="selo ok">CI verde</span>
     <span class="selo">6 bases externas</span>
     <span class="selo">25 documentos</span>
-    <span class="selo">123 testes</span>
+    <span class="selo">126 testes</span>
   </div>
   <div class="creditos">253.680 respostas do BRFSS 2015 (CDC) ·
     Prof. Marino Catarino<br>Código, dados e documentação abertos no

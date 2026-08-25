@@ -457,15 +457,19 @@ def g_vies(vies: dict) -> str:
 
 CSS = """
 :root{
-  --bg:#fcfcfb; --cartao:#fff; --tinta:#0b0b0b; --tinta2:#52514e; --tinta3:#8a8880;
+  --bg:#fcfcfb; --cartao:#fff; --tinta:#0b0b0b; --tinta2:#52514e;
   --linha:#e4e3dc; --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --alerta:#d03b3b;
   --realce:#f2f1ed; --superficie:#fff; --queda:#d03b3b;
+  /* medidos com Puppeteer: #8a8880 dava 3,46:1 e o vermelho do rotulo
+     da armadilha 4,07:1 sobre a propria faixa. Ambos abaixo de 4,5:1. */
+  --tinta3:#706e68; --alerta-rot:#b52d2d; --olho:#1f6ac4;
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-tema="claro"]){
     --bg:#141413; --cartao:#1c1c1a; --tinta:#f2f1ec; --tinta2:#b8b6ae; --tinta3:#807e76;
     --linha:#2e2e2b; --realce:#232320; --superficie:#1c1c1a;
     --s1:#5fa0e8; --s2:#f08b5f; --s3:#3fc994; --queda:#e46a6a;
+    --alerta-rot:#f08a8a; --olho:#5fa0e8;
   }
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -518,7 +522,7 @@ figcaption b{color:var(--tinta2)}
   margin-top:20px}
 .armadilha p{color:var(--tinta);font-size:15.5px;max-width:70ch}
 .armadilha .rot{font-size:12px;text-transform:uppercase;letter-spacing:.07em;
-  color:var(--alerta);font-weight:670;display:block;margin-bottom:5px}
+  color:var(--alerta-rot);font-weight:670;display:block;margin-bottom:5px}
 footer{padding:44px 0 64px;border-top:1px solid var(--linha);font-size:14px;
   color:var(--tinta3)}
 """
