@@ -33,7 +33,7 @@ produto do trabalho.
 **Se você quer a base teórica:** [`docs/24`](docs/24-fundamentacao-teorica.md) —
 método por método, com a bibliografia completa.
 
-**Se você quer o percurso:** [`docs/25`](docs/25-linha-do-tempo.md) — as 11 fases,
+**Se você quer o percurso:** [`docs/25`](docs/25-linha-do-tempo.md) — as 13 fases,
 o que cada uma travou e o que descobriu.
 
 **Se você quer ver a análise em Python:** `notebooks/` — seis notebooks
@@ -212,7 +212,7 @@ Nenhuma é estética; cada uma evita um erro concreto que já apareceu.
 ```
 data/          bronze / interim / silver+gold / external   (conteúdo fora do git)
 docs/          25 documentos + 5 ADRs + dicionário + enunciado
-src/diabetes/  9.500+ linhas em 46 módulos
+src/diabetes/  11.000+ linhas em 37 módulos
   schema.py      contrato único de dados
   ingest/        PDF → CSV por coordenada
   clean/         7 regras rastreadas
@@ -240,12 +240,13 @@ tests/           100 testes, incl. paridade Python↔JavaScript
 
 | | |
 |---|---|
-| Pipeline | **23/23 etapas coerentes** (`.\tasks.ps1 status`) |
-| Testes | **100**, incluindo teste de vazamento e paridade Py↔JS |
+| Pipeline | **26/26 etapas coerentes** (`.\tasks.ps1 status`) |
+| Testes | **129**, incluindo vazamento, paridade Py↔JS e contraste WCAG |
 | Lint | `ruff` limpo |
 | CI | GitHub Actions verde a cada push |
-| Documentos | **25** + 5 ADRs · 6 notebooks · 26 slides |
+| Documentos | **25** + 5 ADRs · 6 notebooks · 26 + 11 slides |
 | Publicação | GitHub Pages, deploy automático a cada mudança em `reports/` |
+| Acessibilidade | **WCAG AA nas 6 superfícies**, medido com Puppeteer: 1.534 amostras, 0 falhas em claro e escuro |
 | Bases externas | BRFSS **2015 e 2023** · Vigitel 2015/2023 · NHANES (prior) · CDC Open Data · painel Medicaid |
 
 ---

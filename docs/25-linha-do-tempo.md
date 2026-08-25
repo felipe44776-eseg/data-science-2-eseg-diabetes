@@ -4,7 +4,7 @@
 > ali, e o que a fase descobriu. Reconstruída do histórico do git — os commits
 > são verificáveis.
 
-O projeto foi feito em **15 commits**. A ordem importa: quase toda decisão de
+O projeto foi feito em **23 commits**. A ordem importa: quase toda decisão de
 arquitetura foi tomada por causa de um número medido na fase anterior, não por
 preferência.
 
@@ -25,7 +25,9 @@ preferência.
 | 8 | **Grupo** | `75f5027`+`f88e58d` | 6 notebooks + deck | notebook não contém lógica |
 | 9 | **Brasil e pré** | `ba466b6`+`0bdaa43` | Vigitel recalibrado, pré-diabetes | recalibrar, não retreinar |
 | 10 | **Fechamento** | `0635b9f` | MCA, causal, temporal | o padrão dos 4 contextos |
-| 11 | **Publicação** | *este* | site, docs/24, docs/25 | link público + bibliografia |
+| 11 | **Publicação** | `163fe8e` | site, docs/24, docs/25 | link público + bibliografia |
+| 12 | **Auditoria** | `ba544a7` | 8 achados corrigidos | 4 números publicados estavam errados |
+| 13 | **Superfícies** | `d661d89` | método, executiva, glossário | contraste medido, não inspecionado |
 
 ---
 
@@ -246,10 +248,88 @@ O que faltava para o trabalho ser **entregável**, não só correto:
 
 ---
 
+## Fase 12 · A auditoria adversarial — `ba544a7`
+
+**20 agentes, 7 camadas, do PDF cru ao produto publicado.** Cada achado passou por
+um cético cuja tarefa era derrubá-lo. Resultado: **8 confirmados, 4 refutados, 100
+verificações que passaram** — incluindo a reconstrução do PDF, a partição sem
+vazamento e a paridade Python↔JavaScript.
+
+**A raiz, encontrada por três auditores independentes:** `features/expandido.py`
+aplicava a máscara `{7, 9, 77, 99}` a *toda* variável. Em três delas o código 7 é
+categoria válida — `EMPLOY1` 7 = aposentado, `INCOME2` 7 = 50-75k, `_AGEG5YR` 7/9 =
+50-64 anos. A regra certa já existia em `external/brfss2015.py`, contradita pelo
+trilho expandido.
+
+**Quatro números publicados estavam errados:**
+
+| onde | publicado | medido |
+|---|---|---|
+| `docs/21`, o OR de manchete | 0,7459 [0,719; 0,774] | **0,6738 [0,641; 0,708]** |
+| `docs/11`, convergência do IPF | "hipótese falsa" | **era verdadeira** — 300 it → 10 |
+| `docs/12`, o BBE | "concorda com o NHANES" | **retratado** — era artefato |
+| `docs/18`, EUA → Brasil | "2 milésimos" | **13,8 milésimos** |
+
+Os intervalos do OR novo e antigo **não se sobrepõem**. A lista de previsões
+refutadas foi de nove para **doze**.
+
+---
+
+## Fase 13 · As três superfícies — `2762c84` a `d661d89`
+
+O trabalho estava correto e continuava difícil de consumir.
+
+| entrega | público |
+|---|---|
+| **`/metodo/`** — 15 decisões, 9 gráficos | quem quer entender *por que* cada escolha |
+| **`/executivo/`** — 11 slides | quem decide e tem 15 minutos |
+| **Glossário de métricas** | quem perguntou "o que é o OR, qual a fórmula?" |
+
+O deck de 26 slides virou **apresentação técnica**; a executiva segue outro arco —
+base → gradientes → matriz de confusão → parcimônia → calculadora.
+
+**E o visual estava quebrado.** `viz/tema.py` emitia `:root{...}` dentro do
+`<style>` de cada SVG; embutido em HTML, isso sequestra os tokens do documento
+inteiro. Em modo escuro o contraste caía para **1,03:1** — texto invisível em todos
+os slides. Só apareceu quando medimos com Puppeteer, porque em modo claro os
+valores coincidiam por acaso.
+
+Hoje as **seis superfícies** passam WCAG AA nos dois modos: **1.534 amostras de
+texto, zero falhas, zero texto cortado.**
+
+---
+
+## Para retomar
+
+O estado é reproduzível de fora: `git clone`, `.\tasks.ps1 dados` (baixa e confere o
+SHA-256 de 2,5 GB), `.\tasks.ps1 all`. O único insumo sem URL é o PDF do enunciado.
+
+**`.\tasks.ps1 status`** é o mapa: 26 etapas, cada uma marcada `ok`, `OBSOLETO` ou
+`ausente`. Se estiver tudo `ok`, o que está publicado reflete o dado atual.
+
+O que está aberto — nenhum é bloqueio, todos estão documentados:
+
+| frente | onde | por que ainda não |
+|---|---|---|
+| Recalibrar o produto para 2023 | `docs/22` §6 | mais barato e maior retorno: um deslocamento de intercepto na tabela já exportada |
+| NHANES individual com HbA1c | `docs/12` | validaria o PU caso a caso |
+| PNS 2019 | `docs/18` | mediria o subdiagnóstico brasileiro |
+| Determinantes sociais medidos | `docs/10` §4b | teste falseável do papel de raça |
+| Anos intermediários do Vigitel | `data/external/FONTES.md` | 2006–2024 estão no mesmo padrão de URL |
+| 57 achados sem veredito da auditoria | tarefa `w6ozunghm` | gravidade média/baixa, **não** validados |
+
+> Os 57 achados sem veredito **não são confirmados**. Ficaram fora da rodada de
+> refutação por limite de orçamento, e tratá-los como reais seria o erro oposto ao
+> que a auditoria existe para evitar.
+
+---
+
 ## O que a linha do tempo mostra
 
-**Nove vezes o dado contradisse o que tínhamos escrito** — e as nove correções
-estão na fonte, não em errata. A lista completa está em `docs/23`.
+**Doze vezes o dado contradisse o que tínhamos escrito** — e as doze correções
+estão na fonte, não em errata. A lista completa está em `docs/23`. As três últimas
+vieram da auditoria da fase 12, e duas delas eram afirmações que tínhamos testado
+e declarado falsas.
 
 Isso não é acidente de processo: é consequência de duas regras adotadas na fase 1.
 Todo número tem um comando que o reproduz, e `tasks.ps1 status` marca como
