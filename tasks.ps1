@@ -16,7 +16,7 @@ param(
     [Parameter(Position = 0)]
     [ValidateSet('status', 'log', 'ingest', 'clean', 'folds', 'external', 'eda',
                  'explicativo', 'figuras', 'modelos', 'vigitel',
-                 'expandido', 'pesos', 'pu', 'glassbox', 'medicaid', 'trilhac', 'produto', 'notebooks', 'deck', 'escorebr', 'prediabetes', 'naosup', 'causal', 'temporal', 'site', 'metodo', 'dados',
+                 'expandido', 'pesos', 'pu', 'glassbox', 'medicaid', 'trilhac', 'produto', 'notebooks', 'deck', 'escorebr', 'prediabetes', 'naosup', 'causal', 'temporal', 'site', 'metodo', 'executivo', 'dados',
                  'test', 'all', 'help')]
     [string]$Task = 'help',
 
@@ -204,6 +204,12 @@ function Invoke-Dados {
     }
 }
 
+function Invoke-Executivo {
+    Invoke-Etapa 'executivo' 'Apresentacao executiva' {
+        python -m diabetes.produto.executivo
+    }
+}
+
 function Invoke-Metodo {
     Invoke-Etapa 'metodo' 'Pagina didatica do metodo' {
         python -m diabetes.produto.metodo
@@ -283,6 +289,7 @@ switch ($Task) {
     'temporal'    { Invoke-Temporal }
     'site'        { Invoke-Site }
     'metodo'      { Invoke-Metodo }
+    'executivo'   { Invoke-Executivo }
     'dados'       { Invoke-Dados }
     'test'        { Invoke-Test }
     'all' {
@@ -298,7 +305,7 @@ switch ($Task) {
         if (Test-Path (Join-Path $PSScriptRoot $XPT)) {
             Invoke-Expandido; Invoke-Pesos; Invoke-Pu; Invoke-Glassbox; Invoke-TrilhaC
             Invoke-EscoreBr; Invoke-Prediabetes; Invoke-NaoSup; Invoke-Causal; Invoke-Temporal
-            Invoke-Produto; Invoke-Notebooks; Invoke-Deck; Invoke-Metodo; Invoke-Site
+            Invoke-Produto; Invoke-Notebooks; Invoke-Deck; Invoke-Executivo; Invoke-Metodo; Invoke-Site
         }
         Invoke-Medicaid
         python -m diabetes.pipeline.estado

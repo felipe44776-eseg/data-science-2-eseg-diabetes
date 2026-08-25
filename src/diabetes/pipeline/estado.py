@@ -242,7 +242,7 @@ ETAPAS: list[Etapa] = [
         nota="perde so 11,8 milesimos em 8 anos; sem concept drift",
     ),
     Etapa(
-        "deck", "Deck da apresentacao",
+        "deck", "Apresentacao tecnica (26 slides)",
         ".\\tasks.ps1 deck",
         ("data/processed/gold/_trilhaC_decisao.json",
          "data/processed/gold/_escore_brasil.json",
@@ -253,6 +253,19 @@ ETAPAS: list[Etapa] = [
          "reports/produto/modelo.json", "src/diabetes/produto/deck.py"),
         ("reports/deck/apresentacao.html",),
         nota="26 slides 1280x720, autocontido, Ctrl+P exporta em PDF",
+    ),
+    Etapa(
+        "executivo", "Apresentacao executiva (11 slides)",
+        ".\\tasks.ps1 executivo",
+        ("data/processed/gold/brfss_expandido.parquet",
+         "data/processed/gold/_eda_comparativa.json",
+         "data/processed/gold/_escada_modelos.json",
+         "data/processed/gold/_trilhaC_escore.json",
+         "data/processed/gold/_trilhaC_decisao.json",
+         "data/external/vigitel/_comparacao_binacional.json",
+         "reports/produto/modelo.json", "src/diabetes/produto/executivo.py"),
+        ("reports/executivo/index.html",),
+        nota="publico que decide; a tecnica (deck) tem 26 slides",
     ),
     Etapa(
         "metodo", "Pagina didatica do metodo (15 etapas, 8 graficos)",

@@ -11,7 +11,9 @@ fatores associados a diabetes e predizer ocorrências — com validação contra
 | link direto | o que é |
 |---|---|
 | [🧮 **Calculadora de risco**](https://felipe44776-eseg.github.io/data-science-2-eseg-diabetes/calculadora/) | 12 perguntas → risco estimado. Roda no navegador, offline |
-| [🎤 **Apresentação**](https://felipe44776-eseg.github.io/data-science-2-eseg-diabetes/deck/) | 26 slides · `←` `→` navega · `Ctrl+P` exporta em PDF |
+| [🎤 **Apresentação executiva**](https://felipe44776-eseg.github.io/data-science-2-eseg-diabetes/executivo/) | 11 slides · o achado, o valor e o que dá para usar |
+| [🔬 **Apresentação técnica**](https://felipe44776-eseg.github.io/data-science-2-eseg-diabetes/deck/) | 26 slides · método, refutações e limitações |
+| [🧭 **O método, passo a passo**](https://felipe44776-eseg.github.io/data-science-2-eseg-diabetes/metodo/) | 15 decisões · matriz de confusão, calibração, curva de decisão |
 | [📊 **Figuras**](https://felipe44776-eseg.github.io/data-science-2-eseg-diabetes/figuras/) | 6 gráficos com os números por trás |
 
 ---

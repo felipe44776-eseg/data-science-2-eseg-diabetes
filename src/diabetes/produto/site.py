@@ -233,9 +233,12 @@ roda offline. Trabalho acadêmico — Data Science 2, ESEG.">
     <a class="acao principal" href="calculadora/">
       <span class="ic">🧮</span><b>Calculadora de risco</b>
       <span>12 perguntas · roda no seu navegador, offline</span></a>
+    <a class="acao" href="executivo/">
+      <span class="ic">🎤</span><b>Apresentação executiva</b>
+      <span>11 slides · o achado, o valor e o que dá para usar</span></a>
     <a class="acao" href="deck/">
-      <span class="ic">🎤</span><b>Apresentação</b>
-      <span>26 slides · ← → navega · Ctrl+P exporta em PDF</span></a>
+      <span class="ic">🔬</span><b>Apresentação técnica</b>
+      <span>26 slides · método, refutações e limitações</span></a>
     <a class="acao" href="metodo/">
       <span class="ic">🧭</span><b>O método, passo a passo</b>
       <span>15 decisões · matriz de confusão, calibração, curva de decisão</span></a>

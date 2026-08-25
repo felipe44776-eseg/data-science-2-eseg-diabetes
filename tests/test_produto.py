@@ -353,3 +353,50 @@ def test_grafico_nao_desenha_serie_toda_zerada():
     # e chave ausente tem de FALHAR, nao virar zero
     with pytest.raises(KeyError):
         g_equidade([{"grupo": "x", "n": 1000}])
+
+
+EXECUTIVO = Path("reports/executivo/index.html")
+
+
+@pytest.mark.skipif(not EXECUTIVO.exists(), reason="executivo nao gerado")
+def test_apresentacao_executiva_segue_o_arco_combinado():
+    """base -> gradientes -> matriz de confusão -> parcimônia -> calculadora."""
+    html = EXECUTIVO.read_text(encoding="utf-8")
+    assert 10 <= html.count('class="slide') <= 13, "cerca de 11 slides"
+    for marco in ("achamos a base de verdade", "Onde a prevalência dispara",
+                  "Matriz de confusão", "parcimônia", "calculadora"):
+        assert marco in html, marco
+    # a ordem importa: e o arco que o publico executivo segue
+    pos = [html.find(m) for m in ("achamos a base de verdade",
+                                  "Onde a prevalência dispara",
+                                  "Matriz de confusão",
+                                  "Curva de parcimônia",
+                                  "calculadora que qualquer um abre")]
+    assert pos == sorted(pos), f"slides fora de ordem: {pos}"
+
+
+@pytest.mark.skipif(not EXECUTIVO.exists(), reason="executivo nao gerado")
+def test_executiva_nao_apresenta_marcador_de_acesso_como_fator_de_risco():
+    """Invariante 8, na superfície de maior risco de ser mal lida.
+
+    "Já fez exame de colesterol" tem o maior OR da base (7,11) e NAO e fator de
+    risco — e marcador de quem foi ao medico. Num slide executivo, mostrar o
+    ranking sem esse contraste inverteria a conclusao do trabalho.
+    """
+    html = EXECUTIVO.read_text(encoding="utf-8")
+    assert "marcador de acesso ao médico" in html, "falta a legenda que separa os dois"
+    assert "não é um fator de risco" in html
+    assert "aparece como saudável" in html
+
+
+@pytest.mark.skipif(not EXECUTIVO.exists(), reason="executivo nao gerado")
+def test_faixas_de_idade_do_brfss_estao_certas():
+    """`_AGEG5YR` nivel 1 = 18-24, depois 5 em 5 a partir de 25.
+
+    A formula ingenua `18 + 5*(k-1)` erra a partir do nivel 3 e rotulava a faixa
+    30-34 como "28+". Rotulo de eixo errado num slide executivo e numero errado.
+    """
+    html = EXECUTIVO.read_text(encoding="utf-8")
+    for faixa in ("18+", "30+", "40+", "50+", "60+", "70+"):
+        assert f">{faixa}<" in html, faixa
+    assert ">28+<" not in html and ">38+<" not in html

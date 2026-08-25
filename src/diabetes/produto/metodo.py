@@ -252,8 +252,15 @@ def g_escada(modelos: dict) -> str:
     return svg(W, H, "".join(p), "Escada de modelos")
 
 
-def g_parcimonia(curva: list[dict], teto: float) -> str:
-    """% do teto por numero de variaveis — sustenta o escore de 5 perguntas."""
+def g_parcimonia(curva: list[dict], teto: float,
+                 rotulos: dict[str, str] | None = None) -> str:
+    """% do teto por numero de variaveis — sustenta o escore de 5 perguntas.
+
+    `rotulos` troca o nome tecnico da variavel por um legivel. A pagina do metodo
+    fala com quem audita e mantem o nome real; a apresentacao executiva passa o
+    mapa, porque `saude_geral` nao diz nada para quem decide.
+    """
+    rotulos = rotulos or {}
     W, H = 780, 340
     ml, mt, mb = 66, 76, 66
     lado = W - ml - 60
@@ -272,7 +279,8 @@ def g_parcimonia(curva: list[dict], teto: float) -> str:
         p.append(ponto(x, yy, S1, 5))
         p.append(txt(x, yy - 14, f"{c['%_do_teto']:.0f}%", "val", "middle"))
         p.append(txt(x, H - mb + 20, str(c["n_variaveis"]), "eixo", "middle"))
-        p.append(txt(x, H - mb + 38, c["adicionada"][:11], "eixo", "middle"))
+        nome = rotulos.get(c["adicionada"], c["adicionada"])
+        p.append(txt(x, H - mb + 38, nome[:13], "eixo", "middle"))
     p.append(txt(20, H - 14,
                  f"Teto de referência: PR-AUC {teto:.4f}. ".replace(".", ",")
                  + "A curva satura cedo — é o que justifica um escore de papel.",
