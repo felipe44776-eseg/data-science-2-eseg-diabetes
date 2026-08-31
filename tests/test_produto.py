@@ -455,3 +455,52 @@ def test_glossario_usa_separador_ptbr():
     suspeitos = [x for x in re.findall(r"\d+\.\d+", texto)
                  if len(x.split(".")[1]) != 3]
     assert not suspeitos, f"decimal com ponto: {suspeitos[:5]}"
+
+
+# --- autoria --------------------------------------------------------------
+# Fonte unica em `produto/autoria.py`. Nome escrito a mao em cinco arquivos
+# diverge no dia em que um deles muda — este teste e o que impede.
+
+DECK = Path("reports/deck/apresentacao.html")
+
+SUPERFICIES_COM_AUTORIA = (
+    ("site", SITE), ("calculadora", PAGINA), ("deck", DECK),
+    ("executivo", EXECUTIVO), ("metodo", METODO),
+)
+
+
+def test_grupo_tem_ra_ou_pendencia_explicita():
+    """RA ausente vira 'a confirmar' visivel, nunca some da linha."""
+    from diabetes.produto.autoria import GRUPO, autores
+
+    assert len(GRUPO) >= 4
+    linha = autores()
+    for a in GRUPO:
+        assert a.nome in linha
+        assert (f"RA {a.ra}" if a.ra else "RA a confirmar") in a.rotulo()
+
+
+def test_grupo_em_ordem_alfabetica():
+    """A ordem nao pode sugerir hierarquia de contribuicao — ver o comentario em
+    `autoria.GRUPO`. Se alguem reordenar sem ler, o teste avisa."""
+    from diabetes.produto.autoria import GRUPO
+
+    nomes = [a.nome for a in GRUPO]
+    assert nomes == sorted(nomes)
+
+
+@pytest.mark.parametrize("rotulo,caminho", SUPERFICIES_COM_AUTORIA,
+                         ids=[r for r, _ in SUPERFICIES_COM_AUTORIA])
+def test_toda_superficie_publica_credita_o_grupo(rotulo, caminho):
+    """Os cinco HTML publicados tem de trazer todos os integrantes.
+
+    Superficie que perde um nome e o erro silencioso classico: a pagina abre
+    bonita e o trabalho fica creditado a menos gente do que o fez.
+    """
+    if not caminho.exists():
+        pytest.skip(f"{rotulo} nao gerado")
+    from diabetes.produto.autoria import GRUPO
+
+    html = caminho.read_text(encoding="utf-8")
+    faltando = [a.nome for a in GRUPO if a.nome not in html]
+    assert not faltando, f"{rotulo} nao credita: {faltando}"

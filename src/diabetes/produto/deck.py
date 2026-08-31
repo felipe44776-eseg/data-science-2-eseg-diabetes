@@ -23,6 +23,7 @@ from html import escape
 from pathlib import Path
 
 from diabetes.pipeline.estado import ETAPAS
+from diabetes.produto.autoria import CREDITO, autores
 
 RAIZ = Path(".")
 GOLD = RAIZ / "data" / "processed" / "gold"
@@ -92,7 +93,7 @@ b,strong{color:var(--tinta);font-weight:650}
 .corpo{flex:1;display:flex;flex-direction:column;justify-content:center}
 .capa{justify-content:center}
 .capa h1{font-size:64px;max-width:22ch}
-.rodape-capa{position:absolute;left:72px;bottom:56px;font-size:15px;
+.rodape-capa{position:absolute;left:72px;right:72px;bottom:56px;font-size:15px;
   color:var(--tinta3);line-height:1.7}
 .duas{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:start}
 .tres{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
@@ -254,12 +255,12 @@ def montar() -> str:
     S = []
 
     # 1 · capa
-    S.append(slide("", """
+    S.append(slide("", f"""
       <h1>Diabetes:<br>o que os dados escondem</h1>
       <p class="sub">253.680 respostas do BRFSS 2015 — e o que aparece quando
       comparamos com <b>cinco bases externas</b>.</p>
-      <div class="rodape-capa">Data Science 2 · Projeto 1 · ESEG<br>
-      Prof. Marino Catarino</div>""", "capa"))
+      <div class="rodape-capa">{autores()}<br>
+      {CREDITO}</div>""", "capa"))
 
     # 2 · o problema inicial
     S.append(slide("o começo", f"""

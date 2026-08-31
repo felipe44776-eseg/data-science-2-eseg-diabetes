@@ -25,6 +25,7 @@ import argparse
 import json
 from pathlib import Path
 
+from diabetes.produto.autoria import CREDITO, autores
 from diabetes.produto.deck import CSS, JS, ler, num, slide, tabela
 from diabetes.produto.metodo import (
     g_cobertura,
@@ -220,12 +221,13 @@ def montar() -> str:
     S = []
 
     # 1 · capa
-    S.append(slide("", """
+    S.append(slide("", f"""
       <h1>Quem os dados de saúde<br>deixam de fora</h1>
       <p class="sub">253.680 respostas · seis bases comparadas · uma calculadora de
       risco que roda em qualquer navegador.</p>
-      <div class="rodape-capa">Apresentação executiva · Data Science 2 · Projeto 1 ·
-      ESEG<br>Prof. Marino Catarino · a versão técnica tem 26 slides</div>""", "capa"))
+      <div class="rodape-capa">{autores()}<br>
+      Apresentação executiva · {CREDITO} · a versão técnica tem 26 slides</div>""",
+                   "capa"))
 
     # 2 · o resumo em tres numeros
     S.append(slide("resumo", f"""

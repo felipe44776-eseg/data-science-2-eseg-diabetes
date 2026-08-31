@@ -27,6 +27,7 @@ import json
 from pathlib import Path
 
 from diabetes.pipeline.estado import ETAPAS
+from diabetes.produto.autoria import CREDITO, PROFESSOR, autores
 from diabetes.produto.deck import num
 
 RAIZ = Path(".")
@@ -232,8 +233,8 @@ roda offline. Trabalho acadêmico — Data Science 2, ESEG.">
     <span class="selo">{c['docs']} documentos</span>
     <span class="selo">{c['testes']} testes</span>
   </div>
-  <div class="creditos">253.680 respostas do BRFSS 2015 (CDC) ·
-    Prof. Marino Catarino<br>Código, dados e documentação abertos no
+  <div class="creditos">253.680 respostas do BRFSS 2015 (CDC) · {PROFESSOR}<br>
+    <b>{autores()}</b><br>Código, dados e documentação abertos no
     <a href="{BASE_REPO}">GitHub</a>.</div>
 
   <div class="acoes">
@@ -410,8 +411,8 @@ roda offline. Trabalho acadêmico — Data Science 2, ESEG.">
 </section>
 
 <footer>
-  <p>Trabalho acadêmico · Data Science 2 · Projeto 1 · ESEG · Prof. Marino
-  Catarino.<br>
+  <p>Trabalho acadêmico · {CREDITO}.<br>
+  Grupo: {autores()}.<br>
   Dados: <a href="https://www.cdc.gov/brfss/">BRFSS</a> 2015 e 2023 (CDC) ·
   <a href="https://svs.aids.gov.br/download/Vigitel/">Vigitel</a> 2015 e 2023
   (Ministério da Saúde) · NHANES · CDC Open Data.<br>

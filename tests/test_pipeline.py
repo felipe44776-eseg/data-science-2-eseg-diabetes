@@ -188,3 +188,49 @@ def test_manifesto_do_repositorio_registra_o_hash_da_fonte():
     assert len(m.get("sha256_pdf", "")) == 64, "manifesto sem hash da fonte"
     assert m["n_linhas"] == 253_680
     assert m["paginas"] == 4374
+
+
+# --- reprodutibilidade ----------------------------------------------------
+
+#: Nome do modulo importado -> nome da distribuicao no PyPI, quando diferem.
+DISTRIBUICAO = {
+    "fitz": "pymupdf", "sklearn": "scikit-learn", "dice_ml": "dice-ml",
+    "imblearn": "imbalanced-learn", "yaml": "pyyaml", "cv2": "opencv-python",
+    "PIL": "pillow", "dateutil": "python-dateutil",
+}
+
+
+def _imports_de_terceiros() -> set[str]:
+    """Modulos de terceiros importados em `src/`, por AST — nao por regex."""
+    import ast
+    import sys
+
+    achados: set[str] = set()
+    for arquivo in Path("src").rglob("*.py"):
+        arvore = ast.parse(arquivo.read_text(encoding="utf-8"), str(arquivo))
+        for no in ast.walk(arvore):
+            if isinstance(no, ast.Import):
+                achados |= {a.name.split(".")[0] for a in no.names}
+            elif isinstance(no, ast.ImportFrom) and no.level == 0 and no.module:
+                achados.add(no.module.split(".")[0])
+    return {m for m in achados
+            if m not in sys.stdlib_module_names and m != "diabetes"}
+
+
+def test_requirements_declara_tudo_que_o_codigo_importa():
+    """Import nao declarado quebra o clone limpo, nunca a maquina de quem escreveu.
+
+    Ja aconteceu com quatro pacotes de uma vez — `interpret` (o modelo do
+    produto), `prince`, `nbformat` e `nbclient`. Em todos, `tasks.ps1` falhava
+    so na maquina de outra pessoa, que e o pior lugar para descobrir.
+    """
+    req = Path("requirements.txt").read_text(encoding="utf-8").lower()
+    declarados = {linha.split("==")[0].split(">=")[0].strip()
+                  for linha in req.splitlines()
+                  if linha.strip() and not linha.startswith("#")}
+
+    faltando = sorted(
+        DISTRIBUICAO.get(m, m) for m in _imports_de_terceiros()
+        if DISTRIBUICAO.get(m, m).lower().replace("_", "-") not in
+        {d.replace("_", "-") for d in declarados})
+    assert not faltando, f"importado mas nao declarado em requirements.txt: {faltando}"

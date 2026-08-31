@@ -18,6 +18,8 @@ import argparse
 import json
 from pathlib import Path
 
+from diabetes.produto.autoria import CREDITO, autores
+
 SAIDA = Path("reports/produto")
 
 # --------------------------------------------------------------------------
@@ -443,7 +445,7 @@ def montar(modelo: dict) -> str:
   treinado nos EUA e o IMC pesa ~16% menos no Brasil (Vigitel 2015), então o risco
   para brasileiros é provavelmente superestimado. Raça/etnia entra como proxy de
   determinantes sociais, nunca como fator biológico.</p>
-  <p>Data Science 2 · ESEG · Prof. Marino Catarino ·
+  <p>{CREDITO}<br>{autores()}<br>
   <b>github.com/felipe44776-eseg/data-science-2-eseg-diabetes</b></p>
 </footer>
 </main>

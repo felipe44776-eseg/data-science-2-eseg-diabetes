@@ -29,6 +29,7 @@ import numpy as np
 import pandas as pd
 
 from diabetes.models.expandido import particionar
+from diabetes.produto.autoria import CREDITO, autores
 from diabetes.produto.deck import num
 from diabetes.produto.exportar import prever_do_json
 from diabetes.viz.tema import Escala, barra_h, barra_v, legenda, linha, ponto, svg, txt
@@ -1212,8 +1213,7 @@ def montar() -> str:
             "de um artefato versionado. A matriz de confusão, a ROC e a PR são "
             "calculadas com as tabelas de consulta exportadas para a calculadora, pela "
             "mesma função que a suíte de testes compara contra o JavaScript.<br>"
-            "Trabalho acadêmico · Data Science 2 · Projeto 1 · ESEG · "
-            "Prof. Marino Catarino.</p></footer>\n"
+            f"Trabalho acadêmico · {CREDITO}.<br>Grupo: {autores()}.</p></footer>\n"
             "</div>\n</body></html>")
 
 

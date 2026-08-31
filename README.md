@@ -2,6 +2,23 @@
 
 **Data Science 2 · Projeto 1 · ESEG · Prof. Marino Catarino**
 
+## 👥 Equipe
+
+| integrante | RA |
+|---|---|
+| Felipe Marins | **44776** |
+| Otavio Bonfochi | *a confirmar* |
+| Phelipe Torres Pamponet da França | **46643** |
+| Tadeu Radovan Graça | **46305** |
+
+<sub>Ordem alfabética pelo primeiro nome — o trabalho não tem primeiro autor e a
+ordem não indica hierarquia de contribuição. A lista vive em
+[`src/diabetes/produto/autoria.py`](src/diabetes/produto/autoria.py) e é a mesma
+que aparece nas cinco páginas publicadas; um teste falha se alguma delas perder
+um nome.</sub>
+
+---
+
 Análise de 253.680 respostas da pesquisa BRFSS 2015 (CDC) para identificar
 fatores associados a diabetes e predizer ocorrências — com validação contra
 **seis bases externas** e um **produto** aplicável.
@@ -212,7 +229,7 @@ Nenhuma é estética; cada uma evita um erro concreto que já apareceu.
 ```
 data/          bronze / interim / silver+gold / external   (conteúdo fora do git)
 docs/          25 documentos + 5 ADRs + dicionário + enunciado
-src/diabetes/  11.000+ linhas em 37 módulos
+src/diabetes/  12.800 linhas em 38 módulos
   schema.py      contrato único de dados
   ingest/        PDF → CSV por coordenada
   clean/         7 regras rastreadas
@@ -231,7 +248,7 @@ reports/
   deck/          🎤 apresentacao.html — 26 slides, exporta em PDF
   site/          🌐 index.html — raiz do GitHub Pages
 notebooks/       6 notebooks executados, com saídas
-tests/           100 testes, incl. paridade Python↔JavaScript
+tests/           137 testes, incl. paridade Python↔JavaScript
 ```
 
 ---
@@ -241,13 +258,47 @@ tests/           100 testes, incl. paridade Python↔JavaScript
 | | |
 |---|---|
 | Pipeline | **26/26 etapas coerentes** (`.\tasks.ps1 status`) |
-| Testes | **129**, incluindo vazamento, paridade Py↔JS e contraste WCAG |
+| Testes | **137**, incluindo vazamento, paridade Py↔JS, autoria e contraste WCAG |
 | Lint | `ruff` limpo |
 | CI | GitHub Actions verde a cada push |
 | Documentos | **25** + 5 ADRs · 6 notebooks · 26 + 11 slides |
 | Publicação | GitHub Pages, deploy automático a cada mudança em `reports/` |
 | Acessibilidade | **WCAG AA nas 6 superfícies**, medido com Puppeteer: 1.534 amostras, 0 falhas em claro e escuro |
 | Bases externas | BRFSS **2015 e 2023** · Vigitel 2015/2023 · NHANES (prior) · CDC Open Data · painel Medicaid |
+
+---
+
+## 🙏 Agradecimentos
+
+**Prof. Marino Catarino**, pela orientação e por um enunciado com folga suficiente
+para o trabalho ir além do pedido — inclusive para recusar a acurácia como métrica
+e ter de defender a escolha.
+
+**CDC — Behavioral Risk Factor Surveillance System.** O BRFSS publica microdado,
+codebook e pesos amostrais de graça e sem cadastro. Foi isso que tornou possível o
+achado central: só existe "reconstruímos a base original e batemos 100% célula a
+célula" porque o original está aberto.
+
+**Ministério da Saúde — Vigitel** (Secretaria de Vigilância em Saúde), pelos anos
+de 2006 a 2024 publicados no mesmo padrão. A comparação Brasil × EUA de
+[`docs/09`](docs/09-comparacao-binacional.md) é o que separa "achado do arquivo" de
+"achado que transfere".
+
+**NHANES**, pela medição de glicemia que ancora a estimativa de subdiagnóstico — o
+número que sustenta a tese de que os dados medem *diagnóstico*, não *doença*.
+
+**Os projetos abertos que fazem o trabalho existir**, em especial
+[InterpretML](https://github.com/interpretml/interpret) (o EBM é o modelo do
+produto, não um extra), [statsmodels](https://www.statsmodels.org/) (inferência com
+peso amostral), [DoWhy](https://github.com/py-why/dowhy) (refutação causal),
+[pandas](https://pandas.pydata.org/), [scikit-learn](https://scikit-learn.org/),
+[PyMuPDF](https://pymupdf.readthedocs.io/) (a extração por coordenada que salvou o
+projeto no primeiro dia) e [ruff](https://docs.astral.sh/ruff/).
+
+**Aos colegas que leram e discordaram.** Doze conclusões deste trabalho foram
+refutadas pelo próprio dado — a lista está em
+[`docs/23`](docs/23-sintese-final.md). Nenhuma teria caído sem alguém perguntando
+"como você sabe disso?".
 
 ---
 
